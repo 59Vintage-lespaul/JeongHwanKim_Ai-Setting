@@ -30,7 +30,7 @@ source: pm-skills/pm-product-discovery/brainstorm-experiments-new
 - XYZ 가설을 수립하고 검증 실험을 설계할 때
 
 ## FPOF 컨텍스트
-- 이 스킬은 와키윌리의 신규 상품/캠페인/채널의 시장 검증을 위한 프리토타입 실험에 활용합니다
+- 이 스킬은 커버낫의 신규 상품/캠페인/채널의 시장 검증을 위한 프리토타입 실험에 활용합니다
 - 5대 경영목표 중 "히트상품 + IMC 강화", "글로벌 대응 강화" 달성을 위한 린(Lean) 검증 도구
 - 관련 프리셋: brand.config.json (전략), personas.json (코어 타겟), categories.json (카테고리)
 
@@ -44,7 +44,7 @@ source: pm-skills/pm-product-discovery/brainstorm-experiments-new
 
 **XYZ 가설** (Alberto Savoia, *The Right It*): "최소 X%의 Y가 Z를 할 것이다" 형태로 가설을 수립합니다.
 - **X%**: 참여할 것으로 예상되는 타겟 시장 비율
-- **Y**: 특정 타겟 시장 (예: "18~25세 키치 스타일 선호 여성")
+- **Y**: 특정 타겟 시장 (예: "20~27세 K-컬처 캐주얼 선호 유니섹스")
 - **Z**: 상품/서비스와 어떻게 참여할 것인가
 
 **핵심 원칙** (Alberto Savoia, *The Right It*):
@@ -56,7 +56,7 @@ source: pm-skills/pm-product-discovery/brainstorm-experiments-new
 
 ### Step 1: XYZ 가설 수립
 "최소 X%의 Y가 Z를 할 것이다" 형태로 가설 작성:
-- 패션 컨텍스트 예: "최소 15%의 무신사 와키윌리 방문자가 신규 IP 콜라보 한정판 사전예약을 할 것이다"
+- 패션 컨텍스트 예: "최소 15%의 무신사 커버낫 방문자가 신규 IP 콜라보 한정판 사전예약을 할 것이다"
 - 패션 컨텍스트 예: "최소 5%의 인스타그램 팔로워가 팝업스토어 위치 투표에 참여할 것이다"
 
 ### Step 2: 프리토타입 실험 제안 (2~3개)
@@ -75,10 +75,10 @@ source: pm-skills/pm-product-discovery/brainstorm-experiments-new
 - **지표**: 측정할 항목
 - **성공 기준**: 예상 임계값
 
-### Step 4: 와키윌리 적용 필터링
-- 브랜드 DNA(Kitsch Street & IP Universe)와의 정합성
-- 코어 타겟(18~25세 트렌드리더)에게 자연스러운 실험 채널인가?
-- IP 캐릭터를 활용한 프리토타입 기회
+### Step 4: 커버낫 적용 필터링
+- 브랜드 DNA(Borderless Casual & K-컬처)와의 정합성
+- 코어 타겟(20~27세 트렌드리더)에게 자연스러운 실험 채널인가?
+- 시그니처 상품을 활용한 프리토타입 기회
 - 글로벌 시장 검증에 활용 가능한가?
 
 ## 산출물 포맷
@@ -117,7 +117,7 @@ source: pm-skills/pm-product-discovery/brainstorm-experiments-new
 - 성공 기준:
 - 예상 비용/기간:
 
-## 와키윌리 적용 시사점
+## 커버낫 적용 시사점
 - 브랜드 DNA 정합성:
 - IP 활용 기회:
 - 글로벌 검증 가능성:
@@ -128,7 +128,7 @@ source: pm-skills/pm-product-discovery/brainstorm-experiments-new
 - [ ] 2~3개 프리토타입 실험 설계
 - [ ] 각 실험의 가설-방법-지표-성공 기준 명시
 - [ ] Skin-in-the-Game 원칙 적용 여부 확인
-- [ ] 와키윌리 브랜드 적용 필터링 완료
+- [ ] 커버낫 브랜드 적용 필터링 완료
 
 ## 체크리스트
 - [ ] brand.config.json의 전략 방향과 정합성?

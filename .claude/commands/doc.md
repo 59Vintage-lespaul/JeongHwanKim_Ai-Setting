@@ -30,7 +30,7 @@
 
 1. `.fpof-state.json`에서 현재 시즌과 단계 확인
 2. `workspace/`에서 관련 산출물 참조
-3. `system/presets/wacky-willy/tone-manner.json`에서 톤앤매너 확인
+3. `system/presets/covernat/tone-manner.json`에서 톤앤매너 확인
 4. DOCX 스킬을 사용하여 문서 생성:
    - 표지: 문서 제목, 시즌, 날짜, 작성자(에이전시명)
    - 본문: 제목(H1) → 섹션(H2) → 소제목(H3) 계층 구조

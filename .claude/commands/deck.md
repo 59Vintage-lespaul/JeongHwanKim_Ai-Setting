@@ -27,17 +27,17 @@
 
 1. `.fpof-state.json`에서 현재 시즌과 단계 확인
 2. `workspace/[프로젝트]/`에서 관련 산출물 읽기
-3. `system/presets/wacky-willy/visual-identity.json`에서 브랜드 컬러/폰트 참조
+3. `system/presets/covernat/visual-identity.json`에서 브랜드 컬러/폰트 참조
 4. PPTX 스킬을 사용하여 프레젠테이션 생성:
    - 브랜드 컬러 적용 (Primary: #FF6B35, Secondary: #2EC4B6 등 visual-identity.json 기반)
-   - 와키윌리 톤앤매너 반영
+   - 커버낫 톤앤매너 반영
    - 슬라이드 구성: 표지 → 목차 → 본문 → 요약 → 부록
 5. `workspace/[프로젝트]/` 에 PPTX 파일 저장
 
 ## 슬라이드 디자인 원칙
 - 브랜드 컬러 팔레트 필수 적용
 - 텍스트는 간결하게, 비주얼 중심으로
-- IP 캐릭터(키키) 활용 가능 시 포함
+- 시그니처 상품(씨빅) 활용 가능 시 포함
 - 한 슬라이드 = 하나의 메시지
 
 $ARGUMENTS 에 유형이 지정되면 해당 덱을, 없으면 추천합니다.

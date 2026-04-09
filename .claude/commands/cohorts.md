@@ -9,7 +9,7 @@
 
 ### Step 1: 데이터 또는 분석 정의
 1. `.fpof-state.json`에서 현재 시즌과 단계 확인
-2. `system/presets/wacky-willy/channels.json` 참조 — 채널별 고객 데이터 기준
+2. `system/presets/covernat/channels.json` 참조 — 채널별 고객 데이터 기준
 3. 두 가지 경로:
    - **데이터 있음**: CSV/스프레드시트 업로드 (user_id, 가입일, 활동일, 이벤트 등)
    - **데이터 없음**: 분석 프레임워크 + SQL 쿼리 설계

@@ -3,13 +3,13 @@
 SWOT, PESTLE, Porter's Five Forces, Ansoff Matrix 4개 전략 프레임워크를 한 번에 실행합니다.
 
 ## 사용법
-`/market-scan <분석 대상 시장 또는 브랜드>` — 대상을 생략하면 와키윌리 현재 시즌 기준으로 분석합니다.
+`/market-scan <분석 대상 시장 또는 브랜드>` — 대상을 생략하면 커버낫 현재 시즌 기준으로 분석합니다.
 
 ## 절차
 
 ### Step 1: 컨텍스트 파악
 1. `.fpof-state.json`에서 현재 시즌과 PDCA 단계 확인
-2. `system/presets/wacky-willy/brand.config.json` 참조 — DNA, 포지셔닝, 경영목표
+2. `system/presets/covernat/brand.config.json` 참조 — DNA, 포지셔닝, 경영목표
 3. 사용자에게 확인:
    - 분석 대상 (브랜드 전체 / 특정 카테고리 / 특정 시장)
    - 분석 목적 (시즌 전략 / 시장 진입 / 경쟁 대응 / 연간 리뷰)

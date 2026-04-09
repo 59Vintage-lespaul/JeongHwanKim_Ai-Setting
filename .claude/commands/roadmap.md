@@ -9,7 +9,7 @@
 
 ### Step 1: 현재 로드맵 수집
 1. `.fpof-state.json`에서 현재 시즌과 단계 확인
-2. `system/presets/wacky-willy/brand.config.json` 참조 — 전략 목표
+2. `system/presets/covernat/brand.config.json` 참조 — 전략 목표
 3. 입력 수용:
    - 기능 리스트 / 백로그 아이템
    - 로드맵 문서 (Now/Next/Later, 분기별, 타임라인)

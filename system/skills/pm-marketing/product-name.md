@@ -14,7 +14,7 @@ triggers:
 presets:
   - tone-manner.json
   - brand.config.json
-  - ip-bible.json
+  - personas.json
 outputs:
   - "output/[시즌]/_season/plan_product-name.md"
 source: pm-skills/pm-marketing-growth/product-name
@@ -22,25 +22,25 @@ source: pm-skills/pm-marketing-growth/product-name
 
 # 상품 네이밍
 
-> 와키윌리 브랜드 네이밍 룰 기반으로 컬렉션/라인/아이템 이름을 개발합니다 — pm-skills 원본 프레임워크를 FPOF 패션 하우스 컨텍스트에 맞게 커스터마이징
+> 커버낫 브랜드 네이밍 룰 기반으로 컬렉션/라인/아이템 이름을 개발합니다 — pm-skills 원본 프레임워크를 FPOF 패션 하우스 컨텍스트에 맞게 커스터마이징
 
 ## 언제 사용
 - 새로운 컬렉션/라인/아이템 이름이 필요할 때
 - 콜라보레이션 프로젝트의 네이밍을 결정할 때
-- IP 캐릭터(키키 등)를 활용한 상품명을 개발할 때
+- 시그니처 상품(씨빅 등)을 활용한 상품명을 개발할 때
 - PDCA Plan 단계에서 라인시트 작성 전 네이밍을 확정할 때
 
 ## FPOF 컨텍스트
-- 이 스킬은 와키윌리 브랜드의 상품/컬렉션/라인 네이밍에 활용합니다
-- 관련 프리셋: `tone-manner.json`(톤앤매너, 브랜드 어휘), `brand.config.json`(DNA, 비전, 포지셔닝), `ip-bible.json`(키키+11 캐릭터)
-- 브랜드 DNA "Kitsch Street & IP Universe"에 부합하는 위트 있고 기억에 남는 네이밍이 필요합니다
-- 코어 타겟(18~25세)이 공유하고 싶어하는 이름, 글로벌 확장 시 발음/의미 충돌이 없는 이름을 지향합니다
+- 이 스킬은 커버낫 브랜드의 상품/컬렉션/라인 네이밍에 활용합니다
+- 관련 프리셋: `tone-manner.json`(톤앤매너, 브랜드 어휘), `brand.config.json`(DNA, 비전, 포지셔닝), `personas.json`(시그니처 상품 · 앰버서더)
+- 브랜드 DNA "Borderless Casual & K-컬처"에 부합하는 위트 있고 기억에 남는 네이밍이 필요합니다
+- 코어 타겟(20~27세)이 공유하고 싶어하는 이름, 글로벌 확장 시 발음/의미 충돌이 없는 이름을 지향합니다
 
 ## 사전 준비
 1. `.fpof-state.json` → 현재 시즌 확인
 2. `tone-manner.json` → 브랜드 톤앤매너, 브랜드 어휘/금지 어휘 참조
 3. `brand.config.json` → 브랜드 DNA, 비전, 포지셔닝 참조
-4. `ip-bible.json` → IP 캐릭터 이름, 세계관, 그룹(A/B/C) 참조
+4. `personas.json` → 코어 타겟 페르소나 및 앰버서더(추영우·TXT 수빈·최윤지) 참조
 5. 기존 상품명 체계 및 네이밍 히스토리 확인
 
 ## 실행 절차
@@ -54,10 +54,10 @@ source: pm-skills/pm-marketing-growth/product-name
 - 기존 네이밍 체계와의 정합성
 
 ### Step 2: 브랜드 필터 적용
-와키윌리 브랜드 가이드라인을 적용합니다.
+커버낫 브랜드 가이드라인을 적용합니다.
 - `tone-manner.json`의 브랜드 어휘/금지 어휘 확인
-- Kitsch, Street, IP Universe 키워드와의 연결
-- 뮤즈(지젤) 이미지와의 부합성
+- Borderless Casual, K-Culture, New Basic 키워드와의 연결
+- 앰버서더(추영우·TXT 수빈·최윤지) 이미지와의 부합성
 - K-컬처 감성과 글로벌 적합성 균형
 
 ### Step 3: 네이밍 브레인스토밍
@@ -66,23 +66,23 @@ source: pm-skills/pm-marketing-growth/product-name
 각 이름에 대해:
 1. **Name**: 제안하는 이름
 2. **Rationale**: 이 이름이 적합한 이유 — 상품 가치, 타겟 소구, 브랜드 정합성
-3. **Brand Fit**: 와키윌리 브랜드 아키텍처 및 메시지 전략과의 부합성
+3. **Brand Fit**: 커버낫 브랜드 아키텍처 및 메시지 전략과의 부합성
 4. **Memorability**: 왜 이 이름이 기억에 남고, 차별화되는지
 5. **글로벌 체크**: 주요 타겟 시장(한/영/중/일)에서의 발음, 의미, 상표 고려사항
 
-### Step 4: IP 캐릭터 활용 검토
-IP 활용이 적합한 경우를 판단합니다.
-- 키키 및 11개 캐릭터의 이름/특성 활용 가능성
-- 캐릭터 그룹(A/B/C)별 적합 상품 카테고리
-- 캐릭터 관계도를 활용한 스토리텔링 네이밍
-- IP 활용 시 저작권/상표 고려사항
+### Step 4: 시그니처 상품/앰버서더 활용 검토
+시그니처 자산 활용이 적합한 경우를 판단합니다.
+- 씨빅(CIVIC) 등 시그니처 상품 라인업의 이름/스토리 활용 가능성
+- COVERNAT / AUTHENTIC / COLLEGE 3라인별 적합 상품 카테고리
+- 앰버서더(추영우·TXT 수빈·최윤지) 연관 스토리텔링 네이밍
+- 콜라보·캡슐 활용 시 저작권/상표 고려사항
 
 ### Step 5: 네이밍 평가 및 최종 선정
 후보 이름을 평가 기준에 따라 비교합니다.
 - 발음 용이성 및 철자 편의성
-- 브랜드 톤(Kitsch/Street)과의 정합성
+- 브랜드 톤(Borderless Casual / New Basic)과의 정합성
 - 경쟁사 이름과의 차별화
-- 코어 타겟(18~25세)의 감성 소구력
+- 코어 타겟(20~27세)의 감성 소구력
 - 글로벌 시장 적합성 (발음/의미 충돌 없음)
 - 상표 등록 가능성
 
@@ -139,7 +139,7 @@ IP 활용이 적합한 경우를 판단합니다.
 ## 체크리스트
 - [ ] tone-manner.json의 브랜드 어휘/금지 어휘를 준수하는가?
 - [ ] brand.config.json의 브랜드 DNA와 정합성이 있는가?
-- [ ] 코어 타겟(18~25세)이 공유하고 싶은 이름인가?
+- [ ] 코어 타겟(20~27세)이 공유하고 싶은 이름인가?
 - [ ] 기존 상품명 체계와 일관성이 있는가?
 - [ ] 글로벌 주요 시장에서 부정적 의미가 없는가?
-- [ ] IP 캐릭터 활용 시 ip-bible.json과 정합성이 있는가?
+- [ ] 시그니처 상품 활용 시 personas.json과 정합성이 있는가?

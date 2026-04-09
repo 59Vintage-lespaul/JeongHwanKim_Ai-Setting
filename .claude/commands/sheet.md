@@ -28,7 +28,7 @@
 ## 절차
 
 1. `.fpof-state.json`에서 현재 시즌 확인
-2. `system/presets/wacky-willy/categories.json`, `channels.json` 참조
+2. `system/presets/covernat/categories.json`, `channels.json` 참조
 3. `workspace/`에서 기존 산출물 데이터 참조
 4. XLSX 스킬을 사용하여 스프레드시트 생성:
    - 시트 탭 구조: 요약 → 상세 데이터 → 차트 데이터

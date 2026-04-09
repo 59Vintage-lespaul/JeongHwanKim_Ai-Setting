@@ -26,13 +26,13 @@ source: pm-skills/pm-product-strategy/business-model
 > 9개 빌딩 블록(핵심 파트너, 핵심 활동, 핵심 자원, 가치 제안, 고객 관계, 채널, 고객 세그먼트, 비용 구조, 수익원)으로 사업 모델을 설계합니다 — pm-skills 원본 프레임워크를 FPOF 패션 하우스 컨텍스트에 맞게 커스터마이징
 
 ## 언제 사용
-- 와키윌리 브랜드의 사업 모델을 체계적으로 정리할 때
+- 커버낫 브랜드의 사업 모델을 체계적으로 정리할 때
 - 신규 사업(IP 라이선싱, 글로벌 진출 등) 모델을 설계할 때
 - 투자자/경영진 대상 사업 모델 프레젠테이션 준비 시
 - PDCA Plan 단계에서 전략적 사업 구조 설계 시
 
 ## FPOF 컨텍스트
-- 이 스킬은 와키윌리 브랜드의 전체 사업 모델 또는 신규 사업 영역 모델 설계에 활용합니다
+- 이 스킬은 커버낫 브랜드의 전체 사업 모델 또는 신규 사업 영역 모델 설계에 활용합니다
 - 관련 프리셋: `brand.config.json`(비전, 경영목표), `categories.json`(상품 구조), `channels.json`(유통 채널 및 매출)
 - 패션 브랜드 특성상 Key Partners(원단/봉제), Channels(6개 유통채널), Customer Segments(UNI/WOMAN) 정의가 핵심입니다
 
@@ -62,7 +62,7 @@ source: pm-skills/pm-product-strategy/business-model
 **3. 핵심 자원 (Key Resources)**
 - 가치 창출에 필요한 자원은 무엇인가?
 - 물리적 자산, 지적 재산, 인적 자본, 재무 자원
-- *패션 맥락: 디자인팀, IP 캐릭터 자산, 브랜드 자산, 생산 인프라*
+- *패션 맥락: 디자인팀, 시그니처 상품 자산, 브랜드 자산, 생산 인프라*
 
 ### Step 2: 중앙 — 가치 제안 (Value Proposition)
 
@@ -72,7 +72,7 @@ source: pm-skills/pm-product-strategy/business-model
 - 어떤 니즈를 충족시키는가?
 - 각 세그먼트에 어떤 상품/서비스를 제공하는가?
 - 정량적(가격, 속도, 품질) vs 정성적(디자인, 감성, 스테이터스)
-- *패션 맥락: Kitsch Street 감성, IP 캐릭터 유니버스, K-컬처 아이덴티티*
+- *패션 맥락: Borderless Casual 감성, K-컬처 앰버서더 전략, K-컬처 아이덴티티*
 
 ### Step 3: 우측 — 가치 전달 (Delivering Value)
 
@@ -118,18 +118,18 @@ source: pm-skills/pm-product-strategy/business-model
 4. 수익원이 비용 구조를 커버하는지 경제성 검증 (LTV > 3x CAC)
 5. 핵심 가정 및 리스크 식별
 
-### Step 6: 와키윌리 적용 필터링
-분석 결과를 와키윌리 브랜드 렌즈로 필터링합니다.
+### Step 6: 커버낫 적용 필터링
+분석 결과를 커버낫 브랜드 렌즈로 필터링합니다.
 
-- 브랜드 DNA(Kitsch Street & IP Universe)와의 정합성
-- 코어 타겟(18~25세 트렌드리더)에 대한 시사점
+- 브랜드 DNA(Borderless Casual & K-컬처)와의 정합성
+- 코어 타겟(20~27세 트렌드리더)에 대한 시사점
 - 5대 경영목표와의 연결점:
   - 브랜드 아이덴티티 정립 → 가치 제안의 명확성
   - 히트상품 + IMC 강화 → 핵심 활동의 우선순위
   - QR 비중 확대 → 핵심 파트너/활동의 민첩성
   - 용품 라인업 → 고객 세그먼트/가치 제안 확장
   - 글로벌 대응 → 채널/파트너 확장
-- IP 캐릭터 활용 가능성
+- 시그니처 상품 활용 가능성
   - IP가 핵심 자원이자 수익원으로 작동하는 구조
 
 ### 참고: BMC vs Lean Canvas vs Startup Canvas
@@ -175,7 +175,7 @@ source: pm-skills/pm-product-strategy/business-model
 - 경제성 검증:
 - 핵심 가정 및 리스크:
 
-## 와키윌리 시사점
+## 커버낫 시사점
 - 브랜드 적용:
 - 경영목표 연결:
 - 다음 액션:
@@ -185,7 +185,7 @@ source: pm-skills/pm-product-strategy/business-model
 - [ ] 9개 빌딩 블록 모두 작성 완료
 - [ ] 블록 간 정합성 검증 완료
 - [ ] 경제성 검증 (LTV vs CAC)
-- [ ] 와키윌리 브랜드 적용 필터링 완료
+- [ ] 커버낫 브랜드 적용 필터링 완료
 - [ ] 경영목표 연결 확인
 
 ## 체크리스트

@@ -9,8 +9,8 @@
 
 ### Step 1: 기능 이해
 1. `.fpof-state.json`에서 현재 시즌과 단계 확인
-2. `system/presets/wacky-willy/brand.config.json` 참조 — 전략 방향
-3. `system/presets/wacky-willy/categories.json` 참조 — 카테고리 전략
+2. `system/presets/covernat/brand.config.json` 참조 — 전략 방향
+3. `system/presets/covernat/categories.json` 참조 — 카테고리 전략
 4. 입력 수용 형식: 기능명, 문제 정의, 사용자 요청, 아이디어, 업로드 문서
 
 ### Step 2: 컨텍스트 수집 (대화형)

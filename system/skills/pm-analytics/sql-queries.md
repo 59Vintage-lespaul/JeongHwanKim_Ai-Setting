@@ -28,7 +28,7 @@ source: pm-skills/pm-data-analytics/sql-queries
 - 모든 PDCA 단계에서 데이터 기반 의사결정을 지원할 때
 
 ## FPOF 컨텍스트
-- 이 스킬은 와키윌리 브랜드의 매출/재고/고객 데이터베이스 쿼리에 활용합니다
+- 이 스킬은 커버낫 브랜드의 매출/재고/고객 데이터베이스 쿼리에 활용합니다
 - 패션 이커머스 주요 테이블: 주문(orders), 상품(products), 고객(customers), 재고(inventory), 채널(channels)
 - 시즌 코드(26SS, 26FW 등), SKU 체계, 카테고리 구분 등 패션 도메인 지식이 반영됩니다
 - BigQuery, PostgreSQL, MySQL 등 주요 SQL 방언을 지원합니다
@@ -69,7 +69,7 @@ source: pm-skills/pm-data-analytics/sql-queries
 - 성능 최적화 팁 제공
 - 필요 시 테스트 스크립트 또는 샘플 데이터 생성
 
-### Step 5: 와키윌리 도메인 적용
+### Step 5: 커버낫 도메인 적용
 패션 비즈니스 맥락을 반영합니다.
 - 시즌 코드 필터링 (WHERE season = '26SS')
 - 채널별 매출 집계 (자사몰, 무신사, 29CM 등)

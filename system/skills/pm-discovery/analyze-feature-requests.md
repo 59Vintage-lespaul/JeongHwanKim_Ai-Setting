@@ -29,7 +29,7 @@ source: pm-skills/pm-product-discovery/analyze-feature-requests
 - 고객 요구사항을 상품 기획에 반영할 때
 
 ## FPOF 컨텍스트
-- 이 스킬은 와키윌리의 고객 접점(무신사 리뷰, SNS 댓글, 자사몰 VOC)에서 수집된 피처 요청을 분석하여 시즌 기획에 반영하는 데 활용합니다
+- 이 스킬은 커버낫의 고객 접점(무신사 리뷰, SNS 댓글, 자사몰 VOC)에서 수집된 피처 요청을 분석하여 시즌 기획에 반영하는 데 활용합니다
 - 5대 경영목표 중 "브랜드 아이덴티티 정립", "히트상품 + IMC 강화" 달성을 위한 고객 중심 의사결정 도구
 - 관련 프리셋: brand.config.json (전략), personas.json (코어 타겟), categories.json (카테고리)
 
@@ -53,13 +53,13 @@ source: pm-skills/pm-product-discovery/analyze-feature-requests
 
 ### Step 2: 요청을 테마별로 분류
 관련 요청을 그룹핑하고 각 테마에 이름 부여:
-- 패션 컨텍스트 예: "사이즈 확장 요청", "IP 캐릭터 신규 활용", "소재 개선", "가격대 다양화"
+- 패션 컨텍스트 예: "사이즈 확장 요청", "시그니처 상품 신규 활용", "소재 개선", "가격대 다양화"
 
 ### Step 3: 전략 정합성 평가
 각 테마가 명시된 목표와 얼마나 잘 맞는지 평가:
-- 브랜드 DNA(Kitsch Street & IP Universe) 정합성
+- 브랜드 DNA(Borderless Casual & K-컬처) 정합성
 - 5대 경영목표 기여도
-- 코어 타겟(18~25세 트렌드리더) 니즈 부합
+- 코어 타겟(20~27세 트렌드리더) 니즈 부합
 
 ### Step 4: 상위 3개 피처 우선순위화
 4가지 기준으로 평가:
@@ -75,11 +75,11 @@ source: pm-skills/pm-product-discovery/analyze-feature-requests
 - 고위험 가정
 - 최소 노력으로 해당 가정을 테스트하는 방법
 
-### Step 6: 와키윌리 적용 필터링
-- 브랜드 DNA(Kitsch Street & IP Universe)와의 정합성
-- 코어 타겟(18~25세 트렌드리더) 요청의 비중 확인
+### Step 6: 커버낫 적용 필터링
+- 브랜드 DNA(Borderless Casual & K-컬처)와의 정합성
+- 코어 타겟(20~27세 트렌드리더) 요청의 비중 확인
 - 채널별(무신사, 자사몰, SNS) 요청 패턴 차이
-- IP 캐릭터 활용 관련 요청 하이라이트
+- 시그니처 상품 활용 관련 요청 하이라이트
 - 5대 경영목표와의 연결 매핑
 
 ## 산출물 포맷
@@ -128,7 +128,7 @@ source: pm-skills/pm-product-discovery/analyze-feature-requests
 - 고위험 가정:
 - 테스트 방법:
 
-## 와키윌리 적용 시사점
+## 커버낫 적용 시사점
 - 브랜드 DNA 정합성:
 - 채널별 요청 패턴:
 - IP 활용 기회:
@@ -140,7 +140,7 @@ source: pm-skills/pm-product-discovery/analyze-feature-requests
 - [ ] 각 테마의 전략 정합성 평가
 - [ ] 상위 3개 피처 우선순위화 및 근거 제시
 - [ ] 각 상위 피처의 고위험 가정 및 테스트 방법 명시
-- [ ] 와키윌리 브랜드 적용 필터링 완료
+- [ ] 커버낫 브랜드 적용 필터링 완료
 
 ## 체크리스트
 - [ ] brand.config.json의 전략 방향이 정합성 평가에 반영?

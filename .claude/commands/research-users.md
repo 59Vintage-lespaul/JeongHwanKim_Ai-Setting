@@ -3,14 +3,14 @@
 페르소나 구축, 사용자 세그멘테이션, 고객 여정 맵을 한 번에 실행합니다.
 
 ## 사용법
-`/research-users <리서치 데이터 또는 대상>` — 데이터를 생략하면 와키윌리 기존 페르소나 기반으로 심화 분석합니다.
+`/research-users <리서치 데이터 또는 대상>` — 데이터를 생략하면 커버낫 기존 페르소나 기반으로 심화 분석합니다.
 
 ## 절차
 
 ### Step 1: 리서치 인풋 수집
 1. `.fpof-state.json`에서 현재 시즌과 단계 확인
-2. `system/presets/wacky-willy/personas.json` 참조 — 기존 UNI/WOMAN 페르소나
-3. `system/presets/wacky-willy/channels.json` 참조 — 채널별 고객 접점
+2. `system/presets/covernat/personas.json` 참조 — 기존 UNI/WOMAN 페르소나
+3. `system/presets/covernat/channels.json` 참조 — 채널별 고객 접점
 4. 사용자에게 확인:
    - 보유 리서치 데이터 유형 (설문, 인터뷰, 리뷰, CS 데이터, 판매 데이터)
    - 이해하려는 것 (고객이 누구인지 / 어떻게 다른지 / 어디서 마찰이 발생하는지)

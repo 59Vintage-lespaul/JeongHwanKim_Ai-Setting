@@ -13,7 +13,7 @@
 ### Step 2: 정합성 체크 (Gap Detector)
 `system/skills/quality/gap-analysis.md` 참조:
 - 산출물이 기획 문서(Plan 단계 산출물)와 일치하는지 비교
-- 브랜드 프리셋(`system/presets/wacky-willy/`)과의 일관성 확인
+- 브랜드 프리셋(`system/presets/covernat/`)과의 일관성 확인
 - 카테고리별 Match Rate 산출
 
 ### Step 3: 결과 보고

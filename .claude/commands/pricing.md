@@ -9,8 +9,8 @@
 
 ### Step 1: 컨텍스트 파악
 1. `.fpof-state.json`에서 현재 시즌과 PDCA 단계 확인
-2. `system/presets/wacky-willy/categories.json` 참조 — 카테고리별 상품 전략
-3. `system/presets/wacky-willy/channels.json` 참조 — 채널별 매출 구조
+2. `system/presets/covernat/categories.json` 참조 — 카테고리별 상품 전략
+3. `system/presets/covernat/channels.json` 참조 — 채널별 매출 구조
 4. 사용자에게 확인:
    - 대상 상품/카테고리
    - 현재 가격 구조 (있는 경우)

@@ -15,7 +15,7 @@ triggers:
 presets:
   - visual-identity.json
   - categories.json
-  - ip-bible.json
+  - personas.json
 outputs:
   - "output/[시즌]/design/[아이템]-design-spec.md"
 ---
@@ -31,9 +31,9 @@ outputs:
 ## 사전 준비
 1. `output/[시즌]/design/[아이템]-moodboard.md` → 비주얼 방향 (필수 선행)
 2. `output/[시즌]/plan/line-sheet.md` → SKU 리스트, 아이템 정보
-3. `presets/wacky-willy/visual-identity.json` → 그래픽 스타일 가이드
-4. `presets/wacky-willy/categories.json` → 카테고리별 아이템 구조
-5. `presets/wacky-willy/ip-bible.json` → 캐릭터 활용 시 참조
+3. `presets/covernat/visual-identity.json` → 그래픽 스타일 가이드
+4. `presets/covernat/categories.json` → 카테고리별 아이템 구조
+5. `presets/covernat/personas.json` → 캐릭터 활용 시 참조
 
 ## 실행 절차
 
@@ -56,7 +56,7 @@ outputs:
 ### Step 4: 그래픽/프린트 개발
 - 위치: 가슴/등/소매/전면 등
 - 기법: 프린트/자수/와펜/패치/올오버
-- IP 캐릭터 활용 시: 캐릭터 ID, 포즈/변신, 그룹
+- 시그니처 상품 활용 시: 캐릭터 ID, 포즈/변신, 그룹
 - 그래픽 사이즈 (가로×세로 cm)
 
 ### Step 5: 도식화 텍스트 설명
@@ -95,7 +95,7 @@ outputs:
 | # | 컬러명 | 컬러코드 | 비고 |
 
 ## 그래픽/프린트
-| 위치 | 기법 | 사이즈 | IP캐릭터 | 설명 |
+| 위치 | 기법 | 사이즈 | 시그니처 상품 | 설명 |
 
 ## 도식화 설명
 ### 앞면
@@ -112,6 +112,6 @@ outputs:
 
 ## 체크리스트
 - [ ] 무드보드의 실루엣/소재/컬러 가이드와 일치하는가?
-- [ ] IP 캐릭터 사용 시 ip-bible.json의 설정을 준수하는가?
+- [ ] 시그니처 상품 사용 시 personas.json의 설정을 준수하는가?
 - [ ] 목표 원가율 내에서 실현 가능한 소재/디테일인가?
 - [ ] 도식화 설명이 생산자가 이해할 수 있을 만큼 구체적인가?

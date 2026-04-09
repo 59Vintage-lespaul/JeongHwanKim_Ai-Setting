@@ -9,7 +9,7 @@
 
 ### Step 1: 피드백 데이터 수집
 1. `.fpof-state.json`에서 현재 시즌과 단계 확인
-2. `system/presets/wacky-willy/personas.json` 참조 — 세그먼트 기준
+2. `system/presets/covernat/personas.json` 참조 — 세그먼트 기준
 3. 사용자에게 확인:
    - 피드백 유형 (리뷰 / CS 데이터 / 설문 / SNS 댓글 / NPS)
    - 세그먼트별 분석 필요 여부 (채널별 / 고객 등급별 / 지역별)

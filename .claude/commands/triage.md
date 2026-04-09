@@ -9,7 +9,7 @@
 
 ### Step 1: 기능 요청 수집
 1. `.fpof-state.json`에서 현재 시즌과 단계 확인
-2. `system/presets/wacky-willy/brand.config.json` 참조 — 전략 목표 (정렬 기준)
+2. `system/presets/covernat/brand.config.json` 참조 — 전략 목표 (정렬 기준)
 3. 입력 형식:
    - 텍스트 (줄 단위 요청 리스트)
    - CSV/엑셀 (요청자, 요청 내용, 날짜 등)

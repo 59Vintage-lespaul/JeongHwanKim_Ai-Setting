@@ -29,7 +29,7 @@ source: pm-skills/pm-product-discovery/summarize-interview
 - 인사이트 카드로 연결하여 지식 베이스에 축적할 때
 
 ## FPOF 컨텍스트
-- 이 스킬은 와키윌리 코어 타겟 인터뷰 결과를 구조화하여 시즌 기획에 반영하는 데 활용합니다
+- 이 스킬은 커버낫 코어 타겟 인터뷰 결과를 구조화하여 시즌 기획에 반영하는 데 활용합니다
 - 데이터 인텔리전스의 insight-archiving 스킬과 연계하여 브랜드 지식 베이스에 축적
 - 관련 프리셋: brand.config.json (전략), personas.json (코어 타겟), categories.json (카테고리)
 
@@ -54,9 +54,9 @@ source: pm-skills/pm-product-discovery/summarize-interview
 ### Step 3: 명확하고 간단한 언어 사용
 초등학생도 이해할 수 있는 수준의 명확하고 간단한 언어로 작성
 
-### Step 4: 와키윌리 적용 필터링
-- 코어 타겟(18~25세 트렌드리더) 관점에서의 인사이트 태깅
-- 브랜드 DNA(Kitsch Street & IP Universe) 관련 언급 하이라이트
+### Step 4: 커버낫 적용 필터링
+- 코어 타겟(20~27세 트렌드리더) 관점에서의 인사이트 태깅
+- 브랜드 DNA(Borderless Casual & K-컬처) 관련 언급 하이라이트
 - 채널(무신사, 자사몰 등) 관련 인사이트 분리
 - 5대 경영목표와 연결 가능한 인사이트 표시
 
@@ -90,7 +90,7 @@ source: pm-skills/pm-product-discovery/summarize-interview
 ## 액션 아이템
 - [날짜, 담당자, 액션]
 
-## 와키윌리 적용 시사점
+## 커버낫 적용 시사점
 - 코어 타겟 인사이트:
 - 브랜드 관련 인사이트:
 - 채널 관련 인사이트:
@@ -102,7 +102,7 @@ source: pm-skills/pm-product-discovery/summarize-interview
 - [ ] JTBD 기반 구조화 완성
 - [ ] 현재 솔루션의 좋은 점/문제점 분리
 - [ ] 핵심 인사이트 및 액션 아이템 도출
-- [ ] 와키윌리 브랜드 적용 필터링 완료
+- [ ] 커버낫 브랜드 적용 필터링 완료
 
 ## 체크리스트
 - [ ] personas.json의 코어 타겟 프로필과 인터뷰이 매칭?

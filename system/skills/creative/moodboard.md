@@ -14,7 +14,7 @@ triggers:
 presets:
   - visual-identity.json
   - brand.config.json
-  - ip-bible.json
+  - personas.json
 outputs:
   - "output/[시즌]/design/[아이템]-moodboard.md"
 ---
@@ -30,8 +30,8 @@ outputs:
 ## 사전 준비
 1. `output/[시즌]/plan/brand-strategy.md` → 시즌 테마, IP 활용 방향
 2. `output/[시즌]/plan/season-concept.md` → 키 컬러, 키 실루엣, 키 소재
-3. `presets/wacky-willy/visual-identity.json` → 브랜드 비주얼 가이드
-4. `presets/wacky-willy/ip-bible.json` → 캐릭터 비주얼/성격
+3. `presets/covernat/visual-identity.json` → 브랜드 비주얼 가이드
+4. `presets/covernat/personas.json` → 캐릭터 비주얼/성격
 
 ## 실행 절차
 
@@ -59,8 +59,8 @@ outputs:
 - 기장 트렌드 (크롭/롱/미디 등)
 - 카테고리별 실루엣 가이드
 
-### Step 5: 그래픽/IP 캐릭터 활용 무드
-IP 캐릭터와 그래픽 스타일을 무드로 정의한다.
+### Step 5: 그래픽/시그니처 상품 활용 무드
+시그니처 상품과 그래픽 스타일을 무드로 정의한다.
 - 캐릭터 활용 스타일: 리얼/SD/아이콘화/패턴화
 - 그래픽 기법: 프린트/자수/와펜/패치/올오버
 - 시즌 스토리와 연결된 캐릭터 장면/포즈
@@ -114,7 +114,7 @@ IP 캐릭터와 그래픽 스타일을 무드로 정의한다.
 - [ ] 사용자 승인
 
 ## 체크리스트
-- [ ] Kitsch Street 감성(과감한 컬러, 그래피티/두들, Pop Art)이 유지되는가?
+- [ ] Borderless Casual 감성(과감한 컬러, 그래피티/두들, Pop Art)이 유지되는가?
 - [ ] visual-identity.json의 시그니처 컬러와 조화로운가?
-- [ ] 18~25세 타겟이 공감하는 무드인가?
-- [ ] IP 캐릭터 활용이 자연스러운가?
+- [ ] 20~27세 타겟이 공감하는 무드인가?
+- [ ] 시그니처 상품 활용이 자연스러운가?

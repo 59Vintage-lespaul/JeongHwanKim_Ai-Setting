@@ -33,7 +33,7 @@ outputs:
 ## 사전 준비
 1. `output/[시즌]/check/sales-analysis.md` → 매출 분석 결과 (필수 선행)
 2. `knowledge/` → 기존 축적된 인사이트 (이전 시즌)
-3. `presets/wacky-willy/brand.config.json` → 경영목표와 연결
+3. `presets/covernat/brand.config.json` → 경영목표와 연결
 
 ## 성공 사례 분석 프레임워크
 ```

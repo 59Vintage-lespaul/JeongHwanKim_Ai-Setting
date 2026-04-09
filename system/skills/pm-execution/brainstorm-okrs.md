@@ -30,7 +30,7 @@ source: pm-skills/pm-execution/brainstorm-okrs
 - 효과적인 OKR 작성 방법 학습 시
 
 ## FPOF 컨텍스트
-- 와키윌리 5대 경영목표(브랜드 아이덴티티, 히트상품+IMC, QR 비중, 용품 라인업, 글로벌)와 OKR을 연결
+- 커버낫 5대 경영목표(브랜드 아이덴티티, 히트상품+IMC, QR 비중, 용품 라인업, 글로벌)와 OKR을 연결
 - `brand.config.json`의 비전/로드맵을 참조하여 전략 정합성 확보
 - `channels.json`의 채널별 매출/목표/성장률을 Key Result 수치 기준으로 활용
 
@@ -86,7 +86,7 @@ Key Results:
 - 3개 Key Results (구체적 지표 + 목표 수치)
 - 근거 (회사와 팀에 왜 중요한지)
 
-### Step 6: 와키윌리 적용 필터링
+### Step 6: 커버낫 적용 필터링
 - 각 OKR이 5대 경영목표 중 어떤 것과 연결되는지 매핑
 - Key Result 수치가 `channels.json`의 채널 목표/성장률과 정합하는지 확인
 - 패션 업계 특성(시즌 주기, 리드타임, 재고 회전율 등) 반영 여부 점검

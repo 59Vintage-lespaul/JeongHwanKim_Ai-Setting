@@ -33,7 +33,7 @@ outputs:
 4. `output/[시즌]/check/sales-analysis.md` → 매출 분석
 5. `output/[시즌]/check/gap-report.md` → 갭 분석 리포트
 6. `knowledge/insights/` → 도출된 인사이트
-7. `presets/wacky-willy/brand.config.json` → 경영목표
+7. `presets/covernat/brand.config.json` → 경영목표
 
 ## 실행 절차
 

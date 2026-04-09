@@ -29,8 +29,8 @@ outputs:
 
 ## 사전 준비
 1. `output/[시즌]/plan/season-concept.md` → MD 전략, 카테고리 믹스 (필수 선행)
-2. `presets/wacky-willy/categories.json` → 카테고리별 아이템 구조
-3. `presets/wacky-willy/channels.json` → 채널별 물량 배분 기준
+2. `presets/covernat/categories.json` → 카테고리별 아이템 구조
+3. `presets/covernat/channels.json` → 채널별 물량 배분 기준
 
 ## 실행 절차
 

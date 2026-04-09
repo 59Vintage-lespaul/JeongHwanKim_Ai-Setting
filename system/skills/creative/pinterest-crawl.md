@@ -33,7 +33,7 @@ outputs:
 
 이 스킬은 사용자가 아래와 같이 요청할 때 작동한다:
 - "도파민 드레싱 이미지 수집해줘"
-- "핀터레스트에서 키치 패션 검색해줘"
+- "핀터레스트에서 캐주얼 패션 검색해줘"
 - "볼꾸 레퍼런스 30장 모아줘"
 - "이거랑 비슷한 이미지 찾아줘" (이미지 첨부)
 - "수집한 이미지 AI 필터링 돌려줘"
@@ -71,7 +71,7 @@ outputs:
 - `lookbook`, `outfit`, `street snap` → 착장컷
 - `editorial`, `campaign` → 화보/광고컷
 - `2025`, `2026` → 최신 트렌드
-- `colorful`, `bold`, `vivid` → 와키윌리 무드 매칭
+- `colorful`, `bold`, `vivid` → 커버낫 무드 매칭
 
 **피해야 할 패턴:**
 - 브랜드명 단독 (`Celine shoes`) → 상품 판매 페이지만 나옴
@@ -209,7 +209,7 @@ python3 crawler.py --keyword "{키워드}" --count {수량} --headless 2>&1
 |--------|--------|
 | dopamine dressing | `dopamine-dressing/` |
 | 볼캡 꾸미기 | `bolcap-decorating/` |
-| kitsch street fashion | `kitsch-street-fashion/` |
+| borderless casual | `borderless-casual/` |
 
 한국어 키워드의 폴더명은 영문 음역 또는 의미 번역으로 만든다.
 영문+한국어 병렬 검색의 경우 하나의 폴더에 합친다.
@@ -256,10 +256,10 @@ python3 crawler.py --category brand_mood --headless 2>&1
 사용 가능한 카테고리:
 | 카테고리 | 설명 |
 |----------|------|
-| `brand_mood` | 키치 스트릿 전반 무드 |
+| `brand_mood` | 보더리스 캐주얼 무드 |
 | `character_ip` | 캐릭터·그래픽·IP 감성 |
 | `color_vivid` | 비비드 컬러 트렌드 |
-| `target_styling` | 18~25세 코어타겟 스타일링 |
+| `target_styling` | 20~27세 코어타겟 스타일링 |
 | `campaign_ref` | 캠페인·룩북 레퍼런스 |
 | `accessories` | 용품·악세서리 |
 | `visual_merch` | VM·매장 디스플레이 |

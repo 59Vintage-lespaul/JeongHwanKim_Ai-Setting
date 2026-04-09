@@ -97,9 +97,9 @@ source: pm-skills/pm-execution/create-prd
 ### Step 4: 접근 가능한 언어 사용
 초등학생도 이해할 수 있는 수준으로 작성. 전문 용어 회피. 명확하고 짧은 문장 사용.
 
-### Step 5: 와키윌리 적용 필터링
+### Step 5: 커버낫 적용 필터링
 - 시장 세그먼트에 `personas.json`의 UNI/WOMAN 페르소나 반영
-- 가치 제안에 와키윌리의 Kitsch Street & IP Universe 컨셉 연결
+- 가치 제안에 커버낫의 Borderless Casual & K-컬처 컨셉 연결
 - 출시 계획에 시즌 PDCA 사이클과의 타이밍 맞춤
 
 ## 산출물 포맷
@@ -128,7 +128,7 @@ source: pm-skills/pm-execution/create-prd
 - [ ] 각 섹션이 전체 전략에 연결되어 있는가?
 - [ ] 가정이 명확히 표시되어 검증 가능한가?
 - [ ] 초등학생도 이해할 수 있는 언어로 작성되었는가?
-- [ ] 와키윌리 브랜드 컨텍스트가 반영되었는가?
+- [ ] 커버낫 브랜드 컨텍스트가 반영되었는가?
 
 ---
 

@@ -27,7 +27,7 @@ outputs:
 
 > 무신사 발매판 API를 통해 브랜드별 신상품 발매 정보를 수집한다.
 > 발매일시·D-Day·가격·이미지를 포함한 엑셀을 생성하고,
-> 와키윌리 관점에서 시장 변화와 신규 유형 적용 제안을 제공한다.
+> 커버낫 관점에서 시장 변화와 신규 유형 적용 제안을 제공한다.
 
 ## 언제 사용
 
@@ -64,7 +64,7 @@ outputs:
       "multiSelect": false,
       "options": [
         {"label": "전체 (A)", "description": "남녀 통합"},
-        {"label": "여성 (F)", "description": "와키윌리 우먼스 타겟"},
+        {"label": "여성 (F)", "description": "커버낫 우먼스 타겟"},
         {"label": "남성 (M)", "description": "남성 발매"}
       ]
     },
@@ -129,7 +129,7 @@ python3 crawler.py --section-id 91 --gender A --sort latest --format xlsx
 
 ---
 
-## Step 4: 와키윌리 인사이트 (자동 분석)
+## Step 4: 커버낫 인사이트 (자동 분석)
 
 수집 데이터를 바탕으로 아래 3가지 관점의 인사이트를 생성한다.
 `brand.config.json`과 `categories.json` 프리셋을 반드시 참조한다.
@@ -155,17 +155,17 @@ python3 crawler.py --section-id 91 --gender A --sort latest --format xlsx
 - **발매 방식**: 선착순 vs 응모 방식 (상품 상세에서 확인 가능하면 포함)
 - **단독/한정 발매 패턴**: 무신사 플랫폼을 통한 독점 전략 브랜드
 
-### 4-3. 와키윌리 적용 제안
+### 4-3. 커버낫 적용 제안
 
 BTA 프레임워크 기반으로 구체적인 적용 포인트를 제안한다:
 
 ```
-[Accent] ← 발매 데이터에서 포착된 아이캐칭 요소 → 와키윌리 적용 가능성
+[Accent] ← 발매 데이터에서 포착된 아이캐칭 요소 → 커버낫 적용 가능성
 [Trend]  ← 시장에서 부상 중인 트렌드 유형 → 브랜드화된 방식으로 해석
 [Basic]  ← 재발매 요청이 많은 상품 유형 → 안정 매출 아이템 힌트
 ```
 
-제안은 와키윌리 DNA(Kitsch Street & IP Universe), 코어타겟(18~25세), 비전(K-컬처 기반 글로벌)을
+제안은 커버낫 DNA(Borderless Casual & K-컬처), 코어타겟(20~27세), 비전(K-컬처 기반 글로벌)을
 기준으로 필터링하여 구체적으로 작성한다.
 
 ---

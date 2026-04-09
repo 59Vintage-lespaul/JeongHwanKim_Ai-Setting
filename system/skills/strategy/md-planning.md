@@ -31,9 +31,9 @@ outputs:
 
 ## 사전 준비
 1. `output/[시즌]/plan/brand-strategy.md` → 시즌 테마, 경영목표 연결 (필수 선행)
-2. `presets/wacky-willy/categories.json` → 카테고리 트리, 상품 전략
-3. `presets/wacky-willy/channels.json` → 채널별 매출 목표
-4. `presets/wacky-willy/brand.config.json` → 5대 경영목표 KPI
+2. `presets/covernat/categories.json` → 카테고리 트리, 상품 전략
+3. `presets/covernat/channels.json` → 채널별 매출 목표
+4. `presets/covernat/brand.config.json` → 5대 경영목표 KPI
 5. `knowledge/` → 이전 시즌 히트/부진 상품 데이터
 
 ## 실행 절차
@@ -151,7 +151,7 @@ outputs:
 ### Kano 모델 적용 (패션 맥락)
 - **Must-be (기본):** 고객이 당연히 기대하는 품질/핏/소재 → 미충족 시 불만
 - **Performance (성능):** 더 좋으면 더 만족 (디자인 완성도, 컬러 선택지)
-- **Attractive (매력):** 없어도 불만 없지만 있으면 감동 (IP 캐릭터 히든 디테일, 한정판 요소)
+- **Attractive (매력):** 없어도 불만 없지만 있으면 감동 (시그니처 상품 히든 디테일, 한정판 요소)
 
 ### Opportunity Score 적용법
 1. personas.json의 코어 타겟에게 각 니즈의 중요도(Importance)와 현재 만족도(Satisfaction) 조사

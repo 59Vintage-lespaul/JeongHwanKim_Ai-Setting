@@ -3,14 +3,14 @@
 5가지 그로스 루프와 7가지 GTM 모션을 평가하여 지속가능한 성장 전략을 설계합니다.
 
 ## 사용법
-`/growth <성장 과제 또는 대상>` — 대상을 생략하면 와키윌리 현재 시즌 기준으로 분석합니다.
+`/growth <성장 과제 또는 대상>` — 대상을 생략하면 커버낫 현재 시즌 기준으로 분석합니다.
 
 ## 절차
 
 ### Step 1: 컨텍스트 파악
 1. `.fpof-state.json`에서 현재 시즌과 단계 확인
-2. `system/presets/wacky-willy/channels.json` 참조 — 채널별 매출/성장률
-3. `system/presets/wacky-willy/personas.json` 참조 — 타겟 고객 특성
+2. `system/presets/covernat/channels.json` 참조 — 채널별 매출/성장률
+3. `system/presets/covernat/personas.json` 참조 — 타겟 고객 특성
 4. 사용자에게 확인:
    - 현재 성장 지표 (고객 수, 매출, 성장률, 주요 채널)
    - 잘 되고 있는 것 / 안 되고 있는 것

@@ -27,7 +27,7 @@
 ## 절차
 
 1. `workspace/`에서 관련 산출물 수집
-2. `system/presets/wacky-willy/visual-identity.json`에서 브랜드 스타일 참조
+2. `system/presets/covernat/visual-identity.json`에서 브랜드 스타일 참조
 3. PDF 스킬을 사용하여 문서 생성:
    - 표지: 브랜드 로고 영역, 시즌명, 문서 제목, 날짜
    - 목차 자동 생성

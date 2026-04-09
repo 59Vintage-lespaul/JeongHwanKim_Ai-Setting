@@ -9,8 +9,8 @@
 
 ### Step 1: 디스커버리 컨텍스트 파악
 1. `.fpof-state.json`에서 현재 시즌과 단계 확인
-2. `system/presets/wacky-willy/brand.config.json` 참조 — 전략 방향
-3. `system/presets/wacky-willy/personas.json` 참조 — 타겟 고객
+2. `system/presets/covernat/brand.config.json` 참조 — 전략 방향
+3. `system/presets/covernat/personas.json` 참조 — 타겟 고객
 4. 기존 상품인지(continuous discovery) 신규인지(initial discovery) 판별
 5. 사용자에게 확인:
    - 탐색 대상 (상품 아이디어 / 기능 영역 / 기회 공간)

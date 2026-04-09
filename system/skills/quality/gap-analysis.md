@@ -28,8 +28,8 @@ outputs:
 ## 사전 준비
 1. `output/[시즌]/plan/` → 기획 산출물 전체
 2. `output/[시즌]/check/sales-analysis.md` → 실적 데이터
-3. `presets/wacky-willy/brand.config.json` → 경영목표 KPI
-4. `presets/wacky-willy/channels.json` → 채널별 목표
+3. `presets/covernat/brand.config.json` → 경영목표 KPI
+4. `presets/covernat/channels.json` → 채널별 목표
 
 ## 실행 절차
 

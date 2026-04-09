@@ -3,15 +3,15 @@
 비전부터 방어력까지 9개 섹션의 종합 전략 문서를 작성합니다.
 
 ## 사용법
-`/strategy-canvas <대상 브랜드 또는 상품>` — 대상을 생략하면 와키윌리 전체 브랜드 전략을 수립합니다.
+`/strategy-canvas <대상 브랜드 또는 상품>` — 대상을 생략하면 커버낫 전체 브랜드 전략을 수립합니다.
 
 ## 절차
 
 ### Step 1: 컨텍스트 파악
 1. `.fpof-state.json`에서 현재 시즌과 단계 확인
-2. `system/presets/wacky-willy/brand.config.json` 참조 — DNA, 비전, 포지셔닝
-3. `system/presets/wacky-willy/personas.json` 참조 — 타겟 세그먼트
-4. `system/presets/wacky-willy/categories.json` 참조 — 카테고리 전략
+2. `system/presets/covernat/brand.config.json` 참조 — DNA, 비전, 포지셔닝
+3. `system/presets/covernat/personas.json` 참조 — 타겟 세그먼트
+4. `system/presets/covernat/categories.json` 참조 — 카테고리 전략
 5. 사용자에게 확인:
    - 전략 대상 (브랜드 전체 / 특정 라인 / 신규 카테고리)
    - 현재 단계 (아이디어 / MVP / 성장 / 성숙)

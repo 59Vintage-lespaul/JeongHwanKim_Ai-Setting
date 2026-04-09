@@ -14,8 +14,8 @@ PM, 디자이너, 엔지니어 관점에서 아이디어 또는 실험을 브레
 
 ### Step 2: 컨텍스트 수집
 1. `.fpof-state.json`에서 현재 시즌과 단계 확인
-2. `system/presets/wacky-willy/brand.config.json` 참조 — 전략 방향
-3. `system/presets/wacky-willy/personas.json` 참조 — 타겟 고객
+2. `system/presets/covernat/brand.config.json` 참조 — 전략 방향
+3. `system/presets/covernat/personas.json` 참조 — 타겟 고객
 4. 사용자에게 확인:
    - 기존 상품: 현재 상품, 고객, 탐색 영역, 기존 시도, 제약 조건
    - 신규 상품: 컨셉, 타겟, 현재 대안, 가장 위험한 가설

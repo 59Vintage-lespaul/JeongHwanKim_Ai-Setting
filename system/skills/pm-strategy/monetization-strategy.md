@@ -32,7 +32,7 @@ source: pm-skills/pm-product-strategy/monetization-strategy
 - PDCA Plan 단계에서 사업 모델의 수익 구조를 정의할 때
 
 ## FPOF 컨텍스트
-- 이 스킬은 와키윌리 브랜드의 다양한 수익원 탐색 및 가격 전략 수립에 활용합니다
+- 이 스킬은 커버낫 브랜드의 다양한 수익원 탐색 및 가격 전략 수립에 활용합니다
 - 관련 프리셋: `brand.config.json`(경영목표, 매출 목표), `categories.json`(상품 가격대), `channels.json`(채널별 매출 구조)
 - 패션 브랜드의 수익화는 상품 판매 외에도 IP 라이선싱, 콜라보, 경험 판매 등 다양한 모델이 가능합니다
 
@@ -104,7 +104,7 @@ source: pm-skills/pm-product-strategy/monetization-strategy
 - 시즌/비시즌 가격 전략
 
 **2. IP 라이선싱 (IP Licensing)**
-- 키키 캐릭터 등 IP 자산의 라이선싱 수익
+- 씨빅 시그니처 등 IP 자산의 라이선싱 수익
 - 타 산업(식음료, 문구, 게임)과의 컬래버레이션
 
 **3. 한정판/콜라보레이션 (Limited Edition/Collaboration)**
@@ -133,19 +133,19 @@ source: pm-skills/pm-product-strategy/monetization-strategy
 5. 1~2개 우선 테스트 전략 추천
 6. 테스트 로드맵 및 성공 기준 설정
 
-### Step 5: 와키윌리 적용 필터링
-분석 결과를 와키윌리 브랜드 렌즈로 필터링합니다.
+### Step 5: 커버낫 적용 필터링
+분석 결과를 커버낫 브랜드 렌즈로 필터링합니다.
 
-- 브랜드 DNA(Kitsch Street & IP Universe)와의 정합성
+- 브랜드 DNA(Borderless Casual & K-컬처)와의 정합성
   - 수익화 전략이 브랜드 이미지를 강화하는가?
-  - IP 유니버스를 활용한 독자적 수익원이 있는가?
-- 코어 타겟(18~25세 트렌드리더)에 대한 시사점
+  - K-컬처를 활용한 독자적 수익원이 있는가?
+- 코어 타겟(20~27세 트렌드리더)에 대한 시사점
   - 이 세대의 구매 행태와 지불 의향에 적합한가?
 - 5대 경영목표와의 연결점:
   - 히트상품 + IMC 강화 → 한정판/콜라보 모델
   - 용품 라인업 경쟁력 → 카테고리 확장 수익
   - 글로벌 대응 → 해외 채널 수익 구조
-- IP 캐릭터 활용 가능성
+- 시그니처 상품 활용 가능성
   - 캐릭터 라이선싱이 핵심 수익 다각화 전략
 
 ## 산출물 포맷
@@ -182,7 +182,7 @@ source: pm-skills/pm-product-strategy/monetization-strategy
 - Phase 1 (0~3개월):
 - Phase 2 (3~6개월):
 
-## 와키윌리 시사점
+## 커버낫 시사점
 - 브랜드 적용:
 - 경영목표 연결:
 - 다음 액션:
@@ -193,7 +193,7 @@ source: pm-skills/pm-product-strategy/monetization-strategy
 - [ ] 각 전략별 타겟 적합성, 리스크, 유닛 이코노믹스 분석
 - [ ] 검증 실험 설계 완료
 - [ ] 우선순위 및 추천 전략 선정
-- [ ] 와키윌리 브랜드 적용 필터링 완료
+- [ ] 커버낫 브랜드 적용 필터링 완료
 - [ ] 경영목표 연결 확인
 
 ## 체크리스트

@@ -20,16 +20,16 @@ source: pm-skills/pm-product-discovery/interview-script
 
 # 고객 인터뷰 스크립트 (Customer Interview Script)
 
-> 코어 타겟(18~25세) 고객 인터뷰를 위한 구조화된 스크립트 -- The Mom Test 방법론 기반, JTBD 탐색 질문, 웜업-핵심 탐색-마무리 섹션 포함
+> 코어 타겟(20~27세) 고객 인터뷰를 위한 구조화된 스크립트 -- The Mom Test 방법론 기반, JTBD 탐색 질문, 웜업-핵심 탐색-마무리 섹션 포함
 
 ## 언제 사용
-- 코어 타겟(18~25세 트렌드리더) 고객 인터뷰를 준비할 때
+- 코어 타겟(20~27세 트렌드리더) 고객 인터뷰를 준비할 때
 - 시즌 기획을 위한 디스커버리 리서치를 계획할 때
 - 인터뷰 가이드를 체계적으로 작성할 때
 - 고객 니즈/페인 포인트를 정성적으로 탐색할 때
 
 ## FPOF 컨텍스트
-- 이 스킬은 와키윌리의 코어 타겟 고객 인터뷰 준비에 활용합니다
+- 이 스킬은 커버낫의 코어 타겟 고객 인터뷰 준비에 활용합니다
 - Continuous Discovery의 Stage 1 (Explore)에서 고객 직접 접점을 통한 인사이트 수집 도구
 - 관련 프리셋: brand.config.json (전략), personas.json (코어 타겟), categories.json (카테고리)
 
@@ -122,9 +122,9 @@ source: pm-skills/pm-product-discovery/interview-script
 후속 조치: [다음 단계]
 ```
 
-### Step 5: 와키윌리 적용 필터링
-- 코어 타겟(18~25세 트렌드리더)에 맞는 인터뷰 톤과 언어
-- 키치 스트릿 / IP 유니버스 관련 탐색 질문 포함
+### Step 5: 커버낫 적용 필터링
+- 코어 타겟(20~27세 트렌드리더)에 맞는 인터뷰 톤과 언어
+- 보더리스 캐주얼 / K-컬처 관련 탐색 질문 포함
 - 무신사, 인스타그램 등 코어 타겟 접점 채널 관련 질문
 - 브랜드 인지/선호도 관련 자연스러운 탐색 (피칭 없이)
 
@@ -160,7 +160,7 @@ source: pm-skills/pm-product-discovery/interview-script
 ## 노트 테이킹 템플릿
 [템플릿]
 
-## 와키윌리 적용 시사점
+## 커버낫 적용 시사점
 - 코어 타겟 맞춤:
 - 브랜드 관련 탐색:
 - 채널 관련 탐색:
@@ -172,7 +172,7 @@ source: pm-skills/pm-product-discovery/interview-script
 - [ ] The Mom Test 원칙 적용
 - [ ] JTBD 기반 탐색 질문 포함
 - [ ] 노트 테이킹 템플릿 포함
-- [ ] 와키윌리 브랜드 적용 필터링 완료
+- [ ] 커버낫 브랜드 적용 필터링 완료
 
 ## 체크리스트
 - [ ] personas.json의 코어 타겟 프로필이 반영?

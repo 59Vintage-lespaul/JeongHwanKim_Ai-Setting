@@ -9,8 +9,8 @@
 
 ### Step 1: 런칭 컨텍스트 파악
 1. `.fpof-state.json`에서 현재 시즌과 PDCA 단계 확인
-2. `system/presets/wacky-willy/channels.json` 참조 — 채널별 전략
-3. `system/presets/wacky-willy/personas.json` 참조 — 타겟 고객
+2. `system/presets/covernat/channels.json` 참조 — 채널별 전략
+3. `system/presets/covernat/personas.json` 참조 — 타겟 고객
 4. 사용자에게 확인:
    - 런칭 대상 (신상품 / 신규 라인 / 시즌 컬렉션 / 채널 확장)
    - 현재 단계 (기획 / 프리런칭 / 런칭 임박 / 런칭 후 최적화)

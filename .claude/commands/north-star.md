@@ -3,14 +3,14 @@
 상품이 전달하는 핵심 가치를 포착하는 North Star Metric과 인풋 메트릭을 정의합니다.
 
 ## 사용법
-`/north-star <대상 상품 또는 비즈니스>` — 대상을 생략하면 와키윌리 브랜드 기준으로 정의합니다.
+`/north-star <대상 상품 또는 비즈니스>` — 대상을 생략하면 커버낫 브랜드 기준으로 정의합니다.
 
 ## 절차
 
 ### Step 1: 상품 이해
 1. `.fpof-state.json`에서 현재 시즌과 단계 확인
-2. `system/presets/wacky-willy/brand.config.json` 참조 — 비전, 경영목표
-3. `system/presets/wacky-willy/channels.json` 참조 — 매출 구조
+2. `system/presets/covernat/brand.config.json` 참조 — 비전, 경영목표
+3. `system/presets/covernat/channels.json` 참조 — 매출 구조
 4. 사용자에게 확인:
    - 대상 상품/비즈니스
    - 비즈니스 모델 (거래 / 구독 / 광고 / 마켓플레이스)

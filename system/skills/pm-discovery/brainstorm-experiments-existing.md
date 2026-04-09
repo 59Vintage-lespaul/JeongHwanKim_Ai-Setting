@@ -29,7 +29,7 @@ source: pm-skills/pm-product-discovery/brainstorm-experiments-existing
 - 피처 아이디어를 풀 구현 전에 저비용으로 테스트할 때
 
 ## FPOF 컨텍스트
-- 이 스킬은 와키윌리의 기존 상품 라인(유니/우먼스/용품)의 개선 및 최적화를 위한 실험 설계에 활용합니다
+- 이 스킬은 커버낫의 기존 상품 라인(유니/우먼스/용품)의 개선 및 최적화를 위한 실험 설계에 활용합니다
 - 5대 경영목표 중 "히트상품 + IMC 강화", "QR 비중 확대" 달성을 위한 데이터 기반 의사결정 도구
 - 관련 프리셋: brand.config.json (전략), personas.json (코어 타겟), categories.json (카테고리)
 
@@ -73,9 +73,9 @@ source: pm-skills/pm-product-discovery/brainstorm-experiments-existing
 - **지표 (Metric)**: 무엇을 측정할 것인가?
 - **성공 기준 (Success Threshold)**: 올바른 경우 예상 값
 
-### Step 5: 와키윌리 적용 필터링
-- 브랜드 DNA(Kitsch Street & IP Universe)와의 정합성
-- 코어 타겟(18~25세 트렌드리더) 행동 패턴에 맞는 실험 방법인가?
+### Step 5: 커버낫 적용 필터링
+- 브랜드 DNA(Borderless Casual & K-컬처)와의 정합성
+- 코어 타겟(20~27세 트렌드리더) 행동 패턴에 맞는 실험 방법인가?
 - 채널별(자사몰, 무신사 등) 특성을 반영한 실험인가?
 - 실험 결과가 시즌 의사결정에 활용 가능한가?
 
@@ -109,7 +109,7 @@ source: pm-skills/pm-product-discovery/brainstorm-experiments-existing
 - 성공 기준:
 - 리스크 완화:
 
-## 와키윌리 적용 시사점
+## 커버낫 적용 시사점
 - 브랜드 DNA 정합성:
 - 채널 전략 연결:
 - 시즌 의사결정 활용:
@@ -120,7 +120,7 @@ source: pm-skills/pm-product-discovery/brainstorm-experiments-existing
 - [ ] 가정별 저비용 실험 방법 제안
 - [ ] 각 실험의 가설-방법-지표-성공 기준 명시
 - [ ] 리스크 완화 전략 포함
-- [ ] 와키윌리 브랜드 적용 필터링 완료
+- [ ] 커버낫 브랜드 적용 필터링 완료
 
 ## 체크리스트
 - [ ] brand.config.json의 전략 방향과 정합성?

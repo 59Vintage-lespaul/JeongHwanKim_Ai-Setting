@@ -3,15 +3,15 @@
 JTBD 기반 6파트 템플릿으로 명확한 가치 제안을 설계합니다.
 
 ## 사용법
-`/value-prop <대상 상품 또는 브랜드>` — 대상을 생략하면 와키윌리 코어 타겟 기준으로 작성합니다.
+`/value-prop <대상 상품 또는 브랜드>` — 대상을 생략하면 커버낫 코어 타겟 기준으로 작성합니다.
 
 ## 절차
 
 ### Step 1: 컨텍스트 파악
 1. `.fpof-state.json`에서 현재 시즌과 단계 확인
-2. `system/presets/wacky-willy/personas.json` 참조 — 페르소나, JTBD
-3. `system/presets/wacky-willy/brand.config.json` 참조 — 포지셔닝, 차별화
-4. `system/presets/wacky-willy/tone-manner.json` 참조 — 브랜드 보이스
+2. `system/presets/covernat/personas.json` 참조 — 페르소나, JTBD
+3. `system/presets/covernat/brand.config.json` 참조 — 포지셔닝, 차별화
+4. `system/presets/covernat/tone-manner.json` 참조 — 브랜드 보이스
 5. 사용자에게 확인:
    - 대상 상품/브랜드
    - 타겟 세그먼트 (복수 세그먼트 시 각각 작성)

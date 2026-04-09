@@ -3,14 +3,14 @@
 특정 경쟁사 대비 세일즈/마케팅용 배틀카드를 작성합니다.
 
 ## 사용법
-`/battlecard <와키윌리 vs 경쟁사명>` — 경쟁사를 지정하여 1:1 비교 배틀카드를 생성합니다.
+`/battlecard <커버낫 vs 경쟁사명>` — 경쟁사를 지정하여 1:1 비교 배틀카드를 생성합니다.
 
 ## 절차
 
 ### Step 1: 매치업 파악
 1. `.fpof-state.json`에서 현재 시즌과 단계 확인
-2. `system/presets/wacky-willy/brand.config.json` 참조 — 포지셔닝, 차별점
-3. `system/presets/wacky-willy/channels.json` 참조 — 채널별 경쟁 상황
+2. `system/presets/covernat/brand.config.json` 참조 — 포지셔닝, 차별점
+3. `system/presets/covernat/channels.json` 참조 — 채널별 경쟁 상황
 4. 사용자에게 확인:
    - 비교 대상 경쟁사
    - 고객 유형 (어떤 고객이 두 브랜드를 비교하는지)

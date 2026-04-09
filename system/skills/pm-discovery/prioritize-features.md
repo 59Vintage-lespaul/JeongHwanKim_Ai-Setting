@@ -29,7 +29,7 @@ source: pm-skills/pm-product-discovery/prioritize-features
 - 스코프 결정이 필요할 때
 
 ## FPOF 컨텍스트
-- 이 스킬은 와키윌리의 시즌 기획에서 SKU, 마케팅 채널, 상품 아이디어의 우선순위를 결정하는 데 활용합니다
+- 이 스킬은 커버낫의 시즌 기획에서 SKU, 마케팅 채널, 상품 아이디어의 우선순위를 결정하는 데 활용합니다
 - 5대 경영목표 중 "히트상품 + IMC 강화" 달성을 위한 전략적 스코프 결정 도구
 - 관련 프리셋: brand.config.json (전략), personas.json (코어 타겟), categories.json (카테고리)
 
@@ -72,9 +72,9 @@ source: pm-skills/pm-product-discovery/prioritize-features
 
 ### Step 4: 우선순위 테이블 제시
 
-### Step 5: 와키윌리 적용 필터링
-- 브랜드 DNA(Kitsch Street & IP Universe)와의 정합성 가중치
-- 코어 타겟(18~25세 트렌드리더) Impact 가중치
+### Step 5: 커버낫 적용 필터링
+- 브랜드 DNA(Borderless Casual & K-컬처)와의 정합성 가중치
+- 코어 타겟(20~27세 트렌드리더) Impact 가중치
 - 5대 경영목표별 기여도 매핑
 - 채널별(자사몰, 무신사, 글로벌) 우선순위 차이
 
@@ -116,7 +116,7 @@ source: pm-skills/pm-product-discovery/prioritize-features
 |---------|---------------|
 | | |
 
-## 와키윌리 적용 시사점
+## 커버낫 적용 시사점
 - 브랜드 DNA 가중치:
 - 경영목표 기여도:
 - 채널별 우선순위 차이:
@@ -127,7 +127,7 @@ source: pm-skills/pm-product-discovery/prioritize-features
 - [ ] 상위 5개 추천 및 순위 근거 제시
 - [ ] 비우선순위화 항목 및 근거 명시
 - [ ] 트레이드오프 분석 포함
-- [ ] 와키윌리 브랜드 적용 필터링 완료
+- [ ] 커버낫 브랜드 적용 필터링 완료
 
 ## 체크리스트
 - [ ] brand.config.json의 전략 방향이 Strategic Alignment에 반영?

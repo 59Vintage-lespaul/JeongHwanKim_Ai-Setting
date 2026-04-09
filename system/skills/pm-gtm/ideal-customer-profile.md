@@ -23,10 +23,10 @@ source: pm-skills/pm-go-to-market/ideal-customer-profile
 
 # 이상적 고객 프로필 (ICP)
 
-> Jobs to Be Done 이론 기반 고객 프로파일링 -- 와키윌리의 코어 타겟을 더 세밀하게 정의 (personas.json 기반 확장)
+> Jobs to Be Done 이론 기반 고객 프로파일링 -- 커버낫의 코어 타겟을 더 세밀하게 정의 (personas.json 기반 확장)
 
 ## 언제 사용
-- 와키윌리의 ICP를 리서치/서베이 데이터 기반으로 정의할 때
+- 커버낫의 ICP를 리서치/서베이 데이터 기반으로 정의할 때
 - 고부가가치 고객 세그먼트를 타겟팅할 때
 - 고객 성공 및 확장 패턴을 분석할 때
 - 세일즈 및 마케팅 리소스 우선순위를 결정할 때
@@ -34,7 +34,7 @@ source: pm-skills/pm-go-to-market/ideal-customer-profile
 - 타겟 시장 정의를 정제할 때
 
 ## FPOF 컨텍스트
-- 이 스킬은 와키윌리 브랜드의 코어 타겟을 personas.json 기반으로 확장/정밀화하는 데 활용합니다
+- 이 스킬은 커버낫 브랜드의 코어 타겟을 personas.json 기반으로 확장/정밀화하는 데 활용합니다
 - 5대 경영목표 중 "브랜드 아이덴티티 정립"의 코어타겟 매출 비중, 인지도/선호도 향상에 직결
 - 관련 프리셋: personas.json (UNI/WOMAN 페르소나), brand.config.json (비전/전략), channels.json (채널), categories.json (카테고리)
 
@@ -75,7 +75,7 @@ source: pm-skills/pm-go-to-market/ideal-customer-profile
 - 잡 완료의 성공 지표
 
 ### 니즈와 페인 포인트
-와키윌리 제품이 해결하는 문제:
+커버낫 제품이 해결하는 문제:
 - 구체적인 페인 포인트
 - 현재 대안/우회 방법과 한계
 - 생산성/결과물에 미치는 영향
@@ -117,7 +117,7 @@ source: pm-skills/pm-go-to-market/ideal-customer-profile
 
 ### Step 4: 행동 패턴 식별
 의사결정 및 소비 패턴 매핑:
-- 와키윌리를 어떻게 발견했는가 (채널)
+- 커버낫을 어떻게 발견했는가 (채널)
 - 평가 과정 및 타임라인
 - 구매 의사결정의 핵심 요인
 - 구매 과정의 장애물
@@ -145,9 +145,9 @@ source: pm-skills/pm-go-to-market/ideal-customer-profile
 - 회의감이나 주저함
 - 솔루션의 성공 기준
 
-### Step 7: 와키윌리 적용 필터링
-- 브랜드 DNA(Kitsch Street & IP Universe)와의 정합성
-- 코어 타겟(18~25세 트렌드리더)에 대한 시사점
+### Step 7: 커버낫 적용 필터링
+- 브랜드 DNA(Borderless Casual & K-컬처)와의 정합성
+- 코어 타겟(20~27세 트렌드리더)에 대한 시사점
 - 5대 경영목표와의 연결점 (특히 "브랜드 아이덴티티 정립")
 - personas.json 기존 페르소나와의 비교/확장 포인트
 
@@ -188,7 +188,7 @@ source: pm-skills/pm-go-to-market/ideal-customer-profile
 ## ICP 중 최적 세그먼트
 [ideal-of-the-ideal]
 
-## 와키윌리 적용 시사점
+## 커버낫 적용 시사점
 - personas.json 기존 페르소나와 비교:
 - 브랜드 DNA 정합성:
 - 5대 경영목표 연결:
@@ -199,7 +199,7 @@ source: pm-skills/pm-go-to-market/ideal-customer-profile
 - [ ] 정량/정성 데이터 모두 활용
 - [ ] GTM 시사점 및 메시징 방향 포함
 - [ ] 비적합 기준 정의
-- [ ] 와키윌리 브랜드 적용 필터링 완료
+- [ ] 커버낫 브랜드 적용 필터링 완료
 
 ## 체크리스트
 - [ ] personas.json의 기존 페르소나와 정합성/확장성?

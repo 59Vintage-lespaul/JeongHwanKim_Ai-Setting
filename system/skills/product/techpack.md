@@ -28,7 +28,7 @@ outputs:
 ## 사전 준비
 1. `output/[시즌]/design/[아이템]-design-spec.md` → 디자인 상세 (필수 선행)
 2. `output/[시즌]/design/[아이템]-costing.md` → 원가 검증 결과
-3. `presets/wacky-willy/categories.json` → 카테고리별 사양 기준
+3. `presets/covernat/categories.json` → 카테고리별 사양 기준
 
 ## 테크팩 8대 섹션
 

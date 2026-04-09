@@ -30,7 +30,7 @@ source: pm-skills/pm-product-discovery/brainstorm-ideas-existing
 - 시즌 기획 중 기존 라인 확장/개선 아이디어 도출
 
 ## FPOF 컨텍스트
-- 이 스킬은 와키윌리의 기존 상품 라인(유니/우먼스/용품) 개선 및 확장 아이디어 발굴에 활용합니다
+- 이 스킬은 커버낫의 기존 상품 라인(유니/우먼스/용품) 개선 및 확장 아이디어 발굴에 활용합니다
 - 시즌 기획, IP 콜라보, 카테고리 확장 아이디어 도출
 - 관련 프리셋: categories.json (카테고리 전략), personas.json (타겟), brand.config.json (전략)
 
@@ -89,11 +89,11 @@ source: pm-skills/pm-product-discovery/brainstorm-ideas-existing
 - 선정 이유 (근거)
 - 검증해야 할 핵심 가정
 
-### Step 5: 와키윌리 적용 필터링
-- 브랜드 DNA(Kitsch Street & IP Universe)와의 정합성
-- 코어 타겟(18~25세 트렌드리더)에 대한 시사점
+### Step 5: 커버낫 적용 필터링
+- 브랜드 DNA(Borderless Casual & K-컬처)와의 정합성
+- 코어 타겟(20~27세 트렌드리더)에 대한 시사점
 - 5대 경영목표와의 연결점
-- IP 캐릭터(키키 등) 활용 가능성
+- 시그니처 상품(씨빅 등) 활용 가능성
 
 ## 산출물 포맷
 
@@ -123,7 +123,7 @@ source: pm-skills/pm-product-discovery/brainstorm-ideas-existing
 | 순위 | 아이디어 | 관점 | 선정 이유 | 핵심 가정 |
 |------|---------|------|----------|----------|
 
-## 와키윌리 적용 시사점
+## 커버낫 적용 시사점
 - 브랜드 DNA 정합성:
 - IP 활용 기회:
 ```
@@ -132,7 +132,7 @@ source: pm-skills/pm-product-discovery/brainstorm-ideas-existing
 - [ ] 3개 관점에서 각 5개씩 15개 아이디어 생성
 - [ ] 상위 5개 우선순위화 및 근거 제시
 - [ ] 각 우선순위 아이디어의 핵심 가정 식별
-- [ ] 와키윌리 브랜드 적용 필터링 완료
+- [ ] 커버낫 브랜드 적용 필터링 완료
 
 ## 체크리스트
 - [ ] brand.config.json의 전략 방향과 정합성?

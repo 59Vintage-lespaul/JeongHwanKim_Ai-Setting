@@ -29,7 +29,7 @@ source: pm-skills/pm-product-discovery/identify-assumptions-existing
 - 기존 카테고리 리뉴얼/확장 전 리스크 점검
 
 ## FPOF 컨텍스트
-- 이 스킬은 와키윌리의 기존 상품 라인(유니/우먼스/용품)에 대한 시즌 기획 가정을 체계적으로 점검하는 데 활용합니다
+- 이 스킬은 커버낫의 기존 상품 라인(유니/우먼스/용품)에 대한 시즌 기획 가정을 체계적으로 점검하는 데 활용합니다
 - 5대 경영목표 달성을 위한 기획안의 리스크를 사전에 식별하여 실패 확률을 낮추는 도구
 - 관련 프리셋: brand.config.json (전략), personas.json (코어 타겟), categories.json (카테고리)
 
@@ -72,9 +72,9 @@ source: pm-skills/pm-product-discovery/identify-assumptions-existing
 - 확신도 (High/Medium/Low)
 - 테스트 제안 방법
 
-### Step 4: 와키윌리 적용 필터링
-- 브랜드 DNA(Kitsch Street & IP Universe)와의 정합성 리스크
-- 코어 타겟(18~25세 트렌드리더) 가정의 타당성
+### Step 4: 커버낫 적용 필터링
+- 브랜드 DNA(Borderless Casual & K-컬처)와의 정합성 리스크
+- 코어 타겟(20~27세 트렌드리더) 가정의 타당성
 - 5대 경영목표와의 충돌 가능성
 - 채널별(자사몰, 무신사, 글로벌) 리스크 차이
 
@@ -126,7 +126,7 @@ source: pm-skills/pm-product-discovery/identify-assumptions-existing
 |------|--------|--------|-----------|
 | | | | |
 
-## 와키윌리 적용 시사점
+## 커버낫 적용 시사점
 - 브랜드 DNA 정합성 리스크:
 - 코어 타겟 가정 타당성:
 - 채널별 리스크:
@@ -137,7 +137,7 @@ source: pm-skills/pm-product-discovery/identify-assumptions-existing
 - [ ] 4대 리스크 영역별 가정 식별
 - [ ] 각 가정의 확신도 및 테스트 방법 명시
 - [ ] 건설적 톤 유지 (아이디어 강화 목적)
-- [ ] 와키윌리 브랜드 적용 필터링 완료
+- [ ] 커버낫 브랜드 적용 필터링 완료
 
 ## 체크리스트
 - [ ] brand.config.json의 전략 방향과 정합성?

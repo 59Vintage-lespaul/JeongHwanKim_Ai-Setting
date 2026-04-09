@@ -13,7 +13,7 @@
 
 #### Step 1: 리서치 목표 파악
 1. `.fpof-state.json`에서 현재 시즌과 단계 확인
-2. `system/presets/wacky-willy/personas.json` 참조 — 타겟 페르소나
+2. `system/presets/covernat/personas.json` 참조 — 타겟 페르소나
 3. 사용자에게 확인:
    - 알고 싶은 것 (구체적 리서치 질문)
    - 인터뷰 대상 (세그먼트, 역할)

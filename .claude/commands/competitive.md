@@ -3,14 +3,14 @@
 경쟁사를 식별하고 강약점을 비교 분석하여 차별화 기회를 도출합니다.
 
 ## 사용법
-`/competitive <경쟁사명 또는 시장>` — 대상을 생략하면 와키윌리 경쟁 브랜드 기준으로 분석합니다.
+`/competitive <경쟁사명 또는 시장>` — 대상을 생략하면 커버낫 경쟁 브랜드 기준으로 분석합니다.
 
 ## 절차
 
 ### Step 1: 컨텍스트 파악
 1. `.fpof-state.json`에서 현재 시즌과 단계 확인
-2. `system/presets/wacky-willy/brand.config.json` 참조 — 포지셔닝, 경쟁 구도
-3. `system/presets/wacky-willy/categories.json` 참조 — 카테고리별 경쟁 환경
+2. `system/presets/covernat/brand.config.json` 참조 — 포지셔닝, 경쟁 구도
+3. `system/presets/covernat/categories.json` 참조 — 카테고리별 경쟁 환경
 4. 사용자에게 확인:
    - 분석 대상 (특정 경쟁사 / 카테고리 전체 / 시장 전체)
    - 분석 렌즈 (기능 비교 / 포지셔닝 / 가격 / GTM)

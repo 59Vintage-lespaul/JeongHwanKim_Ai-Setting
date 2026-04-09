@@ -23,7 +23,7 @@ source: pm-skills/pm-go-to-market/beachhead-segment
 
 # 비치헤드 세그먼트 선정
 
-> Geoffrey Moore의 "Crossing the Chasm" 비치헤드 전략을 FPOF 패션 하우스 컨텍스트에 맞게 커스터마이징 -- 와키윌리의 글로벌 확장 시 첫 번째 공략 시장 선정에 활용
+> Geoffrey Moore의 "Crossing the Chasm" 비치헤드 전략을 FPOF 패션 하우스 컨텍스트에 맞게 커스터마이징 -- 커버낫의 글로벌 확장 시 첫 번째 공략 시장 선정에 활용
 
 ## 언제 사용
 - 새로운 시장(글로벌/국내)에 진출할 첫 번째 타겟 세그먼트를 선정할 때
@@ -32,7 +32,7 @@ source: pm-skills/pm-go-to-market/beachhead-segment
 - GTM 가정을 초기 얼리어답터로 검증할 때
 
 ## FPOF 컨텍스트
-- 이 스킬은 와키윌리 브랜드의 글로벌 확장(5대 경영목표 중 "글로벌 대응 강화") 및 신규 카테고리 런칭에 활용합니다
+- 이 스킬은 커버낫 브랜드의 글로벌 확장(5대 경영목표 중 "글로벌 대응 강화") 및 신규 카테고리 런칭에 활용합니다
 - 관련 프리셋: brand.config.json (비전/로드맵), personas.json (코어 타겟), channels.json (6개 채널), categories.json (카테고리 전략)
 
 ## 사전 준비
@@ -62,7 +62,7 @@ source: pm-skills/pm-go-to-market/beachhead-segment
 3~18개월 내 해당 세그먼트의 60~70%를 점유할 수 있는가?
 - 세그먼트가 충분히 크되 과포화되지 않은 상태
 - 경쟁이 제한적이거나 차별화가 용이
-- 와키윌리만의 경쟁 우위가 명확
+- 커버낫만의 경쟁 우위가 명확
 - 유통/접근 경로에 대한 독점적 이점
 
 ### 4. 레퍼럴 잠재력 (Referral Potential)
@@ -77,7 +77,7 @@ source: pm-skills/pm-go-to-market/beachhead-segment
 ### Step 1: 잠재 세그먼트 리스트업
 가능한 모든 타겟 세그먼트를 브레인스토밍:
 - 지역별 (국내 도시, 해외 주요 시장)
-- 연령/라이프스타일 (코어 18~25 vs 확장 타겟)
+- 연령/라이프스타일 (코어 20~27 vs 확장 타겟)
 - 채널별 (무신사, 자사몰, 글로벌 플랫폼)
 - 카테고리별 (유니/우먼스/용품)
 - 고객 성숙도 (트렌드리더 vs 매스)
@@ -105,7 +105,7 @@ source: pm-skills/pm-go-to-market/beachhead-segment
 현실적 시장 점유율 잠재력 평가:
 - TAM (Total Addressable Market) 규모
 - 경쟁 환경과 포지셔닝
-- 와키윌리의 차별화 요소 (Kitsch Street, IP Universe)
+- 커버낫의 차별화 요소 (Borderless Casual, K-컬처)
 - 유통 접근성 (채널 전략)
 - 소요 시간과 리소스
 - 시장 성장세와 모멘텀
@@ -126,11 +126,11 @@ source: pm-skills/pm-go-to-market/beachhead-segment
 - 인접 확장을 위한 최적 레퍼런스
 - 가장 열정적인 초기 고객 코호트
 
-### Step 7: 와키윌리 적용 필터링
-- 브랜드 DNA(Kitsch Street & IP Universe)와의 정합성
-- 코어 타겟(18~25세 트렌드리더)에 대한 시사점
+### Step 7: 커버낫 적용 필터링
+- 브랜드 DNA(Borderless Casual & K-컬처)와의 정합성
+- 코어 타겟(20~27세 트렌드리더)에 대한 시사점
 - 5대 경영목표와의 연결점 (특히 "글로벌 대응 강화", "브랜드 아이덴티티 정립")
-- IP 캐릭터(키키 등)의 활용 가능성
+- 시그니처 상품(씨빅 등)의 활용 가능성
 
 ## 산출물 포맷
 
@@ -171,7 +171,7 @@ source: pm-skills/pm-go-to-market/beachhead-segment
 ## 비치헤드 이후 확장 로드맵
 [중장기 확장 전략]
 
-## 와키윌리 적용 시사점
+## 커버낫 적용 시사점
 - 브랜드 DNA 정합성:
 - 코어 타겟 연관성:
 - 5대 경영목표 연결:
@@ -182,7 +182,7 @@ source: pm-skills/pm-go-to-market/beachhead-segment
 - [ ] 1차 비치헤드 세그먼트 추천 및 근거 제시
 - [ ] 90일 고객 획득 계획 수립
 - [ ] 비치헤드 이후 확장 로드맵 포함
-- [ ] 와키윌리 브랜드 적용 필터링 완료
+- [ ] 커버낫 브랜드 적용 필터링 완료
 
 ## 체크리스트
 - [ ] brand.config.json의 글로벌 전략 방향과 정합성?

@@ -29,7 +29,7 @@ source: pm-skills/pm-execution/retro
 - Start/Stop/Continue, 4Ls, Sailboat 등 회고 포맷 활용 시
 
 ## FPOF 컨텍스트
-- 와키윌리 시즌 사이클(PDCA) 종료 후 Check 단계에서 실행
+- 커버낫 시즌 사이클(PDCA) 종료 후 Check 단계에서 실행
 - `brand.config.json`의 5대 경영목표 달성 여부를 회고 기준으로 활용
 - 시즌 산출물(트렌드 브리프, 라인시트, IMC 전략 등) 완성도를 성과 지표로 참조
 
@@ -86,7 +86,7 @@ source: pm-skills/pm-execution/retro
 - 각각 구체적이고, 담당자 지정 가능하며, 측정 가능해야 함
 - 이전 회고 액션이 있다면 완료 여부 참조
 
-### Step 6: 와키윌리 적용 필터링
+### Step 6: 커버낫 적용 필터링
 - 액션 아이템이 5대 경영목표 중 어떤 것과 연결되는지 매핑
 - 다음 시즌 PDCA Plan 단계에 반영할 개선점 명시
 - 패션 업계 특성(시즌 주기, 리드타임, 샘플 일정 등) 반영 여부 점검

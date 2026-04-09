@@ -9,7 +9,7 @@
 
 ### Step 1: 컨텍스트 수집
 1. `.fpof-state.json`에서 현재 시즌과 단계 확인
-2. `system/presets/wacky-willy/brand.config.json` 참조 — 5대 경영목표, 로드맵
+2. `system/presets/covernat/brand.config.json` 참조 — 5대 경영목표, 로드맵
 3. 사용자에게 확인:
    - OKR 대상 팀/영역
    - 기간 (분기 / 시즌 / 연간)

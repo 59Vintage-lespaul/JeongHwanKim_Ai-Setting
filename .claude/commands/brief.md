@@ -9,7 +9,7 @@
 
 1. `.fpof-state.json`에서 현재 시즌과 PDCA 단계 확인
 2. 해당 산출물의 스킬 파일(`system/skills/` 하위)을 읽어 작성 절차와 필수 항목 파악
-3. 관련 프리셋 JSON 파일(`system/presets/wacky-willy/`)을 참조하여 브랜드 일관성 확보
+3. 관련 프리셋 JSON 파일(`system/presets/covernat/`)을 참조하여 브랜드 일관성 확보
 4. `workspace/[프로젝트]/` 에 산출물 파일 생성
    - 파일명 규칙: `[PDCA단계]_[내용].확장자` (예: `plan_trend-brief.md`, `design_moodboard.md`)
    - 시즌 전체 문서는 `_season/` 폴더에, 아이템별 문서는 아이템명 폴더에 저장

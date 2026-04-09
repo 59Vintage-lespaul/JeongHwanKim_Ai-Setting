@@ -31,7 +31,7 @@ source: pm-skills/pm-execution/dummy-dataset
 ## FPOF 컨텍스트
 - `categories.json`의 유니/우먼스/용품 카테고리 구조를 데이터 스키마에 반영
 - `channels.json`의 6개 채널(매출/목표/성장률)을 현실적인 데이터 분포에 활용
-- 와키윌리 브랜드 특성(18~25세 타겟, IP 캐릭터, 시즌 주기)을 데이터 패턴에 반영
+- 커버낫 브랜드 특성(20~27세 타겟, 시그니처 상품, 시즌 주기)을 데이터 패턴에 반영
 
 ## 사전 준비
 - `.fpof-state.json`에서 현재 시즌/단계 확인
@@ -62,7 +62,7 @@ CSV, JSON, SQL INSERT, Python 스크립트 중 선택한다.
 ### Step 7: 데이터 생성 또는 스크립트 작성
 실행 가능한 결과물을 생성한다.
 
-### Step 8: 와키윌리 적용 필터링
+### Step 8: 커버낫 적용 필터링
 - 카테고리 분포가 `categories.json`의 상품 전략과 정합하는지 확인
 - 채널별 매출 비중이 `channels.json`의 목표/성장률과 정합하는지 확인
 - 시즌성(SS/FW) 패턴이 패션 업계 현실에 맞는지 점검
@@ -76,9 +76,9 @@ import random
 
 # Configuration
 ROWS = 100
-FILENAME = "wacky_willy_sales.csv"
+FILENAME = "covernat_sales.csv"
 
-# 와키윌리 채널/카테고리 기반 설정
+# 커버낫 채널/카테고리 기반 설정
 channels = ["자사몰", "무신사", "29CM", "W컨셉", "백화점", "글로벌"]
 categories = ["UNI 상의", "UNI 하의", "WOMAN 원피스", "용품"]
 

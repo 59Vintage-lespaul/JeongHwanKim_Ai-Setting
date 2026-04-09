@@ -30,9 +30,9 @@ outputs:
 - PDCA Check 단계 진입 시
 
 ## 사전 준비
-1. `presets/wacky-willy/channels.json` → 채널별 목표 매출
-2. `presets/wacky-willy/brand.config.json` → 5대 경영목표 KPI 기준
-3. `presets/wacky-willy/personas.json` → 고객 세그먼트 기준
+1. `presets/covernat/channels.json` → 채널별 목표 매출
+2. `presets/covernat/brand.config.json` → 5대 경영목표 KPI 기준
+3. `presets/covernat/personas.json` → 고객 세그먼트 기준
 4. `output/[시즌]/plan/season-concept.md` → 기획 대비 실적 비교 기준
 5. 사용자 제공 매출 데이터
 
@@ -77,7 +77,7 @@ channels.json의 6개 채널별 목표 대비 실적 비교
 **대시보드 구조:**
 ```
 ┌─────────────────────────────────────────────┐
-│  NORTH STAR: [와키윌리 NSM] — [현재 값]       │
+│  NORTH STAR: [커버낫 NSM] — [현재 값]       │
 │  추이: [↑/↓ X% vs 전기]                      │
 ├──────────────────┬──────────────────────────┤
 │  Input Metric 1  │  Input Metric 2          │
@@ -117,7 +117,7 @@ channels.json의 6개 채널별 목표 대비 실적 비교
 ### Step 6: 고객 분석 (선택)
 - RFM 분석, 코호트 분석
 - 신규 vs 재구매 비율
-- 코어타겟(18~25세) vs 비타겟 비중
+- 코어타겟(20~27세) vs 비타겟 비중
 
 ## 산출물 포맷
 
@@ -139,13 +139,13 @@ channels.json의 6개 채널별 목표 대비 실적 비교
 ```
 
 ### Step 7: North Star Metric 정의 (PM-Skills 통합)
-와키윌리의 비즈니스 게임을 분류하고 North Star Metric을 정의한다.
+커버낫의 비즈니스 게임을 분류하고 North Star Metric을 정의한다.
 
 **비즈니스 게임 분류:**
 - **Attention Game:** 고객이 제품에 얼마나 시간을 쏟는가? (예: TikTok, Spotify)
 - **Transaction Game:** 고객과 플랫폼 간 거래가 얼마나 발생하는가? (예: Amazon, Uber)
 - **Productivity Game:** 고객이 목표를 얼마나 효율적으로 달성하는가? (예: Canva, Notion)
-→ 와키윌리는 **Transaction Game** (패션 커머스) + **Attention Game** (IP 기반 팬덤) 하이브리드
+→ 커버낫은 **Transaction Game** (패션 커머스) + **Attention Game** (IP 기반 팬덤) 하이브리드
 
 **NSM 후보 및 7대 기준 검증:**
 | 기준 | NSM 후보 1 | NSM 후보 2 | NSM 후보 3 |

@@ -57,7 +57,7 @@
 `system/skills/pm-execution/release-notes.md` 참조:
 - 기술 언어 → 사용자 혜택으로 번역
 - New Features / Improvements / Bug Fixes 분류
-- `system/presets/wacky-willy/tone-manner.json` 참조하여 브랜드 보이스 적용
+- `system/presets/covernat/tone-manner.json` 참조하여 브랜드 보이스 적용
 
 #### Step 3: 산출물 저장
 산출물을 `workspace/_season/do_release-notes.md`에 저장한다.

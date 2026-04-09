@@ -13,7 +13,7 @@ triggers:
   - 비주얼 검수해줘
 presets:
   - visual-identity.json
-  - ip-bible.json
+  - personas.json
 outputs:
   - "output/[시즌]/design/[아이템]-visual/"
 ---
@@ -29,8 +29,8 @@ outputs:
 ## 사전 준비
 1. `output/[시즌]/design/[아이템]-design-spec.md` → 디자인 상세 (필수 선행)
 2. `output/[시즌]/design/[아이템]-moodboard.md` → 비주얼 톤/무드
-3. `presets/wacky-willy/visual-identity.json` → 브랜드 비주얼 스타일
-4. `presets/wacky-willy/ip-bible.json` → 캐릭터 비주얼 참조
+3. `presets/covernat/visual-identity.json` → 브랜드 비주얼 스타일
+4. `presets/covernat/personas.json` → 캐릭터 비주얼 참조
 
 ## 실행 절차
 
@@ -50,13 +50,13 @@ outputs:
 - 스타일: 무드보드의 감성 키워드
 - 배경: 유형별 배경 설정
 - 라이팅: 자연광/스튜디오/무드 조명
-- 브랜드 톤: Kitsch Street, Pop Art, Doodle/Graffiti 감성
+- 브랜드 톤: Borderless Casual, Pop Art, Doodle/Graffiti 감성
 
 ### Step 3: 이미지 생성 & 검수
 - [ ] visual-identity.json의 컬러 팔레트가 정확히 반영되었는가?
-- [ ] Kitsch Street 감성이 유지되고 있는가?
-- [ ] IP 캐릭터 사용 시 ip-bible.json의 외형/성격 설정을 따르는가?
-- [ ] 18~25세 타겟이 공감하는 스타일링인가?
+- [ ] Borderless Casual 감성이 유지되고 있는가?
+- [ ] 시그니처 상품 사용 시 personas.json의 외형/성격 설정을 따르는가?
+- [ ] 20~27세 타겟이 공감하는 스타일링인가?
 - [ ] 의류 디테일이 디자인 스펙과 일치하는가?
 
 ### Step 4: 채널별 최적화
@@ -97,7 +97,7 @@ outputs:
 
 ## 체크리스트
 - [ ] 브랜드 컬러 팔레트 정확히 반영?
-- [ ] Kitsch Street 감성 유지?
-- [ ] IP 캐릭터 설정 준수?
+- [ ] Borderless Casual 감성 유지?
+- [ ] 시그니처 상품 설정 준수?
 - [ ] 타겟 연령대 공감 가능?
 - [ ] 디자인 스펙과 일치?

@@ -29,7 +29,7 @@ source: pm-skills/pm-product-discovery/prioritize-assumptions
 - 시즌 기획의 핵심 가정을 체계적으로 관리할 때
 
 ## FPOF 컨텍스트
-- 이 스킬은 와키윌리의 시즌 기획에서 식별된 가정들의 우선순위를 Impact x Risk 매트릭스로 결정하는 데 활용합니다
+- 이 스킬은 커버낫의 시즌 기획에서 식별된 가정들의 우선순위를 Impact x Risk 매트릭스로 결정하는 데 활용합니다
 - identify-assumptions-existing/new 스킬의 후속 단계로 활용
 - 관련 프리셋: brand.config.json (전략), personas.json (코어 타겟), categories.json (카테고리)
 
@@ -72,9 +72,9 @@ source: pm-skills/pm-product-discovery/prioritize-assumptions
 ### Step 4: 우선순위 결과 정리
 매트릭스 또는 우선순위 테이블로 제시
 
-### Step 5: 와키윌리 적용 필터링
+### Step 5: 커버낫 적용 필터링
 - 5대 경영목표 기준으로 Impact 가중치 조정
-- 코어 타겟(18~25세 트렌드리더) 영향 범위 평가
+- 코어 타겟(20~27세 트렌드리더) 영향 범위 평가
 - 시즌 타임라인 내 테스트 가능 여부 확인
 - 채널별 리스크 차이 반영
 
@@ -116,7 +116,7 @@ source: pm-skills/pm-product-discovery/prioritize-assumptions
 - 지표:
 - 성공 기준:
 
-## 와키윌리 적용 시사점
+## 커버낫 적용 시사점
 - 경영목표 기준 가중치:
 - 시즌 타임라인 적합성:
 - 채널별 리스크 차이:
@@ -127,7 +127,7 @@ source: pm-skills/pm-product-discovery/prioritize-assumptions
 - [ ] 4분면 매트릭스 분류 완료
 - [ ] High Impact, High Risk 가정에 대한 실험 설계
 - [ ] 우선순위 결과 테이블/매트릭스 제시
-- [ ] 와키윌리 브랜드 적용 필터링 완료
+- [ ] 커버낫 브랜드 적용 필터링 완료
 
 ## 체크리스트
 - [ ] brand.config.json의 전략 방향이 Impact 평가에 반영?

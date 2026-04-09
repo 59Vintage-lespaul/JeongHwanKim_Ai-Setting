@@ -29,7 +29,7 @@ source: pm-skills/pm-product-discovery/identify-assumptions-new
 - 신규 벤처/사업의 가정을 평가할 때
 
 ## FPOF 컨텍스트
-- 이 스킬은 와키윌리의 신규 사업 영역(글로벌 진출, 신규 카테고리, 새 채널)에 대한 포괄적 리스크 식별에 활용합니다
+- 이 스킬은 커버낫의 신규 사업 영역(글로벌 진출, 신규 카테고리, 새 채널)에 대한 포괄적 리스크 식별에 활용합니다
 - 5대 경영목표 중 "글로벌 대응 강화", "용품 라인업 경쟁력" 등 신규 영역 목표 달성의 리스크 관리 도구
 - 관련 프리셋: brand.config.json (전략), personas.json (코어 타겟), categories.json (카테고리)
 
@@ -98,9 +98,9 @@ source: pm-skills/pm-product-discovery/identify-assumptions-new
 ### Step 3: 가정별 확신도 평가 및 테스트 제안
 각 가정에 대해 확신도(High/Medium/Low)를 평가하고 테스트 방법을 제안
 
-### Step 4: 와키윌리 적용 필터링
-- 브랜드 DNA(Kitsch Street & IP Universe)의 글로벌 통용성
-- 코어 타겟(18~25세 트렌드리더)의 현지 시장 존재 여부
+### Step 4: 커버낫 적용 필터링
+- 브랜드 DNA(Borderless Casual & K-컬처)의 글로벌 통용성
+- 코어 타겟(20~27세 트렌드리더)의 현지 시장 존재 여부
 - K-컬처 기반 글로벌 문화 브랜드 비전과의 정합성
 - 5대 경영목표 중 "글로벌 대응 강화"와의 직접 연결
 
@@ -138,7 +138,7 @@ source: pm-skills/pm-product-discovery/identify-assumptions-new
 | 전략 & 목표 | | | |
 | 팀 | | | |
 
-## 와키윌리 적용 시사점
+## 커버낫 적용 시사점
 - 글로벌 통용성:
 - K-컬처 연결:
 - 시즌 전략 연결:
@@ -148,7 +148,7 @@ source: pm-skills/pm-product-discovery/identify-assumptions-new
 - [ ] 세 가지 관점(PM, 디자이너, 엔지니어)에서 실패 가능성 분석
 - [ ] 8대 리스크 카테고리 모두 커버
 - [ ] 각 가정의 확신도 및 테스트 방법 명시
-- [ ] 와키윌리 브랜드 적용 필터링 완료
+- [ ] 커버낫 브랜드 적용 필터링 완료
 
 ## 체크리스트
 - [ ] brand.config.json의 전략 방향(특히 글로벌)과 정합성?

@@ -15,7 +15,7 @@ triggers:
 presets:
   - visual-identity.json
   - tone-manner.json
-  - ip-bible.json
+  - personas.json
 outputs:
   - "output/[시즌]/do/[상품]-content-plan.md"
 ---
@@ -31,15 +31,15 @@ outputs:
 ## 사전 준비
 1. `output/[시즌]/do/campaign-brief.md` → 캠페인 방향, 3단계 로드맵
 2. `output/[시즌]/design/[아이템]-moodboard.md` → 시즌 비주얼 톤
-3. `presets/wacky-willy/visual-identity.json` → 브랜드 비주얼 가이드
-4. `presets/wacky-willy/tone-manner.json` → 브랜드 톤
-5. `presets/wacky-willy/ip-bible.json` → 캐릭터 활용 시
+3. `presets/covernat/visual-identity.json` → 브랜드 비주얼 가이드
+4. `presets/covernat/tone-manner.json` → 브랜드 톤
+5. `presets/covernat/personas.json` → 캐릭터 활용 시
 
 ## 실행 절차
 
 ### Step 1: 화보 촬영 기획
 - 컨셉: 시즌 테마와 연결된 비주얼 스토리
-- 모델: 뮤즈 지젤 / 일반 모델 / 인플루언서
+- 모델: 앰버서더(추영우·TXT 수빈·최윤지) / 일반 모델 / 인플루언서
 - 로케이션: 스튜디오 / 야외 / 특수 장소
 - 스타일링 방향: 단품 / 코디네이트 / 레이어드
 - 컷 리스트: 전신/반신/디테일/무드 각 몇 컷
@@ -101,4 +101,4 @@ outputs:
 - [ ] visual-identity.json의 비주얼 스타일과 일관성?
 - [ ] 캠페인 브리프의 3단계에 맞는 콘텐츠 배분?
 - [ ] 코어 타겟이 소비하는 콘텐츠 포맷인가?
-- [ ] IP 캐릭터 활용 시 ip-bible.json 참조?
+- [ ] 시그니처 상품 활용 시 personas.json 참조?
