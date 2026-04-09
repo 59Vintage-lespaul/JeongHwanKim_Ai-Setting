@@ -1,0 +1,1396 @@
+"""
+용품 주간판매 대시보드 생성기 v4
+Usage: python generate_dashboard.py <excel_path> [--out <output_dir>] [--date YYYY-MM-DD]
+"""
+
+import sys, json, argparse
+from datetime import date
+from collections import defaultdict
+from pathlib import Path
+
+try:
+    import openpyxl
+except ImportError:
+    print("openpyxl 설치 필요: python -m pip install openpyxl"); sys.exit(1)
+
+SCRIPT_DIR   = Path(__file__).parent
+SNAPSHOT_DIR = SCRIPT_DIR / "snapshots"
+SNAPSHOT_DIR.mkdir(exist_ok=True)
+REPO_ROOT    = SCRIPT_DIR.parent.parent
+DEFAULT_OUT  = REPO_ROOT / "workspace" / "26SS" / "dashboard"
+
+ITEM_NAMES = {
+    "CA":"모자","BK":"버킷햇","BN":"비니",
+    "BP":"백팩","CB":"크로스백","SB":"숄더백","SG":"슬링백",
+    "TB":"토트백","MB":"메신저백","BG":"가방(기타)","BT":"보틀백","EC":"에코백","WA":"지갑",
+    "SD":"샌들","SE":"슬리퍼","SN":"신발",
+    "SK":"양말","GV":"장갑","MU":"머플러","JW":"쥬얼리","SM":"스마트액세서리","TC":"기타액세서리","DG":"애견용품",
+}
+GROUPS = {
+    "CAP":   ["CA","BK","BN"],
+    "BAG":   ["BP","CB","SB","SG","TB","MB","BG","BT","EC","WA"],
+    "SHOES": ["SD","SE","SN"],
+    "ACC":   ["SK","GV","MU","JW","SM","TC","DG"],
+}
+GROUP_LABELS  = {"CAP":"모자·헤드웨어","BAG":"가방","SHOES":"신발","ACC":"액세서리"}
+ITEM_TO_GROUP = {it: g for g, its in GROUPS.items() for it in its}
+BRAND_ORDER   = ["커버낫","와키윌리","리(LEE)"]
+BRAND_LABELS  = {"커버낫":"커버낫","와키윌리":"와키윌리","리(LEE)":"리"}
+VIEW_KEYS     = ["종합","커버낫","와키윌리","리(LEE)"]
+SUMMARY_SEASONS = ["25SS","25FW","26SS"]
+MATRIX_SEASONS  = {"26SS"}
+ALARM_SEASONS   = {"25FW","26SS"}
+
+COL = dict(
+    brand=2, season=6, item_code=8, item_name=9, list_price=13,
+    order_qty=21, period_in_qty=26, total_in_qty=31,
+    period_sale_qty=36, period_sale_amt=37,
+    period_first_amt=38,   # 기간 최초판매금액 (할인 전)
+    period_net_amt=41,     # 기간 실판매금액 (할인 후 실제)
+    total_sale_qty=42, total_sale_amt=43,
+    total_net_amt=47,      # 누계 실판매금액
+    logistics_stock=49, store_stock=53, total_stock=58,
+)
+
+def si(v):
+    try: return int(v) if v else 0
+    except: return 0
+def sf(v):
+    try: return float(v) if v else 0.0
+    except: return 0.0
+def stpct(sale, inc):
+    if inc <= 0: return None
+    return round(min(sale / inc * 100, 100.0), 1)
+def nb(b):
+    if not b: return None
+    b = str(b).strip()
+    return "리(LEE)" if b in ("리(LEE)","리 (LEE)","리") else b
+def itype(code):
+    code = str(code) if code else ""
+    return code[6:8] if len(code) >= 8 else "??"
+
+def infer_season(code):
+    """품번 5~6번째 자리(0-indexed 4~5)로 시즌 추론 — 시즌 칸이 비었을 때 fallback.
+    01·02 → SS, 03·04 → FW. 연도는 3~4번째 자리(0-indexed 2~3)에서 읽음."""
+    if len(code) < 6: return ""
+    year = code[2:4]
+    sc   = code[4:6]
+    if sc in ("01", "02"): return f"{year}SS"
+    if sc in ("03", "04"): return f"{year}FW"
+    return ""
+
+def load_sheet(ws):
+    rows = ws.iter_rows(values_only=True)
+    next(rows); next(rows)
+    skus = []
+    for row in rows:
+        brand = nb(row[COL["brand"]])
+        if not brand or brand not in BRAND_ORDER: continue
+        code = str(row[COL["item_code"]] or "")
+        if len(code) < 8: continue
+        it = itype(code)
+        if it not in ITEM_TO_GROUP: continue  # 어패럴·기타 품목 제외
+        raw_season = str(row[COL["season"]] or "").strip()
+        season = raw_season if raw_season else infer_season(code)
+        skus.append({
+            "brand": brand, "season": season,
+            "item_code": code[:10], "item_name": str(row[COL["item_name"]] or "").strip(),
+            "item_type": it, "group": ITEM_TO_GROUP.get(it,"기타"),
+            "list_price": si(row[COL["list_price"]]), "order_qty": si(row[COL["order_qty"]]),
+            "period_in_qty": si(row[COL["period_in_qty"]]), "total_in_qty": si(row[COL["total_in_qty"]]),
+            "period_sale_qty": si(row[COL["period_sale_qty"]]), "period_sale_amt": sf(row[COL["period_sale_amt"]]),
+            "period_first_amt": sf(row[COL["period_first_amt"]]),
+            "period_net_amt":   sf(row[COL["period_net_amt"]]),
+            "total_sale_qty": si(row[COL["total_sale_qty"]]), "total_sale_amt": sf(row[COL["total_sale_amt"]]),
+            "total_net_amt": sf(row[COL["total_net_amt"]]),
+            "logistics_stock": si(row[COL["logistics_stock"]]), "store_stock": si(row[COL["store_stock"]]),
+            "total_stock": si(row[COL["total_stock"]]),
+        })
+    return skus
+
+def aggregate(skus):
+    agg = defaultdict(lambda: dict(
+        brand="",season="",item_code="",item_name="",item_type="",group="",list_price=0,
+        order_qty=0,period_in_qty=0,total_in_qty=0,
+        period_sale_qty=0,period_sale_amt=0.0,
+        period_first_amt=0.0,period_net_amt=0.0,
+        total_sale_qty=0,total_sale_amt=0.0,total_net_amt=0.0,
+        logistics_stock=0,store_stock=0,total_stock=0,
+    ))
+    num = ["order_qty","period_in_qty","total_in_qty","period_sale_qty","period_sale_amt",
+           "period_first_amt","period_net_amt",
+           "total_sale_qty","total_sale_amt","total_net_amt",
+           "logistics_stock","store_stock","total_stock"]
+    for s in skus:
+        k = (s["brand"],s["season"],s["item_code"])
+        d = agg[k]
+        d.update({f: s[f] for f in ("brand","season","item_code","item_name","item_type","group")})
+        d["list_price"] = s["list_price"] or d["list_price"]
+        for f in num: d[f] += s[f]
+    result = list(agg.values())
+    for d in result: d["st"] = stpct(d["total_sale_qty"], d["total_in_qty"])
+    return result
+
+def save_snapshot(items, ref_date):
+    snap = {"date": ref_date, "items": {
+        f"{d['brand']}|{d['season']}|{d['item_code']}": {"period_sale_qty": d["period_sale_qty"]}
+        for d in items
+    }}
+    (SNAPSHOT_DIR / f"snapshot_{ref_date}.json").write_text(
+        json.dumps(snap, ensure_ascii=False, indent=2), encoding="utf-8")
+
+def load_prev_snaps(cur_date, n=2):
+    snaps = sorted(SNAPSHOT_DIR.glob("snapshot_*.json"), reverse=True)
+    res = []
+    for s in snaps:
+        d = s.stem.replace("snapshot_","")
+        if d != cur_date:
+            res.append(json.loads(s.read_text(encoding="utf-8")))
+            if len(res) >= n: break
+    return res
+
+# ── 계산 ──────────────────────────────────────────────────
+def fil_b(items, brand): return items if brand == "종합" else [d for d in items if d["brand"] == brand]
+def fil_s(items, seasons): return [d for d in items if d["season"] in seasons]
+
+def compute_summary(items):
+    result = {}
+    for s in SUMMARY_SEASONS:
+        result[s] = {}
+        for b in BRAND_ORDER:
+            fil = [d for d in items if d["brand"] == b and d["season"] == s]
+            if not fil: result[s][b] = None; continue
+            ts, ti = sum(d["total_sale_qty"] for d in fil), sum(d["total_in_qty"] for d in fil)
+            result[s][b] = {
+                "label": BRAND_LABELS.get(b, b),
+                "period_qty": sum(d["period_sale_qty"] for d in fil),
+                "period_amt": round(sum(d["period_sale_amt"] for d in fil)),
+                "total_sale": ts, "total_in": ti,
+                "total_stock": sum(d["total_stock"] for d in fil),
+                "st": stpct(ts, ti),
+            }
+    return result
+
+def _agg_group(items, seasons=None):
+    d = defaultdict(lambda: {"period_qty":0,"period_amt":0.0,"total_sale":0,"total_in":0})
+    for it in items:
+        if seasons and it["season"] not in seasons: continue
+        d[it["group"]]["period_qty"]  += it["period_sale_qty"]
+        d[it["group"]]["period_amt"]  += it["period_net_amt"]   # 실판매금액 기준
+        d[it["group"]]["total_sale"]  += it["total_sale_qty"]
+        d[it["group"]]["total_in"]    += it["total_in_qty"]
+    return d
+
+def _agg_type(items, seasons=None):
+    d = defaultdict(lambda: {"period_qty":0,"period_amt":0.0,"total_sale":0,"total_in":0})
+    for it in items:
+        if seasons and it["season"] not in seasons: continue
+        d[it["item_type"]]["period_qty"]  += it["period_sale_qty"]
+        d[it["item_type"]]["period_amt"]  += it["period_net_amt"]   # 실판매금액 기준
+        d[it["item_type"]]["total_sale"]  += it["total_sale_qty"]
+        d[it["item_type"]]["total_in"]    += it["total_in_qty"]
+    return d
+
+def _qty_chart(cd, pd_, keys, lbl):
+    labels, cur, prev = [], [], []
+    for k in keys:
+        c, p = cd.get(k,{"period_qty":0}), pd_.get(k,{"period_qty":0})
+        if c["period_qty"] == 0 and p["period_qty"] == 0: continue
+        labels.append(lbl(k)); cur.append(c["period_qty"]); prev.append(p["period_qty"])
+    return {"labels": labels, "cur": cur, "prev": prev}
+
+def _amt_chart(cd, pd_, keys, lbl):
+    """실판매금액 YoY 차트 데이터 — 만원 단위"""
+    labels, cur, prev = [], [], []
+    for k in keys:
+        c, p = cd.get(k,{"period_amt":0.0}), pd_.get(k,{"period_amt":0.0})
+        ca, pa = round(c["period_amt"]/10000), round(p["period_amt"]/10000)
+        if ca == 0 and pa == 0: continue
+        labels.append(lbl(k)); cur.append(ca); prev.append(pa)
+    return {"labels": labels, "cur": cur, "prev": prev}
+
+def compute_chart(ic, ip):
+    gc26=_agg_group(ic,{"26SS"}); gp26=_agg_group(ip,{"25SS"})
+    gcA =_agg_group(ic,{"26SS","25FW"}); gpA=_agg_group(ip,{"25SS","24FW"})
+    tc26=_agg_type(ic,{"26SS"}); tp26=_agg_type(ip,{"25SS"})
+    tcA =_agg_type(ic,{"26SS","25FW"}); tpA=_agg_type(ip,{"25SS","24FW"})
+    gk=list(GROUPS.keys())
+    ak=sorted(set(list(tcA.keys())+list(tpA.keys())))
+    gl=lambda k: GROUP_LABELS[k]; tl=lambda k: ITEM_NAMES.get(k,k)
+    return {
+        "qty_26ss": {"group":_qty_chart(gc26,gp26,gk,gl), "type":_qty_chart(tc26,tp26,ak,tl)},
+        "qty_all":  {"group":_qty_chart(gcA,gpA,gk,gl),   "type":_qty_chart(tcA,tpA,ak,tl)},
+        "amt_26ss": {"group":_amt_chart(gc26,gp26,gk,gl), "type":_amt_chart(tc26,tp26,ak,tl)},
+        "amt_all":  {"group":_amt_chart(gcA,gpA,gk,gl),   "type":_amt_chart(tcA,tpA,ak,tl)},
+    }
+
+def compute_matrix(items):
+    mat = defaultdict(lambda: defaultdict(lambda: {"qty":0,"total_sale":0,"total_in":0}))
+    for d in fil_s(items, MATRIX_SEASONS):
+        mat[d["group"]][d["brand"]]["qty"]        += d["period_sale_qty"]
+        mat[d["group"]][d["brand"]]["total_sale"] += d["total_sale_qty"]
+        mat[d["group"]][d["brand"]]["total_in"]   += d["total_in_qty"]
+    result = {}
+    for g in GROUPS:
+        result[g] = {}
+        for b in BRAND_ORDER:
+            c = mat[g][b]
+            result[g][b] = {"qty": c["qty"], "st": stpct(c["total_sale"], c["total_in"])}
+    return result
+
+def _is_co_c_prefix(d):
+    return d["brand"] == "커버낫" and len(d["item_code"]) >= 10 and d["item_code"][8].upper() == "C"
+
+def compute_alarms(items, stock_thr=30):
+    """리오더 알람: 소진율 <70% · 최근 판매 있음 · 재고 부족 · 커버낫 C-prefix 제외
+    소진율 >=70%는 의도적 소진 결정으로 간주하여 제외."""
+    res = []
+    for d in fil_s(items, ALARM_SEASONS):
+        if _is_co_c_prefix(d): continue
+        if d["st"] is None: continue
+        if d["st"] >= 70: continue          # 판매율 70%↑ 제외 (이유 있어서 QR 안함)
+        if d["period_sale_qty"] <= 0: continue  # 최근 판매 없으면 제외
+        stock_low = (d["total_stock"] <= stock_thr or
+                     (d["order_qty"] > 0 and d["total_stock"] / d["order_qty"] <= 0.05))
+        if stock_low:
+            res.append({k: d[k] for k in (
+                "brand","season","item_code","item_name","item_type",
+                "order_qty","total_in_qty","total_sale_qty","st",
+                "total_stock","logistics_stock","store_stock","period_sale_qty")})
+    res.sort(key=lambda x: (-x["st"], x["total_stock"]))
+    return res[:40]
+
+def build_pprev_lookup(items_pprev):
+    """전전주 아이템 → period_sale_qty 조회 딕셔너리"""
+    return {
+        f"{d['brand']}|{d['season']}|{d['item_code']}": d["period_sale_qty"]
+        for d in items_pprev
+    }
+
+def _spike_row(d, pprev_lookup):
+    """판매 상위 행 생성 — 전전주 대비 비교"""
+    key = f"{d['brand']}|{d['season']}|{d['item_code']}"
+    pq  = pprev_lookup.get(key, None)
+    chg = round((d["period_sale_qty"] - pq) / pq * 100, 1) if pq and pq > 0 else None
+    return {
+        "brand": d["brand"], "season": d["season"],
+        "item_code": d["item_code"], "item_name": d["item_name"],
+        "item_type": ITEM_NAMES.get(d["item_type"], d["item_type"]),
+        "period_qty": d["period_sale_qty"], "period_amt": round(d["period_sale_amt"]),
+        "pprev_qty": pq, "change": chg, "st": d["st"], "total_stock": d["total_stock"],
+    }
+
+def compute_spikes(items, pprev_lookup=None, top_n=25):
+    """이번기간 판매 상위 + 전전주 대비 증감"""
+    pi = pprev_lookup or {}
+    def top(seasons):
+        sel = [d for d in fil_s(items, seasons) if d["period_sale_qty"] > 0]
+        sel.sort(key=lambda x: -x["period_sale_qty"])
+        return [_spike_row(d, pi) for d in sel[:top_n]]
+    return {"26ss": top({"26SS"}), "all": top({"26SS","25FW"})}
+
+def compute_wow_changes(items_cur, pprev_lookup, surge_thr=40, drop_thr=-40):
+    """전전주 대비 판매 급변 품목 감지 — 급증/급감 각 최대 20개"""
+    surge, drop = [], []
+    for d in fil_s(items_cur, ALARM_SEASONS):
+        if d["period_sale_qty"] <= 0: continue
+        key = f"{d['brand']}|{d['season']}|{d['item_code']}"
+        pq = pprev_lookup.get(key)
+        if not pq or pq <= 0: continue
+        chg = round((d["period_sale_qty"] - pq) / pq * 100, 1)
+        row = {
+            "brand": d["brand"], "season": d["season"],
+            "item_code": d["item_code"], "item_name": d["item_name"],
+            "item_type": ITEM_NAMES.get(d["item_type"], d["item_type"]),
+            "period_qty": d["period_sale_qty"], "pprev_qty": pq,
+            "change": chg, "st": d["st"], "total_stock": d["total_stock"],
+            "qr_candidate": d["st"] is not None and d["st"] < 70,
+        }
+        if chg >= surge_thr:
+            surge.append(row)
+        elif chg <= drop_thr:
+            drop.append(row)
+    surge.sort(key=lambda x: -x["change"])
+    drop.sort(key=lambda x: x["change"])
+    return {"surge": surge[:20], "drop": drop[:20]}
+
+def _bag_row(d):
+    return {
+        "brand": BRAND_LABELS.get(d["brand"], d["brand"]),
+        "item_code": d["item_code"], "item_name": d["item_name"],
+        "item_type": ITEM_NAMES.get(d["item_type"], d["item_type"]),
+        "season": d["season"],
+        "period_qty": d["period_sale_qty"],
+        "total_qty": d["total_sale_qty"],
+        "st": d["st"], "total_stock": d["total_stock"],
+    }
+
+def compute_bag_compare(ic, ip, top_n=20):
+    """가방 이번기간 판매상위 현년 vs 전년 비교"""
+    def top(items, seasons):
+        sel = [d for d in items if d["group"]=="BAG" and d["season"] in seasons and d["total_in_qty"] > 0]
+        sel.sort(key=lambda x: -x["period_sale_qty"])
+        return [_bag_row(d) for d in sel[:top_n]]
+    return {
+        "cur_26ss": top(ic, {"26SS"}),
+        "cur_all":  top(ic, {"26SS","25FW"}),
+        "prev_26ss": top(ip, {"25SS"}),
+        "prev_all":  top(ip, {"25SS","24FW"}),
+    }
+
+def compute_detail(items):
+    active = [d for d in fil_s(items, {"26SS","25FW"}) if d["total_in_qty"] > 0]
+    active.sort(key=lambda x: (x["brand"], x["group"], -(x["st"] or 0)))
+    return [{
+        "brand": BRAND_LABELS.get(d["brand"],d["brand"]), "brand_raw": d["brand"],
+        "season": d["season"], "group": d["group"],
+        "item_code": d["item_code"], "item_name": d["item_name"],
+        "item_type": ITEM_NAMES.get(d["item_type"],d["item_type"]),
+        "list_price": d["list_price"], "order_qty": d["order_qty"],
+        "total_in": d["total_in_qty"], "period_qty": d["period_sale_qty"],
+        "period_amt": round(d["period_sale_amt"]), "total_qty": d["total_sale_qty"],
+        "total_amt": round(d["total_sale_amt"]), "st": d["st"],
+        "total_stock": d["total_stock"], "log_stock": d["logistics_stock"], "str_stock": d["store_stock"],
+    } for d in active]
+
+def compute_brief(ic, ip, brand, pprev_lookup):
+    """브랜드별 주간 매출 브리핑 — 신상(26SS)·이월 분리 + TAG/실판/할인율"""
+    def _seg(items):
+        qty       = sum(d["period_sale_qty"]   for d in items)
+        first_amt = round(sum(d["period_first_amt"] for d in items))  # 최초판매금액 (할인 전)
+        net_amt   = round(sum(d["period_net_amt"]   for d in items))  # 실판매금액 (할인 후)
+        disc      = round((first_amt - net_amt) / first_amt * 100, 1) if first_amt > 0 else None
+        return {"qty": qty, "tag_amt": first_amt, "amt": net_amt, "disc": disc}
+
+    result = {}
+    for b in (BRAND_ORDER if brand == "종합" else [brand]):
+        fc_new   = [d for d in ic if d["brand"] == b and d["season"] == "26SS"]
+        fc_carry = [d for d in ic if d["brand"] == b and d["season"] != "26SS"]
+        fc_all   = fc_new + fc_carry
+        fp       = [d for d in ip if d["brand"] == b and d["season"] == "25SS"]
+        if not fc_all:
+            result[b] = None
+            continue
+
+        new_s   = _seg(fc_new)
+        carry_s = _seg(fc_carry)
+        all_s   = _seg(fc_all)
+
+        # YoY (26SS vs 25SS)
+        prev_yr_qty = sum(d["period_sale_qty"] for d in fp)
+        yoy_pct = round((new_s["qty"] - prev_yr_qty) / prev_yr_qty * 100, 1) if prev_yr_qty > 0 else None
+
+        # WoW vs 전전주 (26SS+이월 전체 기준)
+        wow_qty = sum(
+            pprev_lookup.get(f"{d['brand']}|{d['season']}|{d['item_code']}", 0)
+            for d in fc_all
+        )
+        wow_pct = round((all_s["qty"] - wow_qty) / wow_qty * 100, 1) if wow_qty > 0 else None
+
+        # 최다 판매 그룹 (전체)
+        grp_qty = defaultdict(int)
+        for d in fc_all:
+            grp_qty[d["group"]] += d["period_sale_qty"]
+        top_grp = max(grp_qty, key=grp_qty.get) if grp_qty else None
+        top_grp_qty = grp_qty.get(top_grp, 0)
+
+        # 최다 판매 품번 (신상 기준)
+        top_item = max(fc_new, key=lambda x: x["period_sale_qty"]) if fc_new else None
+
+        # 리오더 대상 (전체)
+        alarm_cnt = len([d for d in compute_alarms(fc_all) if d])
+        signal = "up" if (yoy_pct or 0) >= 10 else "down" if (yoy_pct or 0) <= -10 else "flat"
+
+        result[b] = {
+            "brand": BRAND_LABELS.get(b, b),
+            "all": all_s, "new": new_s, "carry": carry_s,
+            "prev_yr_qty": prev_yr_qty, "yoy_pct": yoy_pct,
+            "wow_qty": wow_qty, "wow_pct": wow_pct,
+            "top_grp": GROUP_LABELS.get(top_grp, top_grp) if top_grp else None,
+            "top_grp_qty": top_grp_qty,
+            "top_item_code": top_item["item_code"] if top_item else None,
+            "top_item_name": top_item["item_name"] if top_item else None,
+            "top_item_qty": top_item["period_sale_qty"] if top_item else 0,
+            "alarm_cnt": alarm_cnt,
+            "signal": signal,
+        }
+    return result
+
+def compute_insight(ic, ip, brand, pprev_lookup=None):
+    """브랜드별 매출 특이사항 — 데이터 기반 차별화 분석 (최대 6개)"""
+    # 전체 브랜드 집계 (비교 기준용)
+    all_cur_qty = sum(d["period_sale_qty"] for d in ic if d["season"] == "26SS")
+    all_prev_qty = sum(d["period_sale_qty"] for d in ip if d["season"] == "25SS")
+
+    result = {}
+    for b in (BRAND_ORDER if brand == "종합" else [brand]):
+        fc_new   = [d for d in ic if d["brand"] == b and d["season"] == "26SS"]
+        fc_carry = [d for d in ic if d["brand"] == b and d["season"] != "26SS"]
+        fc_all   = fc_new + fc_carry
+        fp_new   = [d for d in ip if d["brand"] == b and d["season"] == "25SS"]
+        if not fc_all:
+            result[b] = []
+            continue
+
+        pts = []
+
+        cur_tot  = sum(d["period_sale_qty"] for d in fc_new)
+        prev_tot = sum(d["period_sale_qty"] for d in fp_new)
+        tot_all  = sum(d["period_sale_qty"] for d in fc_all)
+        new_q    = cur_tot
+        carry_q  = sum(d["period_sale_qty"] for d in fc_carry)
+
+        # ① 그룹별 YoY — 수치 비교해서 가장 특징적인 것만
+        grp_cur  = {g: sum(d["period_sale_qty"] for d in fc_new  if d["group"] == g) for g in GROUPS}
+        grp_prev = {g: sum(d["period_sale_qty"] for d in fp_new  if d["group"] == g) for g in GROUPS}
+        grp_yoy  = []
+        for g in GROUPS:
+            c, p = grp_cur[g], grp_prev[g]
+            if c > 0 or p > 0:
+                pct = round((c - p) / p * 100, 1) if p > 0 else None
+                grp_yoy.append((g, c, p, pct))
+        grp_yoy.sort(key=lambda x: abs(x[3] or 0), reverse=True)  # 변화폭 큰 순
+
+        for g, c, p, pct in grp_yoy[:2]:
+            if pct is None: continue
+            lbl = GROUP_LABELS.get(g, g)
+            if pct >= 20:
+                pts.append(f"{lbl} 전년 동기 대비 +{pct}% 호조 — {p:,}개→{c:,}개, 수요 급증")
+            elif pct >= 5:
+                pts.append(f"{lbl} 전년 동기 대비 +{pct}% 증가 — {p:,}개→{c:,}개")
+            elif pct <= -20:
+                pts.append(f"{lbl} 전년 대비 {pct}% 급감 — {p:,}개→{c:,}개, 수요 부진 원인 점검 필요")
+            elif pct <= -5:
+                pts.append(f"{lbl} 전년 대비 {pct}% 감소 — {p:,}개→{c:,}개")
+
+        # ② 전체 YoY
+        if prev_tot > 0:
+            tot_yoy = round((cur_tot - prev_tot) / prev_tot * 100, 1)
+            if abs(tot_yoy) >= 5:
+                sign = f"+{tot_yoy}%" if tot_yoy >= 0 else f"{tot_yoy}%"
+                pts.append(f"신상 전체 판매 전년 대비 {sign} — {prev_tot:,}개→{cur_tot:,}개")
+
+        # ③ 신상 vs 이월 비율 — 전사 평균과 비교
+        if tot_all > 0:
+            nr = round(new_q / tot_all * 100)
+            cr = round(carry_q / tot_all * 100)
+            # 이월이 절반 초과면 특이
+            if cr >= 60:
+                pts.append(f"이월 비중 {cr}% — 신상 판매 부진, 재고 소진 중심 운영")
+            elif nr >= 80:
+                pts.append(f"신상(26SS) 집중도 {nr}% — 이월 영향 거의 없음, 신상 수요 강세")
+            # 이월 중 특정 시즌 집중
+            carry_by_ssn = {}
+            for d in fc_carry:
+                carry_by_ssn[d["season"]] = carry_by_ssn.get(d["season"], 0) + d["period_sale_qty"]
+            if carry_by_ssn:
+                top_ssn = max(carry_by_ssn, key=carry_by_ssn.get)
+                top_ssn_q = carry_by_ssn[top_ssn]
+                if top_ssn_q > 0 and carry_q > 0:
+                    ssn_pct = round(top_ssn_q / carry_q * 100)
+                    if ssn_pct >= 60 and cr >= 20:
+                        pts.append(f"이월 중 {top_ssn} 상품이 {ssn_pct}% 집중 — {top_ssn_q:,}개 판매")
+
+        # ④ 실판매금액 할인율 (최초판매금액 기준)
+        first_amt = sum(d["period_first_amt"] for d in fc_new)
+        net_amt   = sum(d["period_net_amt"]   for d in fc_new)
+        if first_amt > 0:
+            disc = round((first_amt - net_amt) / first_amt * 100, 1)
+            if disc >= 30:
+                pts.append(f"신상 평균 할인율 {disc}% — 고할인 집중, 최초판매가 대비 실판 괴리 큼")
+            elif disc <= 5:
+                pts.append(f"신상 평균 할인율 {disc}% — 사실상 정가 판매, 할인 없이 수요 흡수 중")
+            # 할인율 높은 SKU 개수
+            high_disc_cnt = sum(
+                1 for d in fc_new
+                if d["period_first_amt"] > 0 and
+                   (d["period_first_amt"] - d["period_net_amt"]) / d["period_first_amt"] >= 0.3
+                   and d["period_sale_qty"] > 0
+            )
+            if high_disc_cnt >= 3:
+                pts.append(f"30% 이상 고할인 SKU {high_disc_cnt}개 — 특정 품번 집중 할인 중")
+
+        # ⑤ 최다판매 vs 최저판매 SKU 격차 (집중도)
+        sorted_new = sorted(fc_new, key=lambda x: -x["period_sale_qty"])
+        if len(sorted_new) >= 5 and sorted_new[0]["period_sale_qty"] > 0:
+            top1_q = sorted_new[0]["period_sale_qty"]
+            top1_ratio = round(top1_q / new_q * 100) if new_q > 0 else 0
+            if top1_ratio >= 30:
+                pts.append(f"TOP1 품번({sorted_new[0]['item_code']})이 신상 판매 {top1_ratio}% 차지 — 단일 SKU 쏠림 주의")
+
+        # ⑥ 전전주 대비 판매 급변 SKU — QR 검토 권고
+        if pprev_lookup:
+            wc = compute_wow_changes(fc_all, pprev_lookup)
+            qr_codes = [f"{r['item_code']}({r['change']:+.0f}%)" for r in wc["surge"] if r["qr_candidate"]]
+            if qr_codes:
+                pts.append(f"전전주 대비 급증(QR 검토 권고) — {', '.join(qr_codes[:4])}")
+            drop_codes = [f"{r['item_code']}({r['change']:+.0f}%)" for r in wc["drop"]]
+            if drop_codes:
+                pts.append(f"전전주 대비 급감 주의 — {', '.join(drop_codes[:3])}")
+
+        result[b] = pts[:6]
+    return result
+
+def build_view(ic, ip, brand, pprev_lookup):
+    fc, fp = fil_b(ic, brand), fil_b(ip, brand)
+    return {
+        "summary":     compute_summary(fc),
+        "brief":       compute_brief(ic, ip, brand, pprev_lookup),
+        "insight":     compute_insight(ic, ip, brand, pprev_lookup),
+        "chart":       compute_chart(fc, fp),
+        "matrix":      compute_matrix(fc),
+        "alarms":      compute_alarms(fc),
+        "wow_changes": compute_wow_changes(fc, pprev_lookup),
+        "spikes":      compute_spikes(fc, pprev_lookup),
+        "bag_compare": compute_bag_compare(fc, fp),
+        "detail":      compute_detail(fc),
+    }
+
+# ── HTML ────────────────────────────────────────────────────
+def build_html(ref_date, views, pprev_label, out_path):
+    js_views = json.dumps(views, ensure_ascii=False)
+    ppl = str(pprev_label) if pprev_label else "없음"
+
+    html = f"""<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>용품 주간판매 — {ref_date}</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+*{{box-sizing:border-box;margin:0;padding:0}}
+body{{font-family:'Apple SD Gothic Neo','Pretendard',-apple-system,sans-serif;
+     background:#f4f6f9;color:#1a202c;font-size:13px;line-height:1.5}}
+
+/* ── Nav ── */
+.top-nav{{background:#fff;position:sticky;top:0;z-index:100;border-bottom:2px solid #e2e8f0;
+          padding:0 24px;display:flex;align-items:center;box-shadow:0 2px 8px rgba(0,0,0,.06)}}
+.site-title{{font-size:13px;font-weight:700;color:#2d3748;padding:0 20px 0 0;margin-right:16px;
+             border-right:2px solid #e2e8f0;white-space:nowrap}}
+.brand-tab{{padding:16px 22px;font-size:14px;font-weight:700;color:#a0aec0;cursor:pointer;
+            border:none;border-bottom:3px solid transparent;background:none;transition:all .15s}}
+.brand-tab:hover{{color:#2d3748;background:#f7f8fa}}
+.brand-tab.active{{color:#2b6cb0;border-bottom-color:#2b6cb0;background:#ebf8ff}}
+.nav-meta{{margin-left:auto;color:#718096;font-size:11px;white-space:nowrap}}
+
+/* ── Layout ── */
+.page{{max-width:1400px;margin:0 auto;padding:20px 24px}}
+.section{{background:#fff;border-radius:8px;border:1px solid #e2e8f0;margin-bottom:16px;overflow:hidden}}
+.sec-header{{padding:12px 18px;border-bottom:1px solid #edf2f7;font-size:13px;font-weight:700;
+             color:#2d3748;display:flex;align-items:center;justify-content:space-between}}
+.sec-body{{padding:14px 18px}}
+.tag-26ss{{display:inline-block;background:#ebf8ff;color:#2b6cb0;border-radius:4px;
+           padding:1px 6px;font-size:10px;font-weight:700;margin-left:4px}}
+
+/* ── Season tabs ── */
+.season-tabs{{display:flex;gap:0;border:1px solid #e2e8f0;border-radius:6px;overflow:hidden}}
+.season-tab{{padding:5px 16px;font-size:12px;font-weight:600;color:#718096;cursor:pointer;
+             border:none;background:#fff;border-right:1px solid #e2e8f0;transition:all .12s}}
+.season-tab:last-child{{border-right:none}}
+.season-tab:hover{{background:#f7f8fa;color:#2d3748}}
+.season-tab.active{{background:#2b6cb0;color:#fff}}
+
+/* ── Mode toggle ── */
+.mode-toggle{{display:flex;gap:6px}}
+.mode-btn{{padding:4px 14px;font-size:11px;font-weight:600;color:#718096;cursor:pointer;
+           border:1px solid #e2e8f0;border-radius:12px;background:#fff;transition:all .12s}}
+.mode-btn:hover{{background:#f7f8fa;color:#2d3748}}
+.mode-btn.active{{background:#2b6cb0;color:#fff;border-color:#2b6cb0}}
+
+/* ── Brand cards ── */
+.brand-cards{{display:flex;gap:12px}}
+.brand-card{{flex:1;border:1px solid #e2e8f0;border-radius:8px;padding:14px 16px;background:#fdfdfe}}
+.bc-label{{font-size:11px;font-weight:700;text-transform:uppercase;color:#718096;letter-spacing:.07em;margin-bottom:6px}}
+.bc-big{{font-size:24px;font-weight:800;color:#1a202c}}
+.bc-unit{{font-size:12px;color:#718096;margin-left:2px}}
+.bc-sub{{font-size:11px;color:#4a5568;margin-top:1px}}
+.bc-div{{border-top:1px solid #edf2f7;margin:8px 0}}
+.bc-row{{display:flex;justify-content:space-between;margin-top:2px}}
+.lbl-sm{{font-size:11px;color:#718096}}
+.val-sm{{font-size:12px;font-weight:600}}
+.no-data{{color:#a0aec0;font-size:12px;padding:12px 0;text-align:center}}
+
+/* ── Chart ── */
+.chart-wrap{{position:relative;height:240px}}
+.chart-controls{{display:flex;gap:8px;margin-bottom:10px;align-items:center;flex-wrap:wrap}}
+.ctrl-lbl{{font-size:11px;color:#718096;margin-right:2px}}
+
+/* ── Matrix ── */
+.matrix-table{{width:100%;border-collapse:collapse}}
+.matrix-table th,.matrix-table td{{padding:8px 10px;border:1px solid #edf2f7;text-align:center}}
+.matrix-table thead th{{background:#f7f8fa;font-weight:600;color:#4a5568;font-size:12px}}
+.brand-col{{text-align:left!important;font-weight:600;color:#2d3748;width:80px;font-size:12px}}
+.m-qty{{font-weight:700;color:#2d3748;font-size:13px}}
+.m-st{{font-size:11px;font-weight:600;display:block;margin-top:1px}}
+.cell-empty{{color:#cbd5e0}}
+
+/* ── Compare grid (가방 비교) ── */
+.compare-grid{{display:grid;grid-template-columns:1fr 1fr;gap:16px}}
+.compare-panel{{border:1px solid #e2e8f0;border-radius:8px;overflow:hidden}}
+.panel-header{{padding:10px 14px;background:#f7f8fa;border-bottom:1px solid #e2e8f0;
+               font-size:12px;font-weight:700;color:#4a5568;display:flex;
+               align-items:center;justify-content:space-between}}
+.panel-year-cur{{color:#2b6cb0}}
+.panel-year-prev{{color:#718096}}
+.panel-body{{max-height:380px;overflow-y:auto}}
+
+/* ── Tables ── */
+.tbl-wrap{{overflow-x:auto;max-height:400px;overflow-y:auto}}
+.data-table{{width:100%;border-collapse:collapse;font-size:12px}}
+.data-table th{{background:#f7f8fa;padding:7px 9px;text-align:left;font-weight:600;color:#4a5568;
+                border-bottom:2px solid #e2e8f0;white-space:nowrap;position:sticky;top:0;z-index:1}}
+.data-table td{{padding:6px 9px;border-bottom:1px solid #f0f0f0;vertical-align:middle}}
+.data-table tr:hover td{{background:#f7f8fa}}
+.mono{{font-family:monospace;font-size:11px;color:#4a5568}}
+.num-r{{text-align:right}}
+.bold{{font-weight:700}}
+.alarm-crit td{{background:#fff5f5}}
+.alarm-warn td{{background:#fffaf0}}
+.alarm-crit:hover td{{background:#fed7d7!important}}
+.alarm-warn:hover td{{background:#feebc8!important}}
+.rank-no{{color:#a0aec0;font-size:11px;font-weight:600;width:24px;text-align:right}}
+
+/* ── 배지 ── */
+.badge{{display:inline-block;padding:2px 7px;border-radius:10px;font-size:11px;font-weight:700}}
+.b-red{{background:#fff5f5;color:#e53e3e;border:1px solid #fed7d7}}
+.b-org{{background:#fff8f0;color:#dd6b20;border:1px solid #fbd38d}}
+.b-yel{{background:#fffff0;color:#b7791f;border:1px solid #faf089}}
+.b-grn{{background:#f0fff4;color:#276749;border:1px solid #9ae6b4}}
+.b-gry{{background:#f7f8fa;color:#a0aec0;border:1px solid #e2e8f0}}
+.new-tag{{background:#ebf4ff;color:#2b6cb0;border-radius:4px;padding:1px 5px;font-size:10px;font-weight:700}}
+.up{{color:#e53e3e;font-weight:600;font-size:11px}}
+.dn{{color:#38a169;font-weight:600;font-size:11px}}
+.fl{{color:#a0aec0;font-size:11px}}
+
+/* ── Sortable ── */
+.sortable{{cursor:pointer;user-select:none}}
+.sortable:hover{{background:#edf2f7!important}}
+.sort-ic{{margin-left:3px;color:#cbd5e0;font-size:10px}}
+.sortable.asc .sort-ic::after{{content:"▲";color:#2b6cb0}}
+.sortable.desc .sort-ic::after{{content:"▼";color:#2b6cb0}}
+.sortable:not(.asc):not(.desc) .sort-ic::after{{content:"⇅"}}
+
+/* ── Sub filter ── */
+.sub-filter{{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}}
+.sf-btn{{padding:3px 11px;border:1px solid #e2e8f0;border-radius:14px;font-size:11px;
+         cursor:pointer;background:#fff;color:#4a5568;transition:all .12s}}
+.sf-btn:hover,.sf-btn.on{{background:#2b6cb0;color:#fff;border-color:#2b6cb0}}
+.note{{font-size:11px;color:#a0aec0;margin-top:8px}}
+
+/* ── Brief cards ── */
+.brief-grid{{display:flex;gap:12px;flex-wrap:wrap}}
+.brief-card{{flex:1;min-width:200px;border-radius:8px;padding:14px 16px;border:1px solid #e2e8f0;background:#fdfdfe;position:relative}}
+.brief-card.signal-up{{border-left:4px solid #e53e3e}}
+.brief-card.signal-down{{border-left:4px solid #38a169}}
+.brief-card.signal-flat{{border-left:4px solid #a0aec0}}
+.brief-brand{{font-size:11px;font-weight:700;text-transform:uppercase;color:#718096;letter-spacing:.06em;margin-bottom:6px}}
+.brief-qty{{font-size:22px;font-weight:800;color:#1a202c}}
+.brief-qty-unit{{font-size:12px;color:#718096;margin-left:2px}}
+.brief-amt{{font-size:11px;color:#4a5568;margin-top:1px;margin-bottom:8px}}
+.brief-badges{{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px}}
+.brief-badge{{display:inline-flex;align-items:center;gap:3px;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:700}}
+.bb-yoy-up{{background:#fff5f5;color:#e53e3e;border:1px solid #fed7d7}}
+.bb-yoy-dn{{background:#f0fff4;color:#276749;border:1px solid #9ae6b4}}
+.bb-yoy-flat{{background:#f7f8fa;color:#718096;border:1px solid #e2e8f0}}
+.bb-wow{{background:#fffff0;color:#744210;border:1px solid #faf089}}
+.bb-alarm{{background:#fff8f0;color:#dd6b20;border:1px solid #fbd38d}}
+.brief-divider{{border-top:1px solid #edf2f7;margin:8px 0}}
+.brief-meta{{font-size:11px;color:#4a5568;line-height:1.8}}
+.brief-meta .lbl{{color:#a0aec0}}
+.brief-signal-icon{{position:absolute;top:12px;right:14px;font-size:18px}}
+
+/* ── Brief 금액 테이블 ── */
+.brief-seg-table{{width:100%;border-collapse:collapse;font-size:11px;margin:6px 0 8px}}
+.brief-seg-table th{{color:#a0aec0;font-weight:600;padding:2px 5px;text-align:right;white-space:nowrap}}
+.brief-seg-table th:first-child{{text-align:left}}
+.brief-seg-table td{{padding:2px 5px;color:#2d3748;text-align:right;white-space:nowrap}}
+.brief-seg-table td:first-child{{text-align:left;font-weight:700}}
+.bst-new td:first-child{{color:#2b6cb0}}
+.bst-carry td:first-child{{color:#718096}}
+.bst-total{{border-top:1px dashed #e2e8f0}}
+.bst-total td{{font-weight:700;color:#1a202c}}
+.bst-total td:first-child{{color:#1a202c}}
+
+/* ── Insight section ── */
+.insight-grid{{display:flex;gap:12px;flex-wrap:wrap}}
+.insight-card{{flex:1;min-width:220px;background:#f8fafc;border-radius:8px;padding:14px 16px;border:1px solid #e2e8f0}}
+.insight-brand{{font-size:11px;font-weight:700;text-transform:uppercase;color:#2b6cb0;letter-spacing:.06em;margin-bottom:8px}}
+.insight-list{{list-style:none;padding:0;margin:0}}
+.insight-list li{{font-size:12px;color:#2d3748;padding:5px 0 5px 14px;border-bottom:1px solid #edf2f7;line-height:1.5;position:relative}}
+.insight-list li:last-child{{border-bottom:none}}
+.insight-list li::before{{content:"•";position:absolute;left:0;color:#2b6cb0;font-weight:700}}
+
+/* ── YoY 이중 차트 레이아웃 ── */
+.yoy-dual{{display:grid;grid-template-columns:1fr 1fr;gap:14px}}
+@media(max-width:700px){{.yoy-dual{{grid-template-columns:1fr}}}}
+.yoy-pane-title{{font-size:12px;font-weight:700;color:#4a5568;margin-bottom:6px}}
+</style>
+</head>
+<body>
+
+<nav class="top-nav">
+  <span class="site-title">용품 주간판매</span>
+  <button class="brand-tab active" data-view="종합"    onclick="switchView(this)">종합</button>
+  <button class="brand-tab"        data-view="커버낫"  onclick="switchView(this)">커버낫</button>
+  <button class="brand-tab"        data-view="리(LEE)" onclick="switchView(this)">리</button>
+  <button class="brand-tab"        data-view="와키윌리" onclick="switchView(this)">와키윌리</button>
+  <span class="nav-meta">기준 {ref_date} &nbsp;|&nbsp; 전전주 {ppl}</span>
+</nav>
+
+<div class="page">
+
+  <!-- ① 이번기간 현황 -->
+  <div class="section">
+    <div class="sec-header">
+      <span>이번 기간 현황</span>
+      <div class="season-tabs">
+        <button class="season-tab"        data-ssn="25SS" onclick="setSeasonTab(this)">25SS</button>
+        <button class="season-tab"        data-ssn="25FW" onclick="setSeasonTab(this)">25FW</button>
+        <button class="season-tab active" data-ssn="26SS" onclick="setSeasonTab(this)">26SS</button>
+      </div>
+    </div>
+    <div class="sec-body">
+      <div class="brand-cards" id="cardsArea"></div>
+      <p class="note">소진율 = 누계판매 / 누계입고 (선택 시즌 기준)</p>
+    </div>
+  </div>
+
+  <!-- ① 브랜드별 주간 매출 브리핑 -->
+  <div class="section">
+    <div class="sec-header"><span>브랜드별 주간 매출 브리핑 <span class="tag-26ss">26SS</span></span></div>
+    <div class="sec-body"><div class="brief-grid" id="briefArea"></div></div>
+  </div>
+
+  <!-- ① 브랜드별 매출 특이사항 분석 -->
+  <div class="section">
+    <div class="sec-header"><span>브랜드별 매출 특이사항 분석</span></div>
+    <div class="sec-body"><div class="insight-grid" id="insightArea"></div></div>
+  </div>
+
+  <!-- ② 전년 동기 비교 — 수량 / 금액 -->
+  <div class="section">
+    <div class="sec-header">
+      <span>전년 동기 비교</span>
+      <div class="chart-controls" style="margin:0">
+        <span class="ctrl-lbl">시즌:</span>
+        <div class="mode-toggle">
+          <button class="mode-btn active" data-qm="26ss" onclick="setQtyMode(this)">26SS</button>
+          <button class="mode-btn"        data-qm="all"  onclick="setQtyMode(this)">이월포함</button>
+        </div>
+        <span class="ctrl-lbl" style="margin-left:10px">분류:</span>
+        <div class="mode-toggle">
+          <button class="mode-btn active" data-ql="group" onclick="setQtyLevel(this)">대분류</button>
+          <button class="mode-btn"        data-ql="type"  onclick="setQtyLevel(this)">세분류</button>
+        </div>
+      </div>
+    </div>
+    <div class="sec-body">
+      <div class="yoy-dual">
+        <div>
+          <div class="yoy-pane-title">기간판매수량 (개)</div>
+          <div class="chart-wrap"><canvas id="chartQty"></canvas></div>
+          <p class="note" id="qtyNote"></p>
+        </div>
+        <div>
+          <div class="yoy-pane-title">실판매금액 (만원)</div>
+          <div class="chart-wrap"><canvas id="chartAmt"></canvas></div>
+          <p class="note" id="amtNote"></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ③ 매트릭스 -->
+  <div class="section">
+    <div class="sec-header">
+      <span>품목그룹 × 브랜드 현황 <span class="tag-26ss">26SS</span></span>
+      <span style="font-size:11px;color:#a0aec0;font-weight:400">기간판매수량 / 누계소진율</span>
+    </div>
+    <div class="sec-body">
+      <div class="tbl-wrap"><table class="matrix-table" id="matrixTable"></table></div>
+    </div>
+  </div>
+
+  <!-- ④ 리오더 알람 -->
+  <div class="section">
+    <div class="sec-header">
+      <span>⚠ 리오더 알람</span>
+      <span style="font-size:11px;color:#a0aec0;font-weight:400">25FW·26SS · 소진율 70%↑ · 재고 30개↓ · 커버낫 C-prefix 제외</span>
+    </div>
+    <div class="sec-body">
+      <div class="tbl-wrap">
+        <table class="data-table"><thead><tr>
+          <th>브랜드</th><th>시즌</th><th>품번</th><th>품명</th><th>품목</th>
+          <th class="num-r">발주</th><th class="num-r">누계입고</th><th class="num-r">누계판매</th>
+          <th class="num-r">소진율</th><th class="num-r">총재고</th><th class="num-r">물류/매장</th>
+        </tr></thead><tbody id="alarmBody"></tbody></table>
+      </div>
+      <p class="note">빨간 행: 소진율 85%↑ &nbsp;|&nbsp; 노란 행: 70~84%</p>
+    </div>
+  </div>
+
+  <!-- ⑤ 판매 상위 + 가방 현년 vs 전년 비교 -->
+  <div class="section">
+    <div class="sec-header">
+      <span>📈 판매 상위 비교 — 이번기간 vs 전년동기</span>
+      <div class="mode-toggle">
+        <button class="mode-btn active" data-sm="26ss" onclick="setSpikeMode(this)">26SS</button>
+        <button class="mode-btn"        data-sm="all"  onclick="setSpikeMode(this)">재고포함</button>
+      </div>
+    </div>
+    <div class="sec-body">
+
+      <!-- 전체 판매 상위 -->
+      <div style="margin-bottom:16px">
+        <div style="font-size:12px;font-weight:700;color:#4a5568;margin-bottom:8px">전체 품목 판매상위</div>
+        <div class="tbl-wrap">
+          <table class="data-table"><thead><tr>
+            <th>브랜드</th><th>시즌</th><th>품번</th><th>품명</th><th>품목</th>
+            <th class="num-r">이번기간</th><th class="num-r">전주</th><th class="num-r">증감</th>
+            <th class="num-r">기간매출</th><th class="num-r">소진율</th><th class="num-r">총재고</th>
+          </tr></thead><tbody id="spikeBody"></tbody></table>
+        </div>
+      </div>
+
+      <!-- 가방 현년 vs 전년 좌우 비교 -->
+      <div style="font-size:12px;font-weight:700;color:#4a5568;margin-bottom:8px">
+        가방 판매상위 — 현년 vs 전년 비교
+      </div>
+      <div class="compare-grid">
+        <!-- 현년 -->
+        <div class="compare-panel">
+          <div class="panel-header">
+            <span class="panel-year-cur">현년 이번기간</span>
+            <span id="curSeasonLabel" style="font-size:11px;color:#a0aec0"></span>
+          </div>
+          <div class="panel-body">
+            <table class="data-table"><thead><tr>
+              <th class="num-r" style="width:28px">#</th>
+              <th>품번</th><th>품명</th><th>품목</th>
+              <th class="num-r">기간판매</th><th class="num-r">누계판매</th>
+              <th class="num-r">소진율</th><th class="num-r">재고</th>
+            </tr></thead><tbody id="bagCurBody"></tbody></table>
+          </div>
+        </div>
+        <!-- 전년 -->
+        <div class="compare-panel">
+          <div class="panel-header">
+            <span class="panel-year-prev">전년 동기간</span>
+            <span id="prevSeasonLabel" style="font-size:11px;color:#a0aec0"></span>
+          </div>
+          <div class="panel-body">
+            <table class="data-table"><thead><tr>
+              <th class="num-r" style="width:28px">#</th>
+              <th>품번</th><th>품명</th><th>품목</th>
+              <th class="num-r">기간판매</th><th class="num-r">누계판매</th>
+              <th class="num-r">소진율</th><th class="num-r">재고</th>
+            </tr></thead><tbody id="bagPrevBody"></tbody></table>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ⑥ 전체 상세 -->
+  <div class="section">
+    <div class="sec-header"><span>📋 전체 상세 (25FW · 26SS)</span></div>
+    <div class="sec-body">
+      <div class="sub-filter">
+        <button class="sf-btn on" onclick="subFilter('all',this)">전체</button>
+        <button class="sf-btn" onclick="subFilter('CAP',this)">모자</button>
+        <button class="sf-btn" onclick="subFilter('BAG',this)">가방</button>
+        <button class="sf-btn" onclick="subFilter('SHOES',this)">신발</button>
+        <button class="sf-btn" onclick="subFilter('ACC',this)">액세서리</button>
+        <button class="sf-btn" onclick="subFilter('26SS',this)" style="margin-left:8px">26SS</button>
+        <button class="sf-btn" onclick="subFilter('25FW',this)">25FW</button>
+      </div>
+      <div class="tbl-wrap">
+        <table class="data-table" id="detailTable">
+          <thead><tr>
+            <th class="sortable" data-col="0" data-type="str">브랜드<span class="sort-ic"></span></th>
+            <th class="sortable" data-col="1" data-type="str">시즌<span class="sort-ic"></span></th>
+            <th class="sortable" data-col="2" data-type="str">품번<span class="sort-ic"></span></th>
+            <th class="sortable" data-col="3" data-type="str">품명<span class="sort-ic"></span></th>
+            <th class="sortable" data-col="4" data-type="str">품목<span class="sort-ic"></span></th>
+            <th class="sortable num-r" data-col="5" data-type="num">택가<span class="sort-ic"></span></th>
+            <th class="sortable num-r" data-col="6" data-type="num">발주<span class="sort-ic"></span></th>
+            <th class="sortable num-r" data-col="7" data-type="num">누계입고<span class="sort-ic"></span></th>
+            <th class="sortable num-r" data-col="8" data-type="num">기간판매<span class="sort-ic"></span></th>
+            <th class="sortable num-r" data-col="9" data-type="num">기간매출<span class="sort-ic"></span></th>
+            <th class="sortable num-r" data-col="10" data-type="num">누계판매<span class="sort-ic"></span></th>
+            <th class="sortable num-r" data-col="11" data-type="num">누계매출<span class="sort-ic"></span></th>
+            <th class="sortable num-r" data-col="12" data-type="pct">소진율<span class="sort-ic"></span></th>
+            <th class="sortable num-r" data-col="13" data-type="num">총재고<span class="sort-ic"></span></th>
+            <th class="sortable num-r" data-col="14" data-type="num">물류<span class="sort-ic"></span></th>
+            <th class="sortable num-r" data-col="15" data-type="num">매장<span class="sort-ic"></span></th>
+          </tr></thead>
+          <tbody id="detailBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const VIEWS       = {js_views};
+const BL          = {{"커버낫":"커버낫","와키윌리":"와키윌리","리(LEE)":"리"}};
+const BRAND_ORDER = ["커버낫","와키윌리","리(LEE)"];
+const GL          = {{"CAP":"모자·헤드웨어","BAG":"가방","SHOES":"신발","ACC":"액세서리"}};
+
+let currentView  = "종합";
+let seasonTab    = "26SS";
+let qtyMode      = "26ss";
+let qtyLevel     = "group";
+let spikeMode    = "26ss";
+let subFilterVal = "all";
+let sortState    = {{col:-1,dir:"asc"}};
+let chartQty     = null;
+
+// ── 유틸 ──────────────────────────────────────────────────
+const fN = n => (!n&&n!==0)?"-":Math.round(n).toLocaleString("ko-KR");
+const fA = n => {{
+  if(!n&&n!==0)return"-";
+  if(n>=1e8)return(n/1e8).toFixed(1)+"억원";
+  if(n>=1e4)return Math.round(n/1e4)+"만원";
+  return Math.round(n).toLocaleString()+"원";
+}};
+const stBadge = v => {{
+  if(v===null||v===undefined)return'<span class="badge b-gry">-</span>';
+  const c=v>=80?"b-red":v>=60?"b-org":v>=40?"b-yel":"b-grn";
+  return`<span class="badge ${{c}}">${{v.toFixed(1)}}%</span>`;
+}};
+const stColor = v => v===null||v===undefined?"#999":v>=80?"#e53e3e":v>=60?"#dd6b20":v>=40?"#d69e2e":"#38a169";
+const diffSpan = (change,pq) => {{
+  if(pq===null||pq===undefined)return'<span class="new-tag">NEW</span>';
+  if(change===null||change===undefined)return'<span class="fl">─</span>';
+  const s=change>0?"+":"",c=change>0?"up":change<0?"dn":"fl",a=change>0?"▲":change<0?"▼":"─";
+  return`<span class="${{c}}">${{a}} ${{s}}${{change.toFixed(1)}}%</span>`;
+}};
+const yMax = arr => {{
+  const m=Math.max(...arr.filter(v=>v>0),1);
+  const mg=Math.pow(10,Math.floor(Math.log10(m)));
+  return Math.ceil(m/mg)*mg;
+}};
+
+// ── 탭 전환 ──────────────────────────────────────────────
+function switchView(btn){{
+  currentView=btn.getAttribute("data-view");
+  document.querySelectorAll(".brand-tab").forEach(b=>b.classList.remove("active"));
+  btn.classList.add("active");
+  subFilterVal="all"; sortState={{col:-1,dir:"asc"}};
+  renderAll();
+}}
+function setSeasonTab(btn){{
+  seasonTab=btn.getAttribute("data-ssn");
+  document.querySelectorAll(".season-tab").forEach(b=>b.classList.remove("active"));
+  btn.classList.add("active");
+  renderCards(VIEWS[currentView].summary);
+}}
+function setQtyMode(btn){{
+  qtyMode=btn.getAttribute("data-qm");
+  document.querySelectorAll("[data-qm]").forEach(b=>b.classList.remove("active"));
+  btn.classList.add("active");
+  renderQtyChart(VIEWS[currentView].chart);
+  renderAmtChart(VIEWS[currentView].chart);
+}}
+function setQtyLevel(btn){{
+  qtyLevel=btn.getAttribute("data-ql");
+  document.querySelectorAll("[data-ql]").forEach(b=>b.classList.remove("active"));
+  btn.classList.add("active");
+  renderQtyChart(VIEWS[currentView].chart);
+  renderAmtChart(VIEWS[currentView].chart);
+}}
+function setSpikeMode(btn){{
+  spikeMode=btn.getAttribute("data-sm");
+  document.querySelectorAll("[data-sm]").forEach(b=>b.classList.remove("active"));
+  btn.classList.add("active");
+  const v=VIEWS[currentView];
+  renderSpikes(v.spikes);
+  renderBagCompare(v.bag_compare);
+}}
+
+// ── 브랜드 브리핑 ─────────────────────────────────────────
+function renderBrief(brief){{
+  const brands=currentView==="종합"?BRAND_ORDER:[currentView];
+  document.getElementById("briefArea").innerHTML=brands.map(b=>{{
+    const d=brief?.[b];
+    if(!d)return`<div class="brief-card signal-flat"><div class="brief-brand">${{BL[b]||b}}</div><div class="no-data">데이터 없음</div></div>`;
+    const sigCls="signal-"+d.signal;
+    const sigIcon=d.signal==="up"?"📈":d.signal==="down"?"📉":"➡️";
+    const yoyBadgeCls=d.yoy_pct===null?"bb-yoy-flat":d.yoy_pct>=10?"bb-yoy-up":d.yoy_pct<=-10?"bb-yoy-dn":"bb-yoy-flat";
+    const yoyText=d.yoy_pct===null?"YoY -":`YoY ${{d.yoy_pct>=0?"+":""}}${{d.yoy_pct}}%`;
+    const wowText=d.wow_pct===null?"WoW -":`WoW ${{d.wow_pct>=0?"+":""}}${{d.wow_pct}}%`;
+    const alarmBadge=d.alarm_cnt>0?`<span class="brief-badge bb-alarm">⚠️ QR ${{d.alarm_cnt}}건</span>`:"";
+    const discFmt=v=>v===null?"-":`${{v}}%`;
+    const n=d.new, c=d.carry, a=d.all;
+    return`<div class="brief-card ${{sigCls}}">
+      <span class="brief-signal-icon">${{sigIcon}}</span>
+      <div class="brief-brand">${{d.brand}}</div>
+      <div><span class="brief-qty">${{fN(a.qty)}}</span><span class="brief-qty-unit">개</span>
+           <span style="font-size:11px;color:#718096;margin-left:6px">${{fA(a.amt)}}</span></div>
+      <table class="brief-seg-table">
+        <thead><tr>
+          <th></th><th>수량</th><th>TAG금액</th><th>실판금액</th><th>할인율</th>
+        </tr></thead>
+        <tbody>
+          <tr class="bst-new">
+            <td>신상(26SS)</td>
+            <td>${{fN(n.qty)}}개</td>
+            <td>${{fA(n.tag_amt)}}</td>
+            <td>${{fA(n.amt)}}</td>
+            <td>${{discFmt(n.disc)}}</td>
+          </tr>
+          <tr class="bst-carry">
+            <td>이월</td>
+            <td>${{fN(c.qty)}}개</td>
+            <td>${{fA(c.tag_amt)}}</td>
+            <td>${{fA(c.amt)}}</td>
+            <td>${{discFmt(c.disc)}}</td>
+          </tr>
+          <tr class="bst-total">
+            <td>합계</td>
+            <td>${{fN(a.qty)}}개</td>
+            <td>${{fA(a.tag_amt)}}</td>
+            <td>${{fA(a.amt)}}</td>
+            <td>${{discFmt(a.disc)}}</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="brief-badges">
+        <span class="brief-badge ${{yoyBadgeCls}}">${{yoyText}}</span>
+        <span class="brief-badge bb-wow">${{wowText}}</span>
+        ${{alarmBadge}}
+      </div>
+      <div class="brief-divider"></div>
+      <div class="brief-meta">
+        <span class="lbl">최다판매 품목</span> ${{d.top_grp||"-"}} (${{fN(d.top_grp_qty)}}개)<br>
+        <span class="lbl">최다판매 품번</span> ${{d.top_item_code||"-"}} ${{d.top_item_name?`— ${{d.top_item_name}}`:""}}<br>
+        <span style="margin-left:12px;color:#718096">${{fN(d.top_item_qty)}}개</span>
+      </div>
+    </div>`;
+  }}).join("");
+}}
+
+// ── 전체 렌더 ─────────────────────────────────────────────
+function renderAll(){{
+  const v=VIEWS[currentView];
+  renderBrief(v.brief);
+  renderInsight(v.insight);
+  renderCards(v.summary);
+  renderQtyChart(v.chart);
+  renderAmtChart(v.chart);
+  renderMatrix(v.matrix);
+  renderAlarms(v.alarms);
+  renderSpikes(v.spikes);
+  renderBagCompare(v.bag_compare);
+  renderDetail(v.detail);
+  resetSubFilter(); resetSortHeaders();
+}}
+
+// ── 카드 ─────────────────────────────────────────────────
+function renderCards(summary){{
+  const brands=currentView==="종합"?BRAND_ORDER:[currentView];
+  document.getElementById("cardsArea").innerHTML=brands.map(b=>{{
+    const s=summary[seasonTab]?.[b];
+    if(!s)return`<div class="brand-card"><div class="bc-label">${{BL[b]||b}}</div><div class="no-data">데이터 없음</div></div>`;
+    return`<div class="brand-card">
+      <div class="bc-label">${{s.label}}</div>
+      <div><span class="bc-big">${{fN(s.period_qty)}}</span><span class="bc-unit">개</span></div>
+      <div class="bc-sub">${{fA(s.period_amt)}}</div>
+      <div class="bc-div"></div>
+      <div class="bc-row"><span class="lbl-sm">누계소진율</span>
+        <span class="val-sm" style="color:${{stColor(s.st)}}">${{s.st!==null?s.st.toFixed(1)+"%":"-"}}</span></div>
+      <div class="bc-row"><span class="lbl-sm">총재고</span>
+        <span class="val-sm">${{fN(s.total_stock)}}개</span></div>
+    </div>`;
+  }}).join("");
+}}
+
+// ── 기간판매 차트 ─────────────────────────────────────────
+function renderQtyChart(chart){{
+  const key=qtyMode==="26ss"?"qty_26ss":"qty_all";
+  const d=chart[key][qtyLevel];
+  if(chartQty)chartQty.destroy();
+  const ym=yMax([...d.cur,...d.prev]);
+  chartQty=new Chart(document.getElementById("chartQty"),{{
+    type:"bar",
+    data:{{labels:d.labels,datasets:[
+      {{label:"현년",data:d.cur,backgroundColor:"rgba(49,130,206,.85)",borderColor:"#2b6cb0",borderWidth:1,borderRadius:3}},
+      {{label:"전년",data:d.prev,backgroundColor:"rgba(160,174,192,.5)",borderColor:"#a0aec0",borderWidth:1,borderRadius:3}},
+    ]}},
+    options:{{
+      responsive:true,maintainAspectRatio:false,
+      plugins:{{legend:{{position:"bottom",labels:{{font:{{size:11}},boxWidth:12,padding:8}}}},
+               tooltip:{{callbacks:{{label:c=>c.dataset.label+": "+c.parsed.y.toLocaleString()+"개"}}}}}},
+      scales:{{
+        x:{{ticks:{{font:{{size:11}}}},grid:{{display:false}}}},
+        y:{{min:0,max:ym,ticks:{{stepSize:ym/5,callback:v=>v.toLocaleString(),font:{{size:11}}}},grid:{{color:"#f0f0f0"}}}}
+      }}
+    }}
+  }});
+  const tc=d.cur.reduce((a,b)=>a+b,0),tp=d.prev.reduce((a,b)=>a+b,0);
+  const pct=tp>0?((tc-tp)/tp*100).toFixed(1):"-";
+  const sign=parseFloat(pct)>=0?"+":"";
+  document.getElementById("qtyNote").textContent=`현년 ${{tc.toLocaleString()}}개 / 전년 ${{tp.toLocaleString()}}개 · YoY ${{sign}}${{pct}}%`;
+}}
+
+// ── 실판매금액 차트 ───────────────────────────────────────
+let chartAmt=null;
+function renderAmtChart(chart){{
+  const key=qtyMode==="26ss"?"amt_26ss":"amt_all";
+  const d=chart[key][qtyLevel];
+  if(chartAmt)chartAmt.destroy();
+  const ym=yMax([...d.cur,...d.prev]);
+  chartAmt=new Chart(document.getElementById("chartAmt"),{{
+    type:"bar",
+    data:{{labels:d.labels,datasets:[
+      {{label:"현년",data:d.cur,backgroundColor:"rgba(56,161,105,.85)",borderColor:"#276749",borderWidth:1,borderRadius:3}},
+      {{label:"전년",data:d.prev,backgroundColor:"rgba(160,174,192,.5)",borderColor:"#a0aec0",borderWidth:1,borderRadius:3}},
+    ]}},
+    options:{{
+      responsive:true,maintainAspectRatio:false,
+      plugins:{{legend:{{position:"bottom",labels:{{font:{{size:11}},boxWidth:12,padding:8}}}},
+               tooltip:{{callbacks:{{label:c=>c.dataset.label+": "+c.parsed.y.toLocaleString()+"만원"}}}}}},
+      scales:{{
+        x:{{ticks:{{font:{{size:11}}}},grid:{{display:false}}}},
+        y:{{min:0,max:ym,ticks:{{stepSize:ym/5,callback:v=>v.toLocaleString(),font:{{size:11}}}},grid:{{color:"#f0f0f0"}}}}
+      }}
+    }}
+  }});
+  const tc=d.cur.reduce((a,b)=>a+b,0),tp=d.prev.reduce((a,b)=>a+b,0);
+  const pct=tp>0?((tc-tp)/tp*100).toFixed(1):"-";
+  const sign=parseFloat(pct)>=0?"+":"";
+  document.getElementById("amtNote").textContent=`현년 ${{tc.toLocaleString()}}만원 / 전년 ${{tp.toLocaleString()}}만원 · YoY ${{sign}}${{pct}}%`;
+}}
+
+// ── 브랜드별 특이사항 인사이트 ────────────────────────────
+function renderInsight(insight){{
+  const brands=currentView==="종합"?BRAND_ORDER:[currentView];
+  document.getElementById("insightArea").innerHTML=brands.map(b=>{{
+    const pts=insight?.[b]||[];
+    const items=pts.length>0
+      ?pts.map(p=>`<li>${{p}}</li>`).join("")
+      :`<li style="color:#a0aec0">분석 데이터 부족</li>`;
+    return`<div class="insight-card">
+      <div class="insight-brand">${{BL[b]||b}}</div>
+      <ul class="insight-list">${{items}}</ul>
+    </div>`;
+  }}).join("");
+}}
+
+// ── 매트릭스 ─────────────────────────────────────────────
+function renderMatrix(matrix){{
+  const brands=currentView==="종합"?BRAND_ORDER:[currentView];
+  const grps=["CAP","BAG","SHOES","ACC"];
+  let h="<thead><tr><th class='brand-col'>브랜드</th>";
+  grps.forEach(g=>h+=`<th style="min-width:120px">${{GL[g]}}</th>`);
+  h+="</tr></thead><tbody>";
+  brands.forEach(b=>{{
+    h+=`<tr><td class="brand-col">${{BL[b]||b}}</td>`;
+    grps.forEach(g=>{{
+      const c=(matrix[g]||{{}})[b];
+      h+=c&&c.qty>0
+        ?`<td><span class="m-qty">${{fN(c.qty)}}</span><span class="m-st" style="color:${{stColor(c.st)}}">${{c.st!==null?c.st.toFixed(1)+"%":"-"}}</span></td>`
+        :`<td class="cell-empty">─</td>`;
+    }});
+    h+="</tr>";
+  }});
+  document.getElementById("matrixTable").innerHTML=h+"</tbody>";
+}}
+
+// ── 리오더 알람 ───────────────────────────────────────────
+function renderAlarms(alarms){{
+  const body=document.getElementById("alarmBody");
+  if(!alarms.length){{body.innerHTML='<tr><td colspan="11" class="no-data" style="padding:16px">리오더 알람 없음</td></tr>';return;}}
+  body.innerHTML=alarms.map(a=>{{
+    const cls=a.st>=85?"alarm-crit":"alarm-warn";
+    return`<tr class="${{cls}}"><td>${{BL[a.brand]||a.brand}}</td><td>${{a.season}}</td>
+      <td class="mono">${{a.item_code}}</td><td>${{a.item_name}}</td><td>${{a.item_type}}</td>
+      <td class="num-r">${{fN(a.order_qty)}}</td><td class="num-r">${{fN(a.total_in_qty)}}</td>
+      <td class="num-r">${{fN(a.total_sale_qty)}}</td><td class="num-r">${{stBadge(a.st)}}</td>
+      <td class="num-r bold" style="color:#e53e3e">${{fN(a.total_stock)}}</td>
+      <td class="num-r">${{fN(a.logistics_stock)}} / ${{fN(a.store_stock)}}</td></tr>`;
+  }}).join("");
+}}
+
+// ── 전체 판매 상위 ────────────────────────────────────────
+function renderSpikes(spikes){{
+  const list=spikes[spikeMode]||[];
+  const body=document.getElementById("spikeBody");
+  if(!list.length){{body.innerHTML='<tr><td colspan="11" class="no-data" style="padding:16px">기간판매 없음</td></tr>';return;}}
+  body.innerHTML=list.map(s=>`<tr>
+    <td>${{BL[s.brand]||s.brand}}</td><td>${{s.season}}</td>
+    <td class="mono">${{s.item_code}}</td><td>${{s.item_name}}</td><td>${{s.item_type}}</td>
+    <td class="num-r bold" style="color:#2b6cb0">${{fN(s.period_qty)}}</td>
+    <td class="num-r">${{s.prev_qty!==null?fN(s.prev_qty):"-"}}</td>
+    <td class="num-r">${{diffSpan(s.change,s.prev_qty)}}</td>
+    <td class="num-r">${{fA(s.period_amt)}}</td>
+    <td class="num-r">${{stBadge(s.st)}}</td>
+    <td class="num-r">${{fN(s.total_stock)}}</td>
+  </tr>`).join("");
+}}
+
+// ── 가방 현년 vs 전년 비교 ─────────────────────────────────
+function renderBagCompare(bag){{
+  const curKey  = spikeMode==="26ss" ? "cur_26ss"  : "cur_all";
+  const prevKey = spikeMode==="26ss" ? "prev_26ss" : "prev_all";
+  const curLabel  = spikeMode==="26ss" ? "26SS" : "26SS+25FW";
+  const prevLabel = spikeMode==="26ss" ? "25SS" : "25SS+24FW";
+
+  document.getElementById("curSeasonLabel").textContent  = curLabel;
+  document.getElementById("prevSeasonLabel").textContent = prevLabel;
+
+  const bagRow = (d, rank) => `<tr>
+    <td class="rank-no">${{rank}}</td>
+    <td class="mono">${{d.item_code}}</td><td>${{d.item_name}}</td><td>${{d.item_type}}</td>
+    <td class="num-r bold" style="color:#2b6cb0">${{fN(d.period_qty)}}</td>
+    <td class="num-r">${{fN(d.total_qty)}}</td>
+    <td class="num-r">${{stBadge(d.st)}}</td>
+    <td class="num-r">${{fN(d.total_stock)}}</td>
+  </tr>`;
+
+  const curList  = bag[curKey]  || [];
+  const prevList = bag[prevKey] || [];
+
+  document.getElementById("bagCurBody").innerHTML  =
+    curList.length  ? curList.map((d,i)=>bagRow(d,i+1)).join("")
+                    : '<tr><td colspan="8" class="no-data" style="padding:12px">데이터 없음</td></tr>';
+  document.getElementById("bagPrevBody").innerHTML =
+    prevList.length ? prevList.map((d,i)=>bagRow(d,i+1)).join("")
+                    : '<tr><td colspan="8" class="no-data" style="padding:12px">데이터 없음</td></tr>';
+}}
+
+// ── 상세 테이블 ───────────────────────────────────────────
+function renderDetail(detail){{
+  document.getElementById("detailBody").innerHTML=detail.map(d=>`
+    <tr data-group="${{d.group}}" data-season="${{d.season}}">
+      <td>${{d.brand}}</td><td>${{d.season}}</td>
+      <td class="mono">${{d.item_code}}</td><td>${{d.item_name}}</td><td>${{d.item_type}}</td>
+      <td class="num-r">${{fN(d.list_price)}}</td><td class="num-r">${{fN(d.order_qty)}}</td>
+      <td class="num-r">${{fN(d.total_in)}}</td>
+      <td class="num-r bold">${{fN(d.period_qty)}}</td><td class="num-r">${{fA(d.period_amt)}}</td>
+      <td class="num-r">${{fN(d.total_qty)}}</td><td class="num-r">${{fA(d.total_amt)}}</td>
+      <td class="num-r">${{stBadge(d.st)}}</td><td class="num-r">${{fN(d.total_stock)}}</td>
+      <td class="num-r">${{fN(d.log_stock)}}</td><td class="num-r">${{fN(d.str_stock)}}</td>
+    </tr>`).join("");
+}}
+
+// ── 서브필터 ─────────────────────────────────────────────
+function subFilter(val,btn){{
+  subFilterVal=val;
+  document.querySelectorAll(".sf-btn").forEach(b=>b.classList.remove("on"));
+  btn.classList.add("on"); applySubFilter();
+}}
+function applySubFilter(){{
+  document.querySelectorAll("#detailBody tr").forEach(r=>{{
+    if(subFilterVal==="all"){{r.style.display="";return;}}
+    r.style.display=(r.getAttribute("data-group")===subFilterVal||r.getAttribute("data-season")===subFilterVal)?"":"none";
+  }});
+}}
+function resetSubFilter(){{
+  subFilterVal="all";
+  document.querySelectorAll(".sf-btn").forEach(b=>b.classList.remove("on"));
+  const f=document.querySelector(".sf-btn");if(f)f.classList.add("on");
+}}
+
+// ── 소팅 ─────────────────────────────────────────────────
+function parseCell(text,type){{
+  if(!text||text==="-"||text==="─")return type==="str"?"":Number.NEGATIVE_INFINITY;
+  if(type==="pct"){{const m=text.match(/([\\d.]+)%/);return m?parseFloat(m[1]):-1;}}
+  if(type==="num"){{
+    const s=text.replace(/,/g,"").replace("원","").trim();
+    if(s.endsWith("억원")||s.endsWith("억"))return parseFloat(s)*1e8;
+    if(s.endsWith("만원")||s.endsWith("만"))return parseFloat(s)*1e4;
+    return parseFloat(s)||0;
+  }}
+  return text.trim();
+}}
+function resetSortHeaders(){{
+  document.querySelectorAll("#detailTable thead .sortable").forEach(h=>h.classList.remove("asc","desc"));
+  sortState={{col:-1,dir:"asc"}};
+}}
+
+document.addEventListener("DOMContentLoaded",()=>{{
+  document.querySelectorAll("#detailTable thead .sortable").forEach(th=>{{
+    th.addEventListener("click",function(){{
+      const col=parseInt(this.dataset.col),type=this.dataset.type;
+      sortState.col===col ? sortState.dir=sortState.dir==="asc"?"desc":"asc"
+                          : (sortState.col=col, sortState.dir=(type==="num"||type==="pct")?"desc":"asc");
+      document.querySelectorAll("#detailTable thead .sortable").forEach(h=>h.classList.remove("asc","desc"));
+      this.classList.add(sortState.dir);
+      const tbody=document.getElementById("detailBody");
+      Array.from(tbody.querySelectorAll("tr"))
+        .sort((a,b)=>{{
+          const at=(a.querySelectorAll("td")[col]||{{}}).textContent||"";
+          const bt=(b.querySelectorAll("td")[col]||{{}}).textContent||"";
+          const av=parseCell(at,type),bv=parseCell(bt,type);
+          if(av===bv)return 0;
+          const cmp=type==="str"?at.localeCompare(bt,"ko"):(av<bv?-1:1);
+          return sortState.dir==="asc"?cmp:-cmp;
+        }})
+        .forEach(r=>tbody.appendChild(r));
+      applySubFilter();
+    }});
+  }});
+  renderAll();
+}});
+</script>
+</body>
+</html>"""
+    Path(out_path).write_text(html, encoding="utf-8")
+
+# ── 메인 ──────────────────────────────────────────────────
+def main():
+    p=argparse.ArgumentParser(); p.add_argument("excel"); p.add_argument("--out",default=str(DEFAULT_OUT)); p.add_argument("--date",default=None)
+    args=p.parse_args()
+    path=Path(args.excel)
+    if not path.exists(): print(f"파일 없음: {path}"); sys.exit(1)
+
+    wb=openpyxl.load_workbook(str(path),read_only=True,data_only=True)
+    sheets=wb.sheetnames; print(f"시트: {sheets}")
+    def find(kw): return next((s for s in sheets if kw in s), None)
+
+    cur_sheet  = find("2026") and next((s for s in sheets if "2026" in s and "전전주" not in s), None)
+    pprev_sheet= find("전전주")
+    prev_sheet = find("2025")
+    if not cur_sheet: cur_sheet = sheets[0]
+    if not prev_sheet: prev_sheet = sheets[1] if len(sheets) > 1 else sheets[0]
+
+    print(f"[1/4] 현재주 시트 ({cur_sheet})...")
+    items_cur = aggregate(load_sheet(wb[cur_sheet])); print(f"  -> {len(items_cur):,}개")
+
+    print(f"[2/4] 전년 시트 ({prev_sheet})...")
+    items_prev = aggregate(load_sheet(wb[prev_sheet])); print(f"  -> {len(items_prev):,}개")
+
+    if pprev_sheet:
+        print(f"[3/4] 전전주 시트 ({pprev_sheet})...")
+        items_pprev = aggregate(load_sheet(wb[pprev_sheet])); print(f"  -> {len(items_pprev):,}개")
+    else:
+        print("[3/4] 전전주 시트 없음 — 스냅샷으로 대체")
+        snaps = load_prev_snaps(date.today().strftime("%Y-%m-%d"), 1)
+        items_pprev = []
+        if snaps:
+            items_pprev = [
+                {"brand": k.split("|")[0], "season": k.split("|")[1],
+                 "item_code": k.split("|")[2], "period_sale_qty": v["period_sale_qty"]}
+                for k, v in snaps[0]["items"].items()
+            ]
+    wb.close()
+
+    pprev_lookup = build_pprev_lookup(items_pprev)
+    pprev_date = pprev_sheet or "스냅샷"
+
+    ref_date = args.date or date.today().strftime("%Y-%m-%d"); print(f"기준일: {ref_date}")
+    save_snapshot(items_cur, ref_date)
+
+    print("[4/4] HTML 생성...")
+    views = {vk: build_view(items_cur, items_prev, vk, pprev_lookup) for vk in VIEW_KEYS}
+    out_dir = Path(args.out); out_dir.mkdir(parents=True, exist_ok=True)
+    out_file = out_dir / f"board_acc-weekly_{ref_date}.html"
+    build_html(ref_date, views, pprev_date, out_file)
+    print(f"\n완료: {out_file}")
+
+if __name__=="__main__": main()

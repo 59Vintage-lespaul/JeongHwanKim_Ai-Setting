@@ -1,0 +1,99 @@
+{
+  "meta": {
+    "version": "1.0.0",
+    "created": "2026-04-08",
+    "last_updated": "2026-04-08",
+    "project": "covernat-planning-md",
+    "description": "커버낫 FPOF — 패션 하우스 AI 오케스트레이션 상태"
+  },
+  "active_brand": "covernat",
+  "current_season": "26SS",
+  "pdca": {
+    "current_phase": "plan",
+    "phase_progress": 0,
+    "phases": {
+      "plan": {
+        "status": "in_progress",
+        "progress": 0,
+        "started": "2026-04-08",
+        "outputs": [],
+        "next_skill": "trend-research",
+        "checklist": {
+          "trend-research": false,
+          "brand-strategy": false,
+          "md-planning": false,
+          "line-sheet": false
+        }
+      },
+      "design": {
+        "status": "pending",
+        "progress": 0,
+        "outputs": [],
+        "checklist": {
+          "moodboard": false,
+          "design-spec": false,
+          "visual-generation": false,
+          "costing-ve": false
+        }
+      },
+      "do": {
+        "status": "pending",
+        "progress": 0,
+        "outputs": [],
+        "checklist": {
+          "techpack": false,
+          "imc-strategy": false,
+          "visual-content": false,
+          "copywriting": false,
+          "social-viral": false
+        }
+      },
+      "check": {
+        "status": "pending",
+        "progress": 0,
+        "outputs": [],
+        "checklist": {
+          "sales-analysis": false,
+          "insight-archiving": false,
+          "gap-analysis": false,
+          "completion-report": false
+        }
+      },
+      "act": {
+        "status": "pending",
+        "progress": 0,
+        "outputs": [],
+        "notes": ""
+      }
+    }
+  },
+  "projects": {},
+  "operational": {
+    "weekly": {
+      "current_week": null,
+      "last_review": null,
+      "outputs": []
+    },
+    "dashboard": {
+      "last_updated": null,
+      "data_files": []
+    }
+  },
+  "brand_preset_paths": {
+    "brand_config": "system/presets/covernat/brand.config.json",
+    "personas": "system/presets/covernat/personas.json",
+    "tone_manner": "system/presets/covernat/tone-manner.json",
+    "visual_identity": "system/presets/covernat/visual-identity.json",
+    "categories": "system/presets/covernat/categories.json",
+    "channels": "system/presets/covernat/channels.json",
+    "bcave_bta": "system/presets/bcave/bta-guideline.md",
+    "bcave_business_unit": "system/presets/bcave/business-unit-guide.md",
+    "bcave_ax_strategy": "system/presets/bcave/bcave-ax-strategy-guide.md",
+    "bcave_rework": "system/presets/bcave/bcave-rework-process-innovation-guide.md",
+    "bcave_file_naming": "system/presets/bcave/file-naming-convention.json",
+    "bcave_product_code": "system/presets/bcave/product-code.json",
+    "skills_base": "system/skills/"
+  },
+  "workspace_root": "workspace/26SS/",
+  "notes": "커버낫 FPOF 초기화 완료. 26SS Plan 단계 시작 준비됨."
+}

@@ -1,0 +1,157 @@
+{
+  "_meta": {
+    "description": "FPOF 시스템 아키텍처 — 4-Layer 구조, PDCA 엔진, 에이전시 구성, 품질 게이트",
+    "source": "docs/reference/fpof-architecture.md",
+    "version": "1.0",
+    "updated": "2026-03-25"
+  },
+  "architecture": {
+    "layers": [
+      {
+        "level": 1,
+        "name": "Orchestrator Core",
+        "description": "세션 관리, 에이전트 라우팅, 상태 머신",
+        "components": {
+          "conductor": "전체 워크플로우 제어, 에이전트 호출 순서 결정",
+          "state_machine": ".fpof-state.json 기반 PDCA 단계 추적",
+          "router": "사용자 입력 → 적절한 에이전트/스킬 라우팅",
+          "memory": "세션 간 컨텍스트 유지, 브랜드 지식 축적"
+        }
+      },
+      {
+        "level": 2,
+        "name": "PDCA Engine",
+        "description": "패션 도메인 PDCA 품질 관리 계층",
+        "phases": {
+          "plan": { "protocol": "Season Strategy", "automation": "semi-auto" },
+          "design": { "protocol": "Creative Development", "automation": "semi-auto" },
+          "do": { "protocol": "Production & Launch", "automation": "semi-auto" },
+          "check": { "protocol": "Performance Review", "automation": "auto" },
+          "act": { "protocol": "Improvement Cycle", "automation": "auto" }
+        }
+      },
+      {
+        "level": 3,
+        "name": "Domain Agents",
+        "description": "5개 에이전시 + 품질관리부"
+      },
+      {
+        "level": 4,
+        "name": "Brand Preset",
+        "description": "브랜드별 특화 설정 (JSON 프리셋)"
+      }
+    ],
+    "design_principles": [
+      "Brand-Agnostic Core: 프레임워크 코어는 특정 브랜드에 종속되지 않음",
+      "Preset-Based Customization: 브랜드별 특화는 프리셋으로 분리",
+      "Semi-Automatic Flow: 단계 완료 시 다음 단계 추천, QG 자동 실행",
+      "Document-Driven: 모든 의사결정과 산출물은 문서로 추적"
+    ]
+  },
+  "quality_gates": {
+    "QG1": {
+      "position": "Plan → Design",
+      "checks": ["시즌 컨셉 완전성", "SKU 계획 유효성", "예산 정합성"],
+      "pass_criteria": "필수 항목 100% 작성, 숫자 정합성 통과"
+    },
+    "QG2": {
+      "position": "Design → Do",
+      "checks": ["디자인-기획 정합성", "원가 타겟 충족", "비주얼 완성도"],
+      "pass_criteria": "원가 타겟 이내, 디자인 스펙 완전"
+    },
+    "QG3": {
+      "position": "Do → Check",
+      "checks": ["테크팩 완전성", "마케팅 자료 완비", "런칭 계획 수립"],
+      "pass_criteria": "모든 산출물 생성 완료"
+    },
+    "QG4": {
+      "position": "Check → Next",
+      "checks": ["KPI 달성률", "갭 분석 결과"],
+      "pass_criteria": "Match Rate >= 90% → Complete",
+      "fail_action": "Match Rate < 90% → Act Phase (자동 개선 최대 5회)"
+    }
+  },
+  "agencies": {
+    "strategy_planning": {
+      "name_ko": "전략기획실",
+      "agents": [
+        { "role": "Brand Strategist", "phase": "plan", "tier": 1 },
+        { "role": "Chief Merchandiser", "phase": "plan", "tier": 1 },
+        { "role": "Collection Planner", "phase": "plan-design", "tier": 2 },
+        { "role": "Market Researcher", "phase": "plan,check", "tier": 2 }
+      ]
+    },
+    "creative_studio": {
+      "name_ko": "크리에이티브 스튜디오",
+      "agents": [
+        { "role": "Creative Director", "phase": "design", "tier": 1 },
+        { "role": "Fashion Designer", "phase": "design", "tier": 2 },
+        { "role": "Art Director", "phase": "design-do", "tier": 2 }
+      ]
+    },
+    "product_lab": {
+      "name_ko": "프로덕트 랩",
+      "agents": [
+        { "role": "Production Manager", "phase": "do", "tier": 2 }
+      ]
+    },
+    "marketing_showroom": {
+      "name_ko": "마케팅 쇼룸",
+      "agents": [
+        { "role": "Marketing Director", "phase": "do", "tier": 1 },
+        { "role": "Fashion Editor", "phase": "do", "tier": 2 },
+        { "role": "Social Strategy Director", "phase": "do", "tier": 2 }
+      ]
+    },
+    "data_intelligence": {
+      "name_ko": "데이터 인텔리전스",
+      "agents": [
+        { "role": "Trend Analyst", "phase": "check", "tier": 2 }
+      ]
+    },
+    "quality_control": {
+      "name_ko": "QC 본부",
+      "agents": [
+        { "role": "Gap Detector", "phase": "check", "automation": "auto" },
+        { "role": "Design Validator", "phase": "check", "automation": "auto" },
+        { "role": "PDCA Iterator", "phase": "act", "automation": "auto" },
+        { "role": "Report Generator", "phase": "act", "automation": "auto" }
+      ]
+    }
+  },
+  "pdca_workflow": {
+    "plan": {
+      "sequence": ["Market Researcher → 트렌드 분석", "Brand Strategist → 브랜드 전략", "Chief Merchandiser → MD 전략", "Collection Planner → 라인시트"],
+      "artifacts": ["trend-brief.md", "brand-strategy.md", "season-concept.md", "line-sheet.xlsx"],
+      "exit": "사용자 승인 → QG1 → Design"
+    },
+    "design": {
+      "sequence": ["Creative Director → 무드보드/키비주얼", "Fashion Designer → 디자인 개발", "Art Director → 비주얼 제작", "Production Manager → 원가 검증"],
+      "artifacts": ["moodboard.md", "design-spec.md", "visual/", "costing-analysis.md"],
+      "exit": "사용자 승인 → QG2 → Do"
+    },
+    "do": {
+      "sequence": ["Production Manager → 테크팩/생산", "Marketing Director → IMC 전략", "Fashion Editor → 카피/콘텐츠", "Social Strategy Director → 바이럴"],
+      "artifacts": ["techpack.md", "campaign-brief.md", "copy-deck.md", "launch-plan.md"],
+      "exit": "사용자 승인 → QG3 → Check"
+    },
+    "check": {
+      "sequence": ["Trend Analyst → 매출/KPI 분석", "Market Researcher → 경쟁사 비교", "Gap Detector → 갭 분석(자동)", "Report Generator → 리포트(자동)"],
+      "artifacts": ["sales-analysis.md", "gap-report.md", "pdca-report.md"],
+      "exit": "Match Rate >= 90% → Complete / < 90% → Act"
+    },
+    "act": {
+      "sequence": ["PDCA Iterator → 개선계획(자동)", "관련 에이전트 → 개선 실행", "Gap Detector → 재검증(자동, 최대 5회)"],
+      "artifacts": ["improvement-plan.md", "action-items.md"],
+      "exit": "개선 결과 보고 → 다음 사이클 Plan"
+    }
+  },
+  "skill_phase_mapping": {
+    "plan": ["brand-positioning", "trend-research", "md-planning", "line-sheet", "pestle-analysis", "porters-five-forces", "ansoff-matrix", "business-model-canvas", "value-proposition"],
+    "design": ["moodboard", "design-spec", "visual-generation", "costing-ve", "pinterest-crawl"],
+    "do": ["techpack", "qr-process", "imc-strategy", "copywriting", "social-viral", "visual-content"],
+    "check": ["sales-analysis", "insight-archiving", "gap-analysis", "completion-report", "ab-test-analysis", "cohort-analysis"],
+    "act": ["pdca-iteration"],
+    "always": ["grammar-check", "quality-gate", "format-conversion", "meeting", "executive-summary"]
+  }
+}

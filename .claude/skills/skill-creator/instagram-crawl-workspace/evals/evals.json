@@ -1,0 +1,77 @@
+{
+  "skill_name": "instagram-crawl",
+  "evals": [
+    {
+      "id": 0,
+      "prompt": "인스타그램에서 키치 패션 레퍼런스 이미지 20장 수집해줘. 와키윌리 무드에 맞는 스트릿 감성으로.",
+      "expected_output": "인스타그램 해시태그 크롤링 절차 실행: 키치 관련 해시태그 클러스터 설계(#키치패션 등), AskUserQuestion으로 사용자 확인 요청, 이미지 전용 수집 커맨드 제시 (--no-videos 포함), 20장 기본값 적용, 저장 경로 및 폴더 구조 안내",
+      "files": [],
+      "assertions": [
+        {
+          "name": "has_hashtag_cluster",
+          "description": "응답에 #키치패션 등 해시태그 클러스터 설계 내용이 포함되어 있는가"
+        },
+        {
+          "name": "has_confirmation_step",
+          "description": "AskUserQuestion 또는 사용자 확인 단계가 명시되어 있는가"
+        },
+        {
+          "name": "no_videos_excluded",
+          "description": "--no-videos 옵션 또는 동영상 제외 처리가 명시되어 있는가"
+        },
+        {
+          "name": "default_count_20",
+          "description": "기본 수량 20장이 적용되어 있는가"
+        }
+      ]
+    },
+    {
+      "id": 1,
+      "prompt": "인스타 해시태그 #오버사이즈후드 #후드티코디 로 이미지 수집해줘. 릴스는 빼고.",
+      "expected_output": "명시된 해시태그(#오버사이즈후드, #후드티코디)를 바로 수집 대상으로 확인, 릴스 제외 옵션(--no-videos) 명시적으로 적용, 태그 간 10초 쿨다운 언급, 기본 20장 또는 수량 확인, 저장 경로 안내",
+      "files": [],
+      "assertions": [
+        {
+          "name": "uses_provided_hashtags",
+          "description": "사용자가 제공한 #오버사이즈후드, #후드티코디를 그대로 사용하는가"
+        },
+        {
+          "name": "reels_excluded",
+          "description": "--no-videos 또는 릴스/동영상 제외 처리가 명확히 언급되는가"
+        },
+        {
+          "name": "cooldown_mentioned",
+          "description": "태그 간 쿨다운(10초 또는 딜레이)이 언급되는가"
+        },
+        {
+          "name": "no_redundant_redesign",
+          "description": "이미 태그가 제공되었는데 불필요하게 해시태그를 재설계하지 않는가"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "SNS에서 27SS 모자 레퍼런스 긁어줘. 볼캡이랑 버킷햇 위주로 30장.",
+      "expected_output": "SNS = 인스타그램으로 해석, 볼캡/버킷햇 관련 해시태그 클러스터 설계(#볼캡코디, #버킷햇, #캡코디 등), 수량 30장 반영, AskUserQuestion으로 해시태그 확인, 이미지 전용 수집, 저장 경로 안내",
+      "files": [],
+      "assertions": [
+        {
+          "name": "interprets_sns_as_instagram",
+          "description": "SNS를 인스타그램(Instagram/인스타그램)으로 해석하는가"
+        },
+        {
+          "name": "includes_bolcap_tags",
+          "description": "볼캡 관련 해시태그(#볼캡, #볼캡코디 등)가 설계에 포함되는가"
+        },
+        {
+          "name": "includes_bucket_hat_tags",
+          "description": "버킷햇 관련 해시태그(#버킷햇, #버킷햇코디 등)가 설계에 포함되는가"
+        },
+        {
+          "name": "count_30_applied",
+          "description": "수량 30장이 정확히 반영되는가 (기본 20이 아닌 30)"
+        }
+      ]
+    }
+  ]
+}

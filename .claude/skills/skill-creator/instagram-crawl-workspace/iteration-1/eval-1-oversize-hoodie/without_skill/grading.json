@@ -1,0 +1,29 @@
+{
+  "eval_id": 1,
+  "eval_name": "oversize-hoodie-explicit-hashtags",
+  "configuration": "without_skill",
+  "expectations": [
+    {
+      "text": "uses_provided_hashtags: 사용자가 제공한 #오버사이즈후드, #후드티코디를 그대로 사용하는가",
+      "passed": true,
+      "evidence": "instaloader 커맨드에 '#오버사이즈후드', '#후드티코디' 그대로 사용"
+    },
+    {
+      "text": "reels_excluded: --no-videos 또는 릴스/동영상 제외 처리가 명확히 언급되는가",
+      "passed": true,
+      "evidence": "--no-videos, --no-video-thumbnails 옵션 모두 명시. 추가 Python 필터링 스크립트도 제공"
+    },
+    {
+      "text": "cooldown_mentioned: 태그 간 쿨다운(10초 또는 딜레이)이 언급되는가",
+      "passed": false,
+      "evidence": "쿨다운/sleep 언급 없음. 두 태그를 순차 실행하지만 딜레이 처리 없음"
+    },
+    {
+      "text": "no_redundant_redesign: 이미 태그가 제공되었는데 불필요하게 해시태그를 재설계하지 않는가",
+      "passed": true,
+      "evidence": "주어진 두 태그를 그대로 사용. 추가 해시태그 설계 없음"
+    }
+  ],
+  "pass_rate": 0.75,
+  "notes": "instaloader 도구 선택이 올바르고 동영상 제외도 정확히 처리. 다만 Instagram 차단 방지를 위한 쿨다운 누락이 실무상 문제가 될 수 있음"
+}

@@ -1,0 +1,184 @@
+{
+  "_meta": {
+    "description": "비케이브 전사 품번 체계 — 기초코드현황.xlsx 기준",
+    "source": "기초코드현황.xlsx (ERP 공식 코드 테이블)",
+    "last_updated": "2026-03-31",
+    "format": "[BR][YY][SS][IT][##]",
+    "format_detail": "브랜드(2) + 연도(2) + 시즌(2) + 품목(2) + 제품번호(2) = 10자리",
+    "example": {
+      "code": "WA2501CA01",
+      "decode": {
+        "brand": "WA → 와키윌리",
+        "year": "25 → 2025년",
+        "season": "01 → 봄(SS)",
+        "item": "CA → 모자",
+        "number": "01 → 01번"
+      }
+    }
+  },
+
+  "segments": {
+    "brand": {
+      "position": "0~1",
+      "length": 2,
+      "label": "브랜드",
+      "note": "수정불가. ERP 등록 코드."
+    },
+    "year": {
+      "position": "2~3",
+      "length": 2,
+      "label": "생산연도",
+      "note": "연도 끝 2자리. 예: 2027 → 27"
+    },
+    "season": {
+      "position": "4~5",
+      "length": 2,
+      "label": "시즌"
+    },
+    "item": {
+      "position": "6~7",
+      "length": 2,
+      "label": "품목"
+    },
+    "number": {
+      "position": "8~9",
+      "length": 2,
+      "label": "제품번호",
+      "note": "동일 브랜드·연도·시즌·품목 내 순번. 01~99."
+    }
+  },
+
+  "brand_codes": {
+    "_active": ["WA", "CO", "LE", "CT", "WT", "LK", "CK"],
+    "WA": { "name": "와키윌리", "status": "사용", "sort": 2 },
+    "CO": { "name": "커버낫", "status": "사용", "sort": 1 },
+    "LE": { "name": "리 (LEE)", "status": "사용", "sort": 3 },
+    "CT": { "name": "커버낫 타이완", "status": "사용" },
+    "WT": { "name": "와키윌리 타이완", "status": "사용" },
+    "LK": { "name": "LEE KIDS", "status": "사용" },
+    "CK": { "name": "커버낫 키즈", "status": "사용" },
+    "EB": { "name": "이벳필드", "status": "사용", "sort": 4 },
+    "FA": { "name": "팔렛", "status": "사용", "sort": 5 },
+    "MG": { "name": "와키윌리 (구코드)", "status": "미사용", "note": "WA로 통합" }
+  },
+
+  "season_codes": {
+    "00": { "label": "스탠다드", "note": "시즌 무관 상시 운영 상품" },
+    "01": { "label": "봄", "season_alias": "SS (Spring)" },
+    "02": { "label": "여름", "season_alias": "SS (Summer)" },
+    "03": { "label": "가을", "season_alias": "FW (Fall)" },
+    "04": { "label": "겨울", "season_alias": "FW (Winter)" },
+    "05": { "label": "콜라보", "note": "브랜드 콜라보레이션 전용" },
+    "06": { "label": "상반기", "note": "SS 통합 (2024-05-13 추가)" },
+    "07": { "label": "하반기", "note": "FW 통합 (2024-05-13 추가)" }
+  },
+
+  "item_codes": {
+    "_groups": {
+      "CAP": ["CA", "BK", "BN"],
+      "BAG": ["BP", "CB", "SB", "SG", "TB", "MB", "BG", "BT", "EC", "WA"],
+      "SHOES": ["SD", "SE", "SN"],
+      "ACC": ["SK", "GV", "MU", "JW", "SM", "TC", "DG"]
+    },
+    "CA": { "name": "모자", "category": "EQUIPMENT/CAP", "group": "CAP" },
+    "BK": { "name": "버킷햇", "category": "EQUIPMENT/CAP", "group": "CAP" },
+    "BN": { "name": "비니", "category": "EQUIPMENT/CAP", "group": "CAP" },
+    "BP": { "name": "백팩", "category": "EQUIPMENT/BAG", "group": "BAG" },
+    "CB": { "name": "크로스백", "category": "EQUIPMENT/BAG", "group": "BAG" },
+    "SB": { "name": "숄더백", "category": "EQUIPMENT/BAG", "group": "BAG" },
+    "SG": { "name": "슬링백", "category": "EQUIPMENT/BAG", "group": "BAG" },
+    "TB": { "name": "토트백", "category": "EQUIPMENT/BAG", "group": "BAG" },
+    "MB": { "name": "메신저백", "category": "EQUIPMENT/BAG", "group": "BAG" },
+    "BG": { "name": "가방 (기타)", "category": "EQUIPMENT/BAG", "group": "BAG" },
+    "BT": { "name": "보틀백", "category": "EQUIPMENT/BAG", "group": "BAG" },
+    "EC": { "name": "에코백", "category": "EQUIPMENT/BAG", "group": "BAG" },
+    "WA": { "name": "지갑", "category": "EQUIPMENT/BAG", "group": "BAG" },
+    "SD": { "name": "샌들", "category": "EQUIPMENT/SHOES", "group": "SHOES" },
+    "SE": { "name": "슬리퍼", "category": "EQUIPMENT/SHOES", "group": "SHOES" },
+    "SN": { "name": "신발 (기타)", "category": "EQUIPMENT/SHOES", "group": "SHOES" },
+    "SK": { "name": "양말", "category": "EQUIPMENT/ACC", "group": "ACC" },
+    "GV": { "name": "장갑", "category": "EQUIPMENT/ACC", "group": "ACC" },
+    "MU": { "name": "머플러", "category": "EQUIPMENT/ACC", "group": "ACC" },
+    "JW": { "name": "쥬얼리", "category": "EQUIPMENT/ACC", "group": "ACC" },
+    "SM": { "name": "스마트 액세서리", "category": "EQUIPMENT/ACC", "group": "ACC" },
+    "TC": { "name": "기타 액세서리", "category": "EQUIPMENT/ACC", "group": "ACC" },
+    "DG": { "name": "애견용품", "category": "EQUIPMENT/ACC", "group": "ACC" }
+  },
+
+  "color_codes": {
+    "_note": "품번과 별도로 운용되는 3자리 색상 코드 시스템 (ERP 내 색상 필드)",
+    "_groups": {
+      "블랙": ["BK", "BB", "BA", "BS", "FB", "IB", "JB", "PS", "VB", "WB"],
+      "화이트": ["WH", "WM", "OW", "WT"],
+      "그레이": ["GR", "AS", "CH", "DG", "DH", "DI", "GM", "HG", "LG", "MC", "MG", "OY", "SY", "GI"],
+      "네이비": ["NA", "NB", "DN", "DY", "FN", "NM", "MY"],
+      "블루": ["BL", "BM", "BN", "CV", "DB", "DU", "EB", "GB", "ID", "IL", "IM", "IN", "LB", "MR", "OC", "RB", "SA", "SB", "TB", "AB", "CB", "TE", "LQ"],
+      "레드": ["RD", "DR", "CY", "PR", "RO"],
+      "오렌지": ["OG", "RT", "DS", "LS", "SM", "PJ", "DA"],
+      "옐로": ["YE", "YL", "LM", "LY", "MU", "SF", "GY", "DL"],
+      "그린": ["GN", "CO", "EM", "FE", "LI", "LL", "LN", "LO", "MI", "ML", "MM", "MN", "OL", "PF", "PL", "PN", "RM", "SC", "SG", "SP", "TN", "TU", "ME", "OS", "RG", "VG", "LQ", "PT"],
+      "카키": ["KH", "KG", "KO", "KW", "KB", "LK", "KK", "PH"],
+      "브라운": ["BR", "CL", "MO", "SI", "WD", "MB", "DW", "LW", "PW", "RS", "KR", "CN"],
+      "베이지": ["BE", "GG", "SD", "SE", "TS", "NT", "OT", "IE", "PB", "KB"],
+      "핑크": ["PI", "HP", "LP", "PE", "PP", "IP", "PQ", "DK"],
+      "퍼플": ["PU", "MA", "CR", "LV", "GU", "KP", "PM", "TP"],
+      "와인": ["BU", "WI"],
+      "패턴": ["CA", "CK", "FG", "HI", "JU", "LE", "BP", "OM", "SR", "TG", "TK", "TR", "ZI", "PK", "PG", "PY"],
+      "골드/메탈": ["GD", "GH", "ST", "SV"],
+      "멀티": ["MT", "MX", "DX", "CX", "CC"],
+      "기타": ["TC", "XX", "ZZ", "EN", "JA", "NV", "HZ"]
+    },
+    "BK": "BLACK", "BB": "BLACK/BLACK", "BA": "BLACK RAW", "BS": "BLACK WASHED",
+    "FB": "FADED BLACK", "IB": "IVORY BLACK", "JB": "JET BLACK", "PS": "PIGMENT BLACK",
+    "VB": "VINTAGE BLACK", "WB": "WARM BLACK",
+    "WH": "WHITE", "WM": "WHITE MELANGE", "OW": "OFF WHITE",
+    "GR": "GRAY", "AS": "ASH", "CH": "CHARCOAL", "DG": "DARK GRAY",
+    "DH": "DARK HEATHER", "DI": "DARK INK", "GM": "GRAY MARL", "HG": "HEATHER GRAY",
+    "LG": "LIGHT GRAY", "MC": "MELANGE CHARCOAL", "MG": "MELANGE GRAY",
+    "NA": "NAVY", "NB": "NAVY BLUE", "DN": "DARK NAVY", "FN": "FRENCH NAVY",
+    "BL": "BLUE", "DB": "DARK BLUE", "DU": "DUSTY BLUE", "LB": "LIGHT BLUE",
+    "RB": "ROYAL BLUE", "SA": "SAX", "SB": "SKY BLUE",
+    "RD": "RED", "DR": "DEEP RED", "CY": "CHERRY", "PR": "POPRED",
+    "OG": "ORANGE", "RT": "RUST", "SM": "SALMON",
+    "YE": "YELLOW", "LM": "LEMON", "MU": "MUSTARD", "SF": "SUNFLOWER",
+    "GN": "GREEN", "EM": "EMERALD", "FE": "FOREST GREEN", "LI": "LIME",
+    "MI": "MINT", "OL": "OLIVE", "SG": "SAGE GREEN", "TU": "TURQUOISE",
+    "KH": "KHAKI", "KO": "KHAKI OLIVE", "KW": "KHAKI BROWN",
+    "BR": "BROWN", "CL": "CHOCOLATE", "MO": "MOCA", "SI": "SIENNA",
+    "BE": "BEIGE", "GG": "GREIGE", "NT": "NATURAL", "OT": "OATMEAL",
+    "PI": "PINK", "HP": "HOT PINK", "LP": "LIGHT PINK", "PE": "PEACH",
+    "PU": "PURPLE", "MA": "MAGENTA", "LV": "LAVENDER",
+    "BU": "BURGUNDY", "WI": "WINE",
+    "CA": "CAMO", "CK": "CHECK", "SR": "STRIPE", "ZI": "ZIGZAG",
+    "GD": "GOLD", "SV": "SILVER", "ST": "STEEL",
+    "MT": "MULTI", "MX": "MIX",
+    "XX": "NONE", "ZZ": "NONE",
+    "PC": "PIGMENT CREAM", "PD": "PIGMENT INDIGO", "PH": "PIGMENT KHAKI",
+    "PB": "PIGMENT BEIGE", "CB": "PIGMENT BLUE", "GP": "PIGMENT GREEN",
+    "PW": "PIGMENT BROWN", "PQ": "PIGMENT PINK", "PM": "PIGMENT PURPLE",
+    "PJ": "PIGMENT ORANGE", "PO": "PIGMENT CHARCOAL", "GT": "PIGMENT GRAY"
+  },
+
+  "decode_examples": [
+    { "code": "WA2501CA01", "brand": "와키윌리", "year": "2025", "season": "봄(SS)", "item": "모자", "number": "01" },
+    { "code": "WA2503CA13", "brand": "와키윌리", "year": "2025", "season": "가을(FW)", "item": "모자", "number": "13" },
+    { "code": "WA2601BP04", "brand": "와키윌리", "year": "2026", "season": "봄(SS)", "item": "백팩", "number": "04" },
+    { "code": "WA2503BP51", "brand": "와키윌리", "year": "2025", "season": "가을(FW)", "item": "백팩", "number": "51" },
+    { "code": "CO2601CA01", "brand": "커버낫", "year": "2026", "season": "봄(SS)", "item": "모자", "number": "01" },
+    { "code": "LE2701BP01", "brand": "리(LEE)", "year": "2027", "season": "봄(SS)", "item": "백팩", "number": "01" }
+  ],
+
+  "season_alias_map": {
+    "SS": ["01", "02", "06"],
+    "FW": ["03", "04", "07"],
+    "COLLAB": ["05"],
+    "STANDARD": ["00"]
+  },
+
+  "ai_usage_guide": {
+    "parse_code": "품번 10자리를 [0:2]=브랜드, [2:4]=연도, [4:6]=시즌, [6:8]=품목, [8:10]=제품번호로 분해",
+    "generate_code": "브랜드·연도·시즌·품목 확정 후 동일 조합 내 최대 번호 +1로 순번 부여",
+    "season_note": "01=봄/SS, 02=여름/SS, 03=가을/FW, 04=겨울/FW. 기획서에서 'SS'는 01 또는 06, 'FW'는 03 또는 07 사용",
+    "clothing_note": "의류 품목 코드(티셔츠·스웻·후디 등)는 기초코드현황에 미등재 — 실무 확인 필요"
+  }
+}

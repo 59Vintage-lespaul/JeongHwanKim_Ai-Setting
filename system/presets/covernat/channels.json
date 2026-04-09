@@ -1,0 +1,82 @@
+{
+  "brand": "covernat",
+  "revenue_total": "~1,500억원 (2024 기준)",
+  "channel_overview": {
+    "domestic_stores": 89,
+    "overseas_stores": 50,
+    "online_channels": 12,
+    "total_touchpoints": "~151개 (국내+해외 매장 + 온라인)"
+  },
+  "domestic_offline": {
+    "total": 89,
+    "by_region": {
+      "서울": {"count": 21, "key_areas": ["성수", "홍대", "명동", "강남", "신촌"]},
+      "경기": {"count": 32, "key_areas": ["분당", "판교", "일산", "수원", "부천"]},
+      "기타 전국": {"count": 36}
+    },
+    "flagship_stores": [
+      {"name": "성수 플래그십", "type": "직영 플래그십", "role": "브랜드 헤리티지 + 성수 로컬 크리에이티브 결합, 핵심 K-컬처 거점"},
+      {"name": "명동 플래그십", "type": "직영 플래그십", "role": "관광객·외국인 대상 K-컬처 브랜드 쇼케이스, 해외 바이어 접점"},
+      {"name": "홍대 플래그십", "type": "직영 플래그십", "role": "유스 컬처·대학 문화 연결, College Line 중심 전시"}
+    ],
+    "expansion_strategy": {
+      "shoes": "슈즈 집기 보유 매장 현 40개점 → Test 후 확대 or 집기Capa 증량",
+      "megashop": "SIS 메가샵 진열 시 슈즈 섹션 별도 구성 (벽장 일부 슈즈 섹션, ex.MLB 참고)"
+    }
+  },
+  "overseas_offline": {
+    "total": 50,
+    "markets": [
+      {"country": "중국", "type": "최대 해외 시장", "channel": "도소매 혼합", "note": "MLB 중국 4,500억 사례 벤치마킹"},
+      {"country": "일본", "type": "K-트렌드 핵심 시장", "channel": "도매·편집샵"},
+      {"country": "대만", "type": "아시아 거점"},
+      {"country": "싱가포르", "type": "동남아시아 허브"},
+      {"country": "태국", "type": "동남아시아 성장 시장"},
+      {"country": "몽골", "type": "기타 아시아"}
+    ],
+    "global_strategy": {
+      "잉태기_2025_2026": "포지셔닝 목적 B2C 패션전문몰 랭크업 포커싱",
+      "성장기_2027_2029": "D2C-B2C 리밸런싱, 슈즈 전문 유통 확장",
+      "sourcing": "글로벌 CDQ 확보 (Yue Yuen, Feng Tay, Wan Jia Xin Group — 컨택 중)"
+    }
+  },
+  "online": {
+    "owned": {
+      "name": "커버낫 자사몰",
+      "url_note": "브랜드 공식 D2C 채널",
+      "strategy": "잉태기: B2C 패션전문몰 랭크업 → 성장기: D2C Shifting (딜리버리/재고 SMU·컬러·사이즈 맞춤)",
+      "priority": "장기 수익성 핵심 채널"
+    },
+    "platforms": [
+      {"name": "무신사", "type": "패션 전문몰", "priority": "최우선 — 런칭/포지셔닝 핵심, 랭킹 상위 유지 목표", "note": "슈즈: 무신사 랭크업 + 코업 활용"},
+      {"name": "29CM", "type": "감도 플랫폼", "priority": "2순위 — 브랜드 감도 강화, 어센틱 라인 중심"},
+      {"name": "카카오스타일(지그재그)", "type": "여성 패션 앱", "priority": "우먼라인 집중"},
+      {"name": "네이버 스마트스토어", "type": "범용 e커머스", "priority": "트래픽 확보"},
+      {"name": "SSF샵", "type": "삼성패션 플랫폼"},
+      {"name": "에이블리", "type": "MZ 여성 앱", "priority": "우먼라인 접점"},
+      {"name": "GS샵", "type": "TV홈쇼핑·온라인"},
+      {"name": "CJ온스타일", "type": "TV홈쇼핑·온라인"},
+      {"name": "쿠팡", "type": "종합 e커머스", "note": "대중 접근성"},
+      {"name": "KREAM", "type": "리셀·한정판 플랫폼", "note": "콜라보·한정판 이슈 상품 활용"},
+      {"name": "롯데ON", "type": "롯데 그룹 플랫폼"}
+    ]
+  },
+  "channel_strategy": {
+    "잉태기_2025_2026": {
+      "online": "포지셔닝 목적 B2C 패션전문몰 랭크업 (무신사, 29CM, 자사몰만 전개)",
+      "offline": "리스크 프리 유통 — 마켓 테스트 후 순차 출고 확대, 메가샵 진열Capa 확대",
+      "sales": "First Touch — 의류+ACC 연계구매 유도 (세트구매 할인 판촉)"
+    },
+    "성장기_2027_2029": {
+      "online": "D2C-B2C 리밸런싱, 자사몰 Shifting (딜리버리·재고·컬러·사이즈)",
+      "offline": "슈즈 전문 유통 타진 — 계약조건·매출평가 안정성 확보 후 입점",
+      "sales": "First Order & Retention — 앵커상품 첫 구매 → 신규상품 중심 재구매"
+    }
+  },
+  "channel_kpi": {
+    "무신사": "랭킹 상위 유지, 씨빅 패딩 시즌 판매량, 슈즈 카테고리 랭크업",
+    "자사몰": "재구매율, 객단가, D2C 매출 비중",
+    "해외": "아시아 해외 재구매 비중, 중국·일본 채널 매출 성장률",
+    "offline": "매장당 매출(E) 목표 800만원 (100% 마진회수 기준 직영 8개점 기준)"
+  }
+}

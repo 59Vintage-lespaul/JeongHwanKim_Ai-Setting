@@ -1,0 +1,29 @@
+{
+  "eval_id": 0,
+  "eval_name": "kitsch-fashion-collection",
+  "configuration": "without_skill",
+  "expectations": [
+    {
+      "text": "has_hashtag_cluster: 응답에 #키치패션 등 해시태그 클러스터 설계 내용이 포함되어 있는가",
+      "passed": true,
+      "evidence": "1차/2차/3차 해시태그 리스트 제시됨. 단, 스킬의 핵심/스타일/맥락 3레이어 구조가 아닌 임의 구분"
+    },
+    {
+      "text": "has_confirmation_step: AskUserQuestion 또는 사용자 확인 단계가 명시되어 있는가",
+      "passed": false,
+      "evidence": "사용자 확인 단계 없음. 수집 계획을 일방적으로 제시하는 방식"
+    },
+    {
+      "text": "no_videos_excluded: --no-videos 옵션 또는 동영상 제외 처리가 명시되어 있는가",
+      "passed": false,
+      "evidence": "동영상 제외 처리 언급 없음. 이미지만 수집한다는 명시도 없음"
+    },
+    {
+      "text": "default_count_20: 기본 수량 20장이 적용되어 있는가",
+      "passed": false,
+      "evidence": "수량 명시 없음. 단지 '20장 수집 요청'을 해석하는 수준. 워크플로우에서 50장 후보 → 20장 압축이라는 다른 방식 제안"
+    }
+  ],
+  "pass_rate": 0.25,
+  "notes": "해시태그 목록은 풍부하나, 수집 파이프라인의 핵심 요소(사용자 확인, 동영상 제외, 기본 수량) 모두 누락. 일반적인 리서치 어드바이스 수준"
+}

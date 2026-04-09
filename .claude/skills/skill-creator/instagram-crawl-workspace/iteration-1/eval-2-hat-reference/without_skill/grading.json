@@ -1,0 +1,29 @@
+{
+  "eval_id": 2,
+  "eval_name": "hat-reference-sns-implicit",
+  "configuration": "without_skill",
+  "expectations": [
+    {
+      "text": "interprets_sns_as_instagram: SNS를 인스타그램(Instagram/인스타그램)으로 해석하는가",
+      "passed": false,
+      "evidence": "SNS를 Instagram(50%) + Pinterest(30%) + TikTok(20%)으로 분산 해석. Instagram 단일 플랫폼으로 집중하지 않음"
+    },
+    {
+      "text": "includes_bolcap_tags: 볼캡 관련 해시태그(#볼캡, #볼캡코디 등)가 설계에 포함되는가",
+      "passed": true,
+      "evidence": "#볼캡코디, #ballcap2025, #캠프캡 등 볼캡 관련 태그 다수 포함"
+    },
+    {
+      "text": "includes_bucket_hat_tags: 버킷햇 관련 해시태그(#버킷햇, #버킷햇코디 등)가 설계에 포함되는가",
+      "passed": true,
+      "evidence": "#버킷햇코디, #buckethat2025, #fishermanhat 등 버킷햇 관련 태그 포함"
+    },
+    {
+      "text": "count_30_applied: 수량 30장이 정확히 반영되는가 (기본 20이 아닌 30)",
+      "passed": true,
+      "evidence": "30장 배분안 (카테고리별 상세 구분) 제시. 플랫폼별 15+9+6=30장 배분"
+    }
+  ],
+  "pass_rate": 0.75,
+  "notes": "콘텐츠 품질(트렌드 인사이트, 카테고리 배분)은 우수하나, SNS를 Instagram 단일 플랫폼으로 해석하지 않아 워크플로우가 분산됨. 실제 크롤러 실행 계획도 없음"
+}

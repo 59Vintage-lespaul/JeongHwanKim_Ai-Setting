@@ -1,0 +1,138 @@
+{
+  "_meta": {
+    "description": "FPOF 파일 네이밍 & 폴더링 컨벤션 — AI가 산출물 생성 시 자동 참조",
+    "source": "docs/reference/file-naming-convention.md",
+    "version": "1.0",
+    "updated": "2026-03-25"
+  },
+  "basic_rules": {
+    "case": "lowercase_only",
+    "case_exception": "시즌코드(26SS, 26FW)",
+    "spaces": "forbidden",
+    "language": "english_only",
+    "segment_separator": "_",
+    "word_separator": "-",
+    "date_format": "YYYY-MM-DD",
+    "week_format": "wNN",
+    "week_example": "w06, w09, w10",
+    "version_format": "_vN",
+    "version_example": "_v2, _v3",
+    "version_forbidden": "_final"
+  },
+  "file_patterns": {
+    "pdca_artifact": {
+      "pattern": "[pdca]_[content-description][_YYYY-MM-DD][_vN].[ext]",
+      "scope": "season-strategy/ 및 프로젝트 폴더",
+      "pdca_prefixes": ["plan", "design", "do", "check", "act"],
+      "regex": "^(plan|design|do|check|act)_[a-z0-9][a-z0-9-]*(_[0-9]{4}-[0-9]{2}-[0-9]{2})?(_v[0-9]+)?\\.[a-z]+$",
+      "examples": [
+        "plan_trend-brief.md",
+        "plan_market-intel-weekly_2026-03-10.md",
+        "design_moodboard.md",
+        "do_techpack.md",
+        "check_completion-report.md"
+      ]
+    },
+    "operational_artifact": {
+      "pattern": "[doc-type]_[content-description][_YYYY-MM-DD][_vN].[ext]",
+      "scope": "weekly/wNN/ 및 dashboard/",
+      "doc_types": {
+        "review": "주간/월간 리뷰 보고",
+        "meeting": "회의록",
+        "deck": "프레젠테이션",
+        "board": "HTML 대시보드",
+        "sheet": "엑셀 시트",
+        "report": "PDF 보고서",
+        "data": "JSON 데이터"
+      },
+      "regex": "^(review|meeting|deck|board|sheet|report|data)_[a-z0-9][a-z0-9-]*(_[0-9]{4}-[0-9]{2}-[0-9]{2}|_w[0-9]{2})?(_v[0-9]+)?\\.[a-z]+$",
+      "examples": [
+        "review_exec-summary_2026-03-04.md",
+        "meeting_imc-sync_2026-03-05.md",
+        "deck_exec-report_2026-03-04.pptx",
+        "board_dashboard_2026-03-04.html",
+        "sheet_product-master_w09.xlsx",
+        "data_sales.json"
+      ]
+    }
+  },
+  "content_descriptions": {
+    "by_skill": {
+      "trend-research": "trend-brief",
+      "brand-strategy": "brand-strategy",
+      "md-planning": "md-plan",
+      "line-sheet": "line-sheet",
+      "market-intel": "market-intel-weekly",
+      "moodboard": "moodboard",
+      "design-spec": "design-spec",
+      "costing-ve": "costing-analysis",
+      "techpack": "techpack",
+      "imc-strategy": "imc-strategy",
+      "copywriting_pdp": "pdp-copy",
+      "copywriting_sns": "sns-copy",
+      "sales-analysis": "sales-analysis",
+      "quality-gate": "quality-gate",
+      "completion-report": "completion-report"
+    },
+    "by_weekly_type": {
+      "full_raw": "full-raw",
+      "exec_summary": "exec-summary",
+      "dept_summary": "dept-summary",
+      "exec_report_deck": "exec-report",
+      "dashboard": "dashboard",
+      "meeting": "[회의주제]"
+    }
+  },
+  "folder_structure": {
+    "root": "workspace/[SEASON]/",
+    "project_types": {
+      "season_strategy": {
+        "pattern": "season-strategy/",
+        "description": "시즌 전체 방향·트렌드·MD 기획"
+      },
+      "item": {
+        "pattern": "[item-name]/",
+        "examples": ["camp-kitsch/", "oversized-hoodie/"],
+        "description": "개별 상품 개발"
+      },
+      "campaign": {
+        "pattern": "campaign-[name]/",
+        "examples": ["campaign-ss-launch/"],
+        "description": "IMC·마케팅 캠페인"
+      },
+      "retail": {
+        "pattern": "retail-[name]/",
+        "examples": ["retail-seongsu-flagship/"],
+        "description": "매장·팝업·오프라인"
+      },
+      "collab": {
+        "pattern": "collab-[partner]/",
+        "examples": ["collab-sanrio/"],
+        "description": "브랜드·IP 협업"
+      },
+      "weekly": {
+        "pattern": "weekly/wNN/",
+        "description": "주간 운영 산출물"
+      },
+      "weekly_data": {
+        "pattern": "weekly/data/",
+        "description": "매주 업로드하는 원본 엑셀"
+      },
+      "dashboard": {
+        "pattern": "dashboard/",
+        "description": "weekly/data/ 기반 시각화·JSON (매주 갱신)"
+      }
+    }
+  },
+  "folder_rules": [
+    "한 프로젝트의 모든 산출물은 한 폴더에",
+    "PDCA 접두사는 season-strategy/와 프로젝트 폴더에만 사용",
+    "weekly/와 dashboard/에는 doc-type 접두사 사용",
+    "정기 회의록은 weekly/wNN/에 저장",
+    "원본 데이터는 weekly/data/에 누적 관리",
+    "data/ → dashboard/ 흐름 (데이터 갱신 → 시각화 갱신)",
+    "대체된 파일은 _archive/에 보관",
+    "시즌 전환 시 새 폴더 (26FW/ 등)"
+  ],
+  "validation_note": "산출물 생성 시 이 파일의 pattern과 regex를 참조하여 파일명을 검증할 것"
+}

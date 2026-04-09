@@ -1,0 +1,157 @@
+{
+  "brand_id": "covernat",
+  "brand_name": "Covernat",
+  "brand_name_ko": "커버낫",
+  "parent": "B.CAVE",
+  "founded": 2008,
+  "founder": "윤형석",
+  "founder_story": "경영학 전공자였으나 패션에 매료되어 영국 유학 후 일본 빈티지 시장에서 3년간 현장 수업. 귀국 후 25세에 20개 디자인으로 브랜드 시작.",
+  "name_origin": {
+    "cover": "Cover(덮다) — 라이프스타일을 커버한다",
+    "nat": "N.A.T = Needle And Thread — 바느질로 완성하는 정성, 기본에 충실한 옷을 다룬다",
+    "full_meaning": "기본에 충실한 옷을 다룬다 (기초 + 장인 정신)"
+  },
+  "revenue": {
+    "2024_actual": "1,200억원 돌파 (패션인사이트 베스트 브랜드 선정)",
+    "2026_target": "1,650억원",
+    "note": "2024 연말 기준 1,200억+ 달성, 2026년 1,650억 정조준"
+  },
+  "concept": "Borderless Casual",
+  "tagline": "Borderless Casual",
+  "design_origin": "밀리터리·워크웨어·아웃도어 빈티지를 현대적 소재·실루엣으로 재해석. 아메리카나 + 일본 감성 베이스의 캐주얼 스트릿.",
+  "north_star": "현시대의 소비자를 위해, 과거를 존중하며 미래의 가치를 제안한다",
+  "vision": "K-컬처 기반 창조적 글로벌 캐주얼 브랜드",
+  "positioning": "뉴클래식 캐주얼 — SPA(유니클로·탑텐)와 프리미엄 스트릿 사이 미들 마켓 점령. 감도보다 대중성 중심 볼륨 브랜드 전략.",
+  "brand_dna": {
+    "keywords": ["#NATURAL", "#ON_TREND", "#NEW_BASIC"],
+    "foundation": ["도전", "K-트렌드", "다양성", "패션(입는 것)"],
+    "principles": ["소비자 우선", "트렌드 지향", "원팀(다양성을 하나로)", "개선(어제보다 나은 오늘)"]
+  },
+  "brand_character": {
+    "highlight": ["트렌디한", "뉴클래식", "친근한", "잘 만든"],
+    "shade": ["색감 좋은(베이직)", "견고한(담백한)", "로고"],
+    "essence": ["가성비"],
+    "pyramid_note": "Highlight → 브랜드가 적극 어필할 특성 / Shade → 지지 특성(부각하되 주인공은 아님) / Essence → 브랜드 본질 기반"
+  },
+  "brand_narrative_pillars": {
+    "도전": {
+      "key_message": "도전적인 스토리텔링 (Innovative Storytelling)",
+      "customer_touchpoint": "#소재 제품 IMC — 브랜드 철학을 담은 소재·기능 스토리 전개"
+    },
+    "K-트렌드": {
+      "key_message": "K-컬처 기반의 창조적 브랜드",
+      "customer_touchpoint": "#앰버서더 — 한국 창의성을 엔진으로 유스 컬처(음악·아트·스포츠) 결합 캠페인, 글로벌 영향력 강화"
+    },
+    "다양성": {
+      "key_message": "커뮤니티 활성화",
+      "customer_touchpoint": "#k-collab #문화 — 서울 로컬 기반 서브 컬처 커뮤니티 육성, 브랜드 문화적 뿌리 강화"
+    }
+  },
+  "brand_journey_5step": "[K-컬처 팬덤 유입 → 커뮤니티 활성화 → 상품 스토리텔링 확장 → 재방문 → 매출]",
+  "signature_products": [
+    {
+      "name": "씨빅(CIVIC) 다운 패딩",
+      "type": "Big IMC 앵커 상품",
+      "description": "커버낫 시그니처 히어로 프로덕트. 시즌 최대 매출 기여.",
+      "volume_actual": "6.3만장",
+      "revenue_actual": "120억원",
+      "imc_role": "빅IMC 중심 상품 — 전 가치사슬 합의 수량, 대형 캠페인 연동"
+    },
+    {
+      "name": "C로고 캡",
+      "type": "시그니처 ACC",
+      "description": "2014년 출시. 론칭 2년 만에 누적 4만개 판매. BLACKPINK 리사 착용으로 국제 노출.",
+      "significance": "브랜드 아이덴티티 상징 아이템, 글로벌 K-팝 노출 계기"
+    },
+    {
+      "name": "C로고 에코백",
+      "type": "시그니처 ACC",
+      "description": "누적 10만개 달성. 브랜드 대중화 핵심 아이템.",
+      "significance": "고객 접점 확대 + 브랜드 일상 침투"
+    }
+  ],
+  "new_lines_2025": {
+    "covernat_kids": {
+      "description": "커버낫 키즈 — 2025년 런칭",
+      "target": "아동·패밀리 세그먼트",
+      "strategy": "기존 부모 고객층 확장, 패밀리 라이프스타일 브랜드 포지셔닝"
+    },
+    "covernat_beauty": {
+      "description": "커버낫 뷰티 — 2025년 론칭 (립밤·섬유향수)",
+      "target": "기존 의류 고객 크로스셀링",
+      "strategy": "라이프스타일 브랜드 확장, ACC IMC 연동"
+    }
+  },
+  "campaign_2026ss": {
+    "theme": "Shape of Youth (상점의 청춘)",
+    "model": "TXT 수빈",
+    "direction": "K-팝 유스 에너지 + 커버낫 뉴클래식 — 2026 봄 새 기준 제시"
+  },
+  "key_ambassadors": {
+    "domestic": "추영우 (국내 MZ — 자연스러운 도시 청년 이미지)",
+    "asia": "TXT 수빈 (아시아 팬덤 — 커버낫 화보 이력 있음)",
+    "global": "최윤지 (글로벌 — 한일 하이브리드 K-POP 슈퍼루키)"
+  },
+  "reference_brands": {
+    "global_inspiration": ["Kith", "Human Made", "Lacoste", "Carhartt", "Polo Ralph Lauren", "Apple", "Jacquemus"],
+    "tone_reference": [
+      {"brand": "Stüssy", "tone": "Timeless Cool & Culturally Rooted", "apply": "감각적 스타일, K-컬처 기반 문화 정체성, 유스컬처 감성 빈티지 무드"},
+      {"brand": "Uniqlo", "tone": "Scalable Casual Wear", "apply": "일상 속 자연스럽게 스며들며 밝은 분위기 연출"},
+      {"brand": "Lemaire", "tone": "Wardrobe Subtle Innovation", "apply": "로컬 크리에이터 협업 창의 콘텐츠, 제품 감성적 깊이, 세련된 분위기"}
+    ]
+  },
+  "marketing_framework": {
+    "name": "BAM (Branding · Awareness · Management)",
+    "imc_types": {
+      "Big IMC": "씨빅(CIVIC) 패딩 등 앵커 상품 중심 대형 캠페인",
+      "Small IMC": "체스터(코트), 럭키(후디) 등 카테고리별 중형 캠페인",
+      "시즌리스 ACC IMC": "모자(7월) / 가방(8월·12월) / 코스메틱(10월) / 스웻·이지팬츠(10~11월)"
+    },
+    "celeb_strategy": {
+      "funnel": "Branding → Awareness(K-POP artist) → Acquisition(MV PPL) → Activation(오프라인 이벤트) → Conversion(소셜 PFM·무신사)",
+      "check_criteria": ["이미지-브랜드 연결성", "글로벌/아시아 영향력", "팬덤 연령대 코어타겟 일치", "브랜드 착장 이력/적합성"]
+    }
+  },
+  "business_goals_2026": [
+    "브랜드 아이덴티티 강화 — 코어타겟 매출 비중, 인지도/선호도 상승",
+    "히트상품 + IMC 강화 — 씨빅 빅IMC 성과 유지, ROAS 목표 달성",
+    "슈즈 카테고리 안착 — 2026년 30억 달성, 중가 캐주얼슈즈 포지셔닝 확립",
+    "K-컬처 앰버서더 전략 고도화 — 신규 S급 셀럽 발탁, 아시아 인지도 확대",
+    "글로벌 대응 강화 — 중국·일본·동남아 채널 확장, 해외 재구매 비중 증가"
+  ],
+  "collab_history": {
+    "notable": [
+      {"partner": "리그 오브 레전드 (LoL)", "type": "게임 IP", "impact": "유스·게임 문화 접점 확대"},
+      {"partner": "포켓몬스터", "year": 2025, "type": "글로벌 IP"},
+      {"partner": "르망고", "type": "스윔웨어 브랜드", "category": "여름 콜라보"},
+      {"partner": "계곡은개골개골", "year": "25FW", "type": "서브컬처"},
+      {"partner": "하이다나", "year": "25FW"},
+      {"partner": "언더마이카", "year": "25FW"},
+      {"partner": "동아오츠카", "year": "25FW", "type": "음료 브랜드 콜라보"},
+      {"partner": "포켓몬스터·요시고", "year": "25FW"}
+    ]
+  },
+  "global_milestones": {
+    "thailand": {
+      "location": "방콕 시암스퀘어원",
+      "type": "동남아시아 첫 직영 플래그십",
+      "achievement": "무신사글로벌 기준 태국 소비자 선호 한국 패션 브랜드 TOP 5",
+      "exclusive": "방콕 한정 200피스 익스클루시브 컬렉션 발매"
+    },
+    "japan": {"location": "도쿄 긴자", "type": "직영 플래그십"},
+    "expansion_plan": "동남아·동아시아 K-팝·K-컬처 수요 기반 거점 확대"
+  },
+  "store_target": {
+    "current": "89개 (2024~2025 기준)",
+    "target": "100~110개 점 운영 목표"
+  },
+  "five_year_roadmap": {
+    "2025": {"phase": "잉태기", "revenue_apparel_est": "1,500억", "revenue_shoes": "13억", "focus": "브랜드 포지셔닝 + 슈즈 런칭"},
+    "2026": {"phase": "잉태기 후반", "revenue_shoes": "30억", "focus": "앰버서더 강화 + 슈즈 채널 확장"},
+    "2027": {"phase": "성장기 진입", "revenue_shoes": "100억", "focus": "D2C 전환 + 글로벌 성장"},
+    "2028": {"phase": "성장기", "revenue_shoes": "150억", "focus": "슈즈 전문 유통 확장"},
+    "2029": {"phase": "성숙기", "revenue_apparel_target": "3,000억+", "revenue_shoes": "200억", "focus": "글로벌 캐주얼 브랜드 포지셔닝 완성"}
+  },
+  "active_season": "26SS",
+  "brand_hierarchy_note": "B.CAVE 포트폴리오 — 커버낫(뉴클래식 캐주얼/국민 1,500억 브랜드) / 와키윌리(키치스트리트 IP) / 리(프리미엄)"
+}

@@ -1,0 +1,29 @@
+{
+  "eval_id": 1,
+  "eval_name": "oversize-hoodie-explicit-hashtags",
+  "configuration": "with_skill",
+  "expectations": [
+    {
+      "text": "uses_provided_hashtags: 사용자가 제공한 #오버사이즈후드, #후드티코디를 그대로 사용하는가",
+      "passed": true,
+      "evidence": "'#오버사이즈후드', '#후드티코디' 두 태그 그대로 crawler.py에 전달"
+    },
+    {
+      "text": "reels_excluded: --no-videos 또는 릴스/동영상 제외 처리가 명확히 언급되는가",
+      "passed": true,
+      "evidence": "확인 메시지에 '릴스·동영상은 제외합니다 (--no-videos)' 명시, 커맨드에도 --no-videos 포함"
+    },
+    {
+      "text": "cooldown_mentioned: 태그 간 쿨다운(10초 또는 딜레이)이 언급되는가",
+      "passed": true,
+      "evidence": "'# 10초 쿨다운 (Instagram 차단 방지) / sleep 10' 명시"
+    },
+    {
+      "text": "no_redundant_redesign: 이미 태그가 제공되었는데 불필요하게 해시태그를 재설계하지 않는가",
+      "passed": true,
+      "evidence": "'Step 1: 해시태그 설계 단계 — 스킵' 명시. 스킬 §1-B 단순 요청 분기 정상 작동"
+    }
+  ],
+  "pass_rate": 1.0,
+  "notes": "명시적 해시태그 처리가 완벽함. 스킵 로직, 릴스 제외, 쿨다운 모두 정확히 적용"
+}

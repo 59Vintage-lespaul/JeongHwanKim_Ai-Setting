@@ -1,0 +1,29 @@
+{
+  "eval_id": 0,
+  "eval_name": "kitsch-fashion-collection",
+  "configuration": "with_skill",
+  "expectations": [
+    {
+      "text": "has_hashtag_cluster: 응답에 #키치패션 등 해시태그 클러스터 설계 내용이 포함되어 있는가",
+      "passed": true,
+      "evidence": "#키치패션, #키치코디, #캐릭터패션, #스트릿코디, #그래픽티코디 등 핵심/스타일/맥락 3레이어 클러스터 명시됨"
+    },
+    {
+      "text": "has_confirmation_step: AskUserQuestion 또는 사용자 확인 단계가 명시되어 있는가",
+      "passed": true,
+      "evidence": "AskUserQuestion JSON 3개 질문(핵심 태그, 스타일 태그, 수량) 완전히 구현됨"
+    },
+    {
+      "text": "no_videos_excluded: --no-videos 옵션 또는 동영상 제외 처리가 명시되어 있는가",
+      "passed": true,
+      "evidence": "모든 crawler.py 커맨드에 --no-videos 포함, '릴스·동영상 제외' 명시"
+    },
+    {
+      "text": "default_count_20: 기본 수량 20장이 적용되어 있는가",
+      "passed": true,
+      "evidence": "수량 확인 옵션에 '20장 (기본값)' 제시, 각 태그별 --count 20 적용"
+    }
+  ],
+  "pass_rate": 1.0,
+  "notes": "스킬 지침을 정확히 따라 3레이어 해시태그 클러스터 설계, AskUserQuestion, --no-videos, 기본 20장 모두 정상 동작"
+}

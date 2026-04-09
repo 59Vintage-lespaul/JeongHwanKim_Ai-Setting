@@ -1,0 +1,748 @@
+"""
+입고 진행현황 대시보드 생성기
+Usage: python generate_inbound_dashboard.py <excel_path> [--out <output_dir>] [--date YYYY-MM-DD]
+"""
+
+import sys, json, argparse
+from datetime import date, datetime
+from collections import defaultdict
+from pathlib import Path
+
+try:
+    import openpyxl
+except ImportError:
+    print("openpyxl 설치 필요: python -m pip install openpyxl"); sys.exit(1)
+
+SCRIPT_DIR  = Path(__file__).parent
+REPO_ROOT   = SCRIPT_DIR.parent.parent
+DEFAULT_OUT = REPO_ROOT / "output" / "inbound-dashboard"
+
+# ── 컬럼 인덱스 (0-based, row1 = 컬럼헤더 기준) ──────────────────────────
+C_CODE        = 0   # 품번
+C_NAME        = 1   # 품명
+C_ORDER_NO    = 2   # 차수
+C_PO_NO       = 3   # 발주번호
+C_COLOR       = 4   # 색상
+C_SIZE        = 5   # 사이즈
+C_VENDOR      = 6   # 생산처명
+C_PRICE       = 7   # 최초판매가 (판매가격)
+C_PURCHASE    = 8   # 매입구분명
+# ※ 입고단가 컬럼 없음 — 이하 1씩 앞당김
+C_ORDER_DATE  = 9   # 작지발주일
+C_PLAN_DATE   = 10  # 납품예정일
+C_IN_DATE     = 11  # 최초입고일
+C_COMPLETE    = 12  # 납기완료일
+C_LEAD_TIME   = 13  # 소요일 (작지발주일→최초입고일)
+C_ACT_DATE    = 14  # 입고일
+C_DELAY       = 15  # 지연일 (실제입고-납품예정)
+C_ORDER_QTY   = 16  # 발주량
+C_PLAN_QTY    = 17  # 예정수량
+C_PERIOD_IN   = 18  # 입고량 (기간)
+C_PERIOD_RATE = 19  # 입고율 (기간)
+C_PERIOD_AMT  = 20  # 최초판매금액 (기간)
+C_TOTAL_IN    = 21  # 총입고량
+C_NON_IN      = 22  # 미입고량
+C_TOTAL_PLAN  = 23  # 총예정수량
+C_TOTAL_RATE  = 24  # 총입고율
+C_TOTAL_AMT   = 25  # 총최초판매금액
+
+BRAND_MAP   = {"CO": "커버낫", "WA": "와키윌리", "LE": "리(LEE)", "LC": "리(LEE)"}
+BRAND_ORDER = ["커버낫", "와키윌리", "리(LEE)"]
+VIEW_KEYS   = ["종합", "커버낫", "와키윌리", "리(LEE)"]
+
+ITEM_NAMES = {
+    "CA": "모자", "BK": "버킷햇", "BN": "비니",
+    "BP": "백팩", "CB": "크로스백", "SB": "숄더백", "SG": "슬링백",
+    "TB": "토트백", "MB": "메신저백", "BG": "가방(기타)", "BT": "보틀백", "EC": "에코백",
+    "SK": "양말", "SE": "슬리퍼", "SN": "신발",
+    "TC": "기타액세서리", "GV": "장갑", "MU": "머플러",
+    "JW": "쥬얼리", "SM": "스마트액세서리", "DG": "애견용품",
+}
+
+def si(v):
+    try: return int(v) if v is not None else 0
+    except: return 0
+
+def sf(v):
+    try: return float(v) if v is not None else 0.0
+    except: return 0.0
+
+def to_date(v):
+    if v is None: return None
+    if isinstance(v, datetime): return v.date()
+    if isinstance(v, date): return v
+    try: return datetime.strptime(str(v)[:10], "%Y-%m-%d").date()
+    except: return None
+
+def brand_from_code(code):
+    if not code or len(str(code)) < 2: return None
+    return BRAND_MAP.get(str(code)[:2].upper(), None)
+
+def item_type_from_code(code):
+    code = str(code) if code else ""
+    return code[6:8] if len(code) >= 8 else ""
+
+def load_data(path):
+    wb = openpyxl.load_workbook(path, read_only=True, data_only=True)
+    ws = wb.active
+    rows_iter = ws.iter_rows(values_only=True)
+    next(rows_iter)  # row0: 그룹 헤더 (기본사항, 진행사항, 기간분, 누계분)
+    next(rows_iter)  # row1: 컬럼 헤더
+    records = []
+    for row in rows_iter:
+        if len(row) < 26: continue
+        code = str(row[C_CODE] or "").strip()
+        if len(code) < 8: continue
+        brand = brand_from_code(code)
+        if not brand: continue
+        # ── 용품 품목만 필터링 (의류 제외) ─────────────────────────────
+        item_type = item_type_from_code(code)
+        if item_type not in ITEM_NAMES: continue
+
+        price     = si(row[C_PRICE])    # 최초판매가 (판매가격)
+
+        order_qty = si(row[C_ORDER_QTY])  # 발주량
+        total_in  = si(row[C_TOTAL_IN])   # 총입고량
+        non_in    = si(row[C_NON_IN])     # 미입고량
+
+        in_date   = to_date(row[C_IN_DATE])  # 최초입고일 (없으면 미입고)
+        # 지연일: 입고된 경우만 의미 있음
+        delay     = si(row[C_DELAY]) if in_date is not None else None
+        # 리드타임(소요일): 입고된 경우만 의미 있음
+        lead_time_raw = row[C_LEAD_TIME]
+        lead_time = si(lead_time_raw) if (in_date is not None and lead_time_raw is not None and si(lead_time_raw) > 0) else None
+
+        records.append({
+            "code":       code[:10],
+            "name":       str(row[C_NAME] or "").strip(),
+            "order_no":   str(row[C_ORDER_NO] or "").strip(),
+            "po_no":      str(row[C_PO_NO] or "").strip(),
+            "color":      str(row[C_COLOR] or "").strip(),
+            "size":       str(row[C_SIZE] or "").strip(),
+            "vendor":     str(row[C_VENDOR] or "").strip(),
+            "purchase":   str(row[C_PURCHASE] or "").strip(),
+            "price":      price,
+            "order_date": to_date(row[C_ORDER_DATE]),
+            "plan_date":  to_date(row[C_PLAN_DATE]),
+            "in_date":    in_date,
+            "delay":      delay,
+            "lead_time":  lead_time,
+            "order_qty":  order_qty,
+            "total_in":   total_in,
+            "non_in":     non_in,
+            "brand":      brand,
+            "item_type":  item_type,
+        })
+    wb.close()
+    return records
+
+def compute_brand_summary(records):
+    result = {}
+    for b in BRAND_ORDER:
+        br = [r for r in records if r["brand"] == b]
+        if not br: continue
+        order_total = sum(r["order_qty"] for r in br)
+        in_total    = sum(r["total_in"]  for r in br)
+        non_total   = sum(r["non_in"]    for r in br)
+        qty_rate    = round(in_total / order_total * 100, 1) if order_total > 0 else 0.0
+        # 스타일 기준 입고율: 품번 단위, 하나라도 입고된 품번 / 전체 품번
+        all_codes = set(r["code"] for r in br)
+        act_codes = set(r["code"] for r in br if r["total_in"] > 0)
+        style_rate = round(len(act_codes) / len(all_codes) * 100, 1) if all_codes else 0.0
+        # 딜레이 (입고된 것만)
+        delay_vals = [r["delay"] for r in br if r["delay"] is not None]
+        avg_delay  = round(sum(delay_vals) / len(delay_vals), 1) if delay_vals else None
+        on_time    = sum(1 for d in delay_vals if d <= 0)
+        otd_rate   = round(on_time / len(delay_vals) * 100, 1) if delay_vals else None
+        result[b] = {
+            "brand":      b,
+            "order_qty":  order_total,
+            "total_in":   in_total,
+            "non_in":     non_total,
+            "qty_rate":   qty_rate,
+            "style_cnt":  len(all_codes),
+            "in_style":   len(act_codes),
+            "style_rate": style_rate,
+            "avg_delay":  avg_delay,
+            "otd_rate":   otd_rate,
+        }
+    return result
+
+def compute_item_rates(records, brand=None):
+    br = [r for r in records if brand is None or r["brand"] == brand]
+    by_type = defaultdict(lambda: {"order": 0, "in": 0, "non": 0, "codes": set(), "in_codes": set()})
+    for r in br:
+        it = r["item_type"]
+        if it not in ITEM_NAMES: continue
+        by_type[it]["order"] += r["order_qty"]
+        by_type[it]["in"]    += r["total_in"]
+        by_type[it]["non"]   += r["non_in"]
+        by_type[it]["codes"].add(r["code"])
+        if r["total_in"] > 0:
+            by_type[it]["in_codes"].add(r["code"])
+    result = []
+    for it, d in by_type.items():
+        if d["order"] == 0 and d["in"] == 0: continue
+        qty_r   = round(d["in"] / d["order"] * 100, 1) if d["order"] > 0 else 0.0
+        style_r = round(len(d["in_codes"]) / len(d["codes"]) * 100, 1) if d["codes"] else 0.0
+        result.append({
+            "item_type":  it,
+            "label":      ITEM_NAMES.get(it, it),
+            "order":      d["order"],
+            "total_in":   d["in"],
+            "non_in":     d["non"],
+            "qty_rate":   qty_r,
+            "style_cnt":  len(d["codes"]),
+            "in_style":   len(d["in_codes"]),
+            "style_rate": style_r,
+        })
+    result.sort(key=lambda x: -x["total_in"])
+    return result
+
+def compute_delay_dist(records, brand=None):
+    br = [r for r in records if (brand is None or r["brand"] == brand) and r["delay"] is not None]
+    buckets = {"정시이내": 0, "1~7일": 0, "8~14일": 0, "15~30일": 0, "30일초과": 0}
+    for r in br:
+        d = r["delay"]
+        if d <= 0:    buckets["정시이내"] += 1
+        elif d <= 7:  buckets["1~7일"]   += 1
+        elif d <= 14: buckets["8~14일"]  += 1
+        elif d <= 30: buckets["15~30일"] += 1
+        else:         buckets["30일초과"] += 1
+    return buckets
+
+def compute_vendor_table(records):
+    """업체별 납기준수율"""
+    key_map = defaultdict(lambda: {"total": 0, "on_time": 0, "delay_sum": 0, "brands": set()})
+    for r in records:
+        v = r["vendor"]
+        if not v: continue
+        if r["delay"] is not None:
+            key_map[v]["total"]     += 1
+            key_map[v]["delay_sum"] += r["delay"]
+            key_map[v]["brands"].add(r["brand"])
+            if r["delay"] <= 0:
+                key_map[v]["on_time"] += 1
+    result = []
+    for v, d in key_map.items():
+        total = d["total"]
+        if total == 0: continue
+        otd   = round(d["on_time"] / total * 100, 1)
+        avg_d = round(d["delay_sum"] / total, 1)
+        result.append({
+            "vendor":    v,
+            "brands":    ", ".join(sorted(d["brands"])),
+            "total":     total,
+            "on_time":   d["on_time"],
+            "otd_rate":  otd,
+            "avg_delay": avg_d,
+        })
+    result.sort(key=lambda x: x["otd_rate"])
+    return result
+
+def compute_vendor_leadtime(records):
+    """업체별 평균 리드타임 (작지발주일→최초입고일)"""
+    key_map = defaultdict(lambda: {"lt_sum": 0, "lt_cnt": 0, "brands": set()})
+    for r in records:
+        v = r["vendor"]
+        if not v: continue
+        if r["lead_time"] is not None:
+            key_map[v]["lt_sum"] += r["lead_time"]
+            key_map[v]["lt_cnt"] += 1
+        key_map[v]["brands"].add(r["brand"])
+    result = []
+    for v, d in key_map.items():
+        avg_lt = round(d["lt_sum"] / d["lt_cnt"], 1) if d["lt_cnt"] > 0 else None
+        if avg_lt is None: continue
+        result.append({
+            "vendor":  v,
+            "brands":  ", ".join(sorted(d["brands"])),
+            "avg_lt":  avg_lt,
+            "lt_cnt":  d["lt_cnt"],
+        })
+    result.sort(key=lambda x: x["avg_lt"])
+    return result
+
+def compute_sku_detail(records):
+    result = []
+    for r in records:
+        qty_rate = round(r["total_in"] / r["order_qty"] * 100, 1) if r["order_qty"] > 0 else 0.0
+        result.append({
+            "brand":     r["brand"],
+            "code":      r["code"],
+            "name":      r["name"],
+            "color":     r["color"],
+            "size":      r["size"],
+            "vendor":    r["vendor"],
+            "order_qty": r["order_qty"],
+            "total_in":  r["total_in"],
+            "non_in":    r["non_in"],
+            "qty_rate":  qty_rate,
+            "delay":     r["delay"] if r["delay"] is not None else "",
+            "lead_time": r["lead_time"] if r["lead_time"] is not None else "",
+            "price":     r["price"],
+            "cost":      r["cost"],
+            "mult":      r["mult"] if r["mult"] is not None else "",
+        })
+    return result
+
+def jd(obj):
+    def default(o):
+        if isinstance(o, (date, datetime)): return o.isoformat()
+        raise TypeError
+    return json.dumps(obj, ensure_ascii=False, default=default)
+
+def rate_cls(r):
+    if r >= 90: return "rate-green"
+    if r >= 70: return "rate-blue"
+    if r >= 50: return "rate-yellow"
+    return "rate-red"
+
+def otd_cls(r):
+    if r >= 85: return "b-grn"
+    if r >= 70: return "b-yel"
+    return "b-red"
+
+def delay_cls(d):
+    if d is None or d == "": return ""
+    try:
+        d = int(d)
+        if d <= 0: return "delay-ok"
+        if d <= 7: return "delay-warn"
+        return "delay-bad"
+    except: return ""
+
+def generate_html(records, ref_date, output_path):
+    brand_summary   = compute_brand_summary(records)
+    vendor_table    = compute_vendor_table(records)
+    vendor_leadtime = compute_vendor_leadtime(records)
+    sku_detail      = compute_sku_detail(records)
+    overall_delay   = compute_delay_dist(records)
+    active_brands   = [b for b in BRAND_ORDER if b in brand_summary]
+
+    ref_str = ref_date.strftime("%Y-%m-%d") if ref_date else "N/A"
+
+    # ── 브랜드 요약 카드 ─────────────────────────────────────────────
+    def brand_card(b):
+        s = brand_summary.get(b)
+        if not s: return ""
+        qr = s["qty_rate"]
+        qr_cls = rate_cls(qr)
+        mult_str = f'{s["wavg_mult"]}x' if s["wavg_mult"] else "N/A"
+        otd_str  = f'{s["otd_rate"]}%' if s["otd_rate"] is not None else "N/A"
+        otd_c    = otd_cls(s["otd_rate"]) if s["otd_rate"] is not None else "b-grn"
+        delay_str = f'{s["avg_delay"]:+.1f}일' if s["avg_delay"] is not None else "N/A"
+        return f"""
+        <div class="brand-card" onclick="switchView('{b}')">
+          <div class="bc-title">{b}</div>
+          <div class="bc-kpis">
+            <div class="bc-kpi">
+              <span class="bc-val {qr_cls}">{qr}%</span>
+              <span class="bc-lab">수량입고율</span>
+            </div>
+            <div class="bc-kpi">
+              <span class="bc-val {rate_cls(s['style_rate'])}">{s['style_rate']}%</span>
+              <span class="bc-lab">스타일입고율<br>({s['in_style']}/{s['style_cnt']})</span>
+            </div>
+            <div class="bc-kpi">
+              <span class="bc-val">{s['total_in']:,}</span>
+              <span class="bc-lab">총입고량</span>
+            </div>
+            <div class="bc-kpi">
+              <span class="bc-val rate-red">{s['non_in']:,}</span>
+              <span class="bc-lab">미입고량</span>
+            </div>
+            <div class="bc-kpi">
+              <span class="bc-val">{mult_str}</span>
+              <span class="bc-lab">평균배수</span>
+            </div>
+            <div class="bc-kpi">
+              <span class="bc-val {otd_c}">{otd_str}</span>
+              <span class="bc-lab">납기준수율</span>
+            </div>
+            <div class="bc-kpi">
+              <span class="bc-val">{delay_str}</span>
+              <span class="bc-lab">평균딜레이</span>
+            </div>
+          </div>
+          <div class="bc-bar-wrap">
+            <div class="bc-bar" style="width:{qr}%"></div>
+          </div>
+        </div>"""
+
+    brand_cards_html = "".join(brand_card(b) for b in active_brands)
+
+    # ── 종합 입고율 카드 ──────────────────────────────────────────────
+    total_order = sum(r["order_qty"] for r in records)
+    total_in    = sum(r["total_in"]  for r in records)
+    total_non   = sum(r["non_in"]    for r in records)
+    total_qr    = round(total_in / total_order * 100, 1) if total_order > 0 else 0.0
+    all_codes   = set(r["code"] for r in records)
+    in_codes    = set(r["code"] for r in records if r["total_in"] > 0)
+    total_sr    = round(len(in_codes) / len(all_codes) * 100, 1) if all_codes else 0.0
+    wnum_all = sum(r["total_in"] * r["price"] for r in records if r["cost"] > 1 and r["price"] > 0)
+    wden_all = sum(r["total_in"] * r["cost"]  for r in records if r["cost"] > 1 and r["price"] > 0)
+    total_mult  = round(wnum_all / wden_all, 2) if wden_all > 0 else None
+    total_mult_str = f"{total_mult}x" if total_mult else "N/A"
+    delay_vals_all = [r["delay"] for r in records if r["delay"] is not None]
+    total_otd   = round(sum(1 for d in delay_vals_all if d <= 0) / len(delay_vals_all) * 100, 1) if delay_vals_all else None
+    total_otd_str = f"{total_otd}%" if total_otd is not None else "N/A"
+
+    # ── 품목별 입고율 테이블 (탭별) ────────────────────────────────────
+    def item_rate_rows(brand=None):
+        items = compute_item_rates(records, brand)
+        if not items: return "<tr><td colspan='7' style='text-align:center;color:#999'>데이터 없음</td></tr>"
+        rows = []
+        for it in items:
+            rows.append(f"""<tr>
+              <td>{it['label']}</td>
+              <td>{it['order']:,}</td>
+              <td>{it['total_in']:,}</td>
+              <td>{it['non_in']:,}</td>
+              <td><span class="badge {rate_cls(it['qty_rate'])}">{it['qty_rate']}%</span></td>
+              <td>{it['style_cnt']}</td>
+              <td><span class="badge {rate_cls(it['style_rate'])}">{it['in_style']}/{it['style_cnt']} ({it['style_rate']}%)</span></td>
+            </tr>""")
+        return "".join(rows)
+
+    item_rate_tabs_html = ""
+    for vk in VIEW_KEYS:
+        brand = None if vk == "종합" else vk
+        disp = "block" if vk == "종합" else "none"
+        item_rate_tabs_html += f"""
+        <div id="ir-{vk}" class="tab-content" style="display:{disp}">
+          <table class="data-table">
+            <thead><tr>
+              <th>품목</th><th>발주량</th><th>총입고량</th><th>미입고량</th>
+              <th>수량입고율</th><th>전체스타일</th><th>스타일입고율</th>
+            </tr></thead>
+            <tbody>{item_rate_rows(brand)}</tbody>
+          </table>
+        </div>"""
+
+    # ── 딜레이 분포 (종합) ────────────────────────────────────────────
+    delay_dist = overall_delay
+    delay_labels = list(delay_dist.keys())
+    delay_values = list(delay_dist.values())
+
+    # ── 업체 납기준수율 테이블 ────────────────────────────────────────
+    def vendor_rows():
+        if not vendor_table:
+            return "<tr><td colspan='6' style='text-align:center;color:#999'>데이터 없음</td></tr>"
+        rows = []
+        for v in vendor_table:
+            oc = otd_cls(v["otd_rate"])
+            dc = delay_cls(v["avg_delay"])
+            rows.append(f"""<tr>
+              <td>{v['vendor']}</td>
+              <td>{v['brands']}</td>
+              <td>{v['total']}</td>
+              <td>{v['on_time']}</td>
+              <td><span class="badge {oc}">{v['otd_rate']}%</span></td>
+              <td class="{dc}">{'+' if v['avg_delay'] > 0 else ''}{v['avg_delay']}일</td>
+            </tr>""")
+        return "".join(rows)
+
+    # ── 업체별 리드타임 테이블 ────────────────────────────────────────
+    def leadtime_rows():
+        if not vendor_leadtime:
+            return "<tr><td colspan='4' style='text-align:center;color:#999'>데이터 없음</td></tr>"
+        rows = []
+        for v in vendor_leadtime:
+            lt = v["avg_lt"]
+            if lt <= 30:   lt_cls = "b-grn"
+            elif lt <= 60: lt_cls = "b-yel"
+            else:          lt_cls = "b-red"
+            rows.append(f"""<tr>
+              <td>{v['vendor']}</td>
+              <td>{v['brands']}</td>
+              <td>{v['lt_cnt']}</td>
+              <td><span class="badge {lt_cls}">{lt}일</span></td>
+            </tr>""")
+        return "".join(rows)
+
+    # ── SKU 상세 테이블 ───────────────────────────────────────────────
+    def sku_rows(brand=None):
+        rows_data = [r for r in sku_detail if brand is None or r["brand"] == brand]
+        if not rows_data:
+            return "<tr><td colspan='12' style='text-align:center;color:#999'>데이터 없음</td></tr>"
+        rows = []
+        for r in rows_data:
+            qr = r["qty_rate"]
+            dc = delay_cls(r["delay"])
+            mult_str = f"{r['mult']}x" if r["mult"] != "" else "-"
+            non_cls = "rate-red" if r["non_in"] > 0 else ""
+            delay_str = f"{'+' if isinstance(r['delay'],int) and r['delay']>0 else ''}{r['delay']}일" if r["delay"] != "" else "-"
+            lt_str = f"{r['lead_time']}일" if r["lead_time"] != "" else "-"
+            rows.append(f"""<tr>
+              <td>{r['brand']}</td>
+              <td><b>{r['code']}</b></td>
+              <td>{r['name']}</td>
+              <td>{r['color']}</td>
+              <td>{r['size']}</td>
+              <td>{r['vendor']}</td>
+              <td>{r['order_qty']:,}</td>
+              <td>{r['total_in']:,}</td>
+              <td class="{non_cls}">{r['non_in']:,}</td>
+              <td><span class="badge {rate_cls(qr)}">{qr}%</span></td>
+              <td class="{dc}">{delay_str}</td>
+              <td>{lt_str}</td>
+              <td>{mult_str}</td>
+            </tr>""")
+        return "".join(rows)
+
+    sku_tabs_html = ""
+    for vk in VIEW_KEYS:
+        brand = None if vk == "종합" else vk
+        disp = "block" if vk == "종합" else "none"
+        sku_tabs_html += f"""
+        <div id="sku-{vk}" class="tab-content" style="display:{disp}">
+          <table class="data-table sortable" id="sku-table-{vk}">
+            <thead><tr>
+              <th>브랜드</th><th>품번</th><th>품명</th><th>색상</th><th>사이즈</th>
+              <th>업체</th><th>발주량</th><th>총입고량</th><th>미입고량</th>
+              <th>입고율</th><th>딜레이</th><th>리드타임</th><th>배수</th>
+            </tr></thead>
+            <tbody>{sku_rows(brand)}</tbody>
+          </table>
+        </div>"""
+
+    # ── 탭 버튼 HTML ─────────────────────────────────────────────────
+    def tab_btns(prefix):
+        btns = []
+        for i, vk in enumerate(VIEW_KEYS):
+            active = "active" if vk == "종합" else ""
+            btns.append(f'<button class="tab-btn {active}" onclick="switchTab(\'{prefix}\',\'{vk}\')">{vk}</button>')
+        return "".join(btns)
+
+    html = f"""<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>입고 진행현황 대시보드 — {ref_str}</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+*{{box-sizing:border-box;margin:0;padding:0}}
+body{{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f4f5f7;color:#222;font-size:13px}}
+.top-bar{{background:#1a1a2e;color:#fff;padding:14px 24px;display:flex;align-items:center;justify-content:space-between}}
+.top-bar h1{{font-size:16px;font-weight:700;letter-spacing:-0.3px}}
+.top-bar .meta{{font-size:11px;opacity:.7}}
+.nav-tabs{{background:#fff;border-bottom:2px solid #e0e0e0;padding:0 24px;display:flex;gap:4px}}
+.nav-btn{{padding:10px 18px;border:none;background:none;cursor:pointer;font-size:13px;font-weight:600;color:#666;border-bottom:3px solid transparent;margin-bottom:-2px;transition:.2s}}
+.nav-btn.active{{color:#1a1a2e;border-bottom-color:#1a1a2e}}
+.page{{display:none;padding:20px 24px}}
+.page.active{{display:block}}
+section{{margin-bottom:28px}}
+section h2{{font-size:14px;font-weight:700;color:#1a1a2e;margin-bottom:12px;padding-bottom:6px;border-bottom:2px solid #e8e8e8}}
+/* 종합 요약 */
+.summary-bar{{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:20px}}
+.sum-kpi{{background:#fff;border-radius:10px;padding:14px 16px;box-shadow:0 1px 4px rgba(0,0,0,.08)}}
+.sum-kpi .val{{font-size:22px;font-weight:800;color:#1a1a2e}}
+.sum-kpi .lab{{font-size:11px;color:#888;margin-top:2px}}
+/* 브랜드 카드 */
+.brand-cards{{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px}}
+.brand-card{{background:#fff;border-radius:12px;padding:16px;box-shadow:0 1px 6px rgba(0,0,0,.08);cursor:pointer;transition:.2s}}
+.brand-card:hover{{box-shadow:0 4px 16px rgba(0,0,0,.14);transform:translateY(-2px)}}
+.bc-title{{font-size:15px;font-weight:800;color:#1a1a2e;margin-bottom:10px}}
+.bc-kpis{{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:10px}}
+.bc-kpi{{text-align:center}}
+.bc-val{{font-size:15px;font-weight:700;display:block}}
+.bc-lab{{font-size:10px;color:#999;margin-top:2px;display:block;line-height:1.3}}
+.bc-bar-wrap{{height:6px;background:#eee;border-radius:3px;overflow:hidden}}
+.bc-bar{{height:100%;background:#1a1a2e;border-radius:3px;transition:.4s}}
+/* 배지/색상 */
+.badge{{display:inline-block;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:700}}
+.rate-green,.b-grn{{background:#d1fae5;color:#065f46}}
+.rate-blue{{background:#dbeafe;color:#1e40af}}
+.rate-yellow,.b-yel{{background:#fef3c7;color:#92400e}}
+.rate-red,.b-red{{background:#fee2e2;color:#991b1b}}
+.delay-ok{{color:#065f46}}
+.delay-warn{{color:#92400e}}
+.delay-bad{{color:#991b1b;font-weight:700}}
+/* 테이블 */
+.data-table{{width:100%;border-collapse:collapse;background:#fff;border-radius:10px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.07)}}
+.data-table th{{background:#1a1a2e;color:#fff;padding:9px 10px;text-align:left;font-size:12px;font-weight:600;white-space:nowrap}}
+.data-table td{{padding:7px 10px;border-bottom:1px solid #f0f0f0;white-space:nowrap}}
+.data-table tr:hover td{{background:#f9fafb}}
+/* 탭 */
+.tab-wrap{{background:#fff;border-radius:12px;padding:16px;box-shadow:0 1px 4px rgba(0,0,0,.07)}}
+.tab-btns{{display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap}}
+.tab-btn{{padding:6px 14px;border-radius:20px;border:1.5px solid #ddd;background:#fff;cursor:pointer;font-size:12px;font-weight:600;color:#666;transition:.2s}}
+.tab-btn.active{{background:#1a1a2e;color:#fff;border-color:#1a1a2e}}
+.chart-grid{{display:grid;grid-template-columns:1fr 1fr;gap:20px}}
+.chart-box{{background:#fff;border-radius:10px;padding:16px;box-shadow:0 1px 4px rgba(0,0,0,.07)}}
+.chart-box h3{{font-size:12px;font-weight:700;color:#555;margin-bottom:10px}}
+@media(max-width:768px){{.chart-grid{{grid-template-columns:1fr}}.bc-kpis{{grid-template-columns:repeat(2,1fr)}}}}
+</style>
+</head>
+<body>
+
+<div class="top-bar">
+  <h1>📦 입고 진행현황 대시보드</h1>
+  <div class="meta">기준일: {ref_str}</div>
+</div>
+
+<div class="nav-tabs">
+  <button class="nav-btn active" onclick="switchPage('overview')">종합 현황</button>
+  <button class="nav-btn" onclick="switchPage('items')">품목별 입고율</button>
+  <button class="nav-btn" onclick="switchPage('vendors')">업체 현황</button>
+  <button class="nav-btn" onclick="switchPage('detail')">SKU 상세</button>
+</div>
+
+<!-- ▶ 종합 현황 ─────────────────────────────────────────────────────── -->
+<div id="page-overview" class="page active">
+
+  <section>
+    <h2>전사 종합</h2>
+    <div class="summary-bar">
+      <div class="sum-kpi"><div class="val {rate_cls(total_qr)}">{total_qr}%</div><div class="lab">수량 입고율</div></div>
+      <div class="sum-kpi"><div class="val {rate_cls(total_sr)}">{total_sr}%</div><div class="lab">스타일 입고율 ({len(in_codes)}/{len(all_codes)})</div></div>
+      <div class="sum-kpi"><div class="val">{total_in:,}</div><div class="lab">총 입고량</div></div>
+      <div class="sum-kpi"><div class="val rate-red">{total_non:,}</div><div class="lab">미 입고량</div></div>
+      <div class="sum-kpi"><div class="val">{total_order:,}</div><div class="lab">총 발주량</div></div>
+      <div class="sum-kpi"><div class="val">{total_mult_str}</div><div class="lab">평균 판매배수</div></div>
+      <div class="sum-kpi"><div class="val">{total_otd_str}</div><div class="lab">전사 납기준수율</div></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>브랜드별 현황</h2>
+    <div class="brand-cards">
+      {brand_cards_html}
+    </div>
+  </section>
+
+  <section>
+    <h2>딜레이 분포 (입고 완료 건)</h2>
+    <div class="chart-box" style="max-width:500px">
+      <canvas id="delayChart" height="180"></canvas>
+    </div>
+  </section>
+
+</div>
+
+<!-- ▶ 품목별 입고율 ─────────────────────────────────────────────────── -->
+<div id="page-items" class="page">
+  <section>
+    <h2>품목별 입고율</h2>
+    <div class="tab-wrap">
+      <div class="tab-btns">{tab_btns('ir')}</div>
+      {item_rate_tabs_html}
+    </div>
+  </section>
+</div>
+
+<!-- ▶ 업체 현황 ──────────────────────────────────────────────────────── -->
+<div id="page-vendors" class="page">
+  <section>
+    <h2>업체별 납기준수율</h2>
+    <div class="tab-wrap">
+      <table class="data-table">
+        <thead><tr>
+          <th>업체명</th><th>브랜드</th><th>입고건수</th><th>정시입고</th><th>납기준수율</th><th>평균딜레이</th>
+        </tr></thead>
+        <tbody>{vendor_rows()}</tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <h2>업체별 평균 리드타임 (작지발주일 → 최초입고일)</h2>
+    <div class="tab-wrap">
+      <table class="data-table">
+        <thead><tr>
+          <th>업체명</th><th>브랜드</th><th>산출건수</th><th>평균 리드타임</th>
+        </tr></thead>
+        <tbody>{leadtime_rows()}</tbody>
+      </table>
+    </div>
+  </section>
+</div>
+
+<!-- ▶ SKU 상세 ───────────────────────────────────────────────────────── -->
+<div id="page-detail" class="page">
+  <section>
+    <h2>SKU 상세 현황</h2>
+    <div class="tab-wrap">
+      <div class="tab-btns">{tab_btns('sku')}</div>
+      {sku_tabs_html}
+    </div>
+  </section>
+</div>
+
+<script>
+const delayData = {jd({"labels": delay_labels, "values": delay_values})};
+
+// 딜레이 차트
+new Chart(document.getElementById('delayChart'), {{
+  type: 'bar',
+  data: {{
+    labels: delayData.labels,
+    datasets: [{{
+      label: '건수',
+      data: delayData.values,
+      backgroundColor: ['#d1fae5','#dbeafe','#fef3c7','#fed7aa','#fee2e2'],
+      borderRadius: 6,
+    }}]
+  }},
+  options: {{
+    responsive: true,
+    plugins: {{ legend: {{ display: false }} }},
+    scales: {{ y: {{ beginAtZero: true, ticks: {{ stepSize: 1 }} }} }}
+  }}
+}});
+
+function switchPage(id) {{
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('page-' + id).classList.add('active');
+  event.target.classList.add('active');
+}}
+
+function switchView(brand) {{
+  document.querySelectorAll('.nav-btn')[0].click();
+}}
+
+function switchTab(prefix, view) {{
+  document.querySelectorAll('[id^="' + prefix + '-"]').forEach(el => el.style.display = 'none');
+  document.getElementById(prefix + '-' + view).style.display = 'block';
+  event.target.closest('.tab-wrap').querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  event.target.classList.add('active');
+}}
+</script>
+</body>
+</html>"""
+
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    output_path.write_text(html, encoding="utf-8")
+    print(f"저장 완료: {output_path}")
+
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("excel", nargs="?", default=r"C:\Users\bcave\Desktop\입고진행현황.xlsx")
+    parser.add_argument("--out", default=str(DEFAULT_OUT))
+    parser.add_argument("--date", default=None)
+    args = parser.parse_args()
+
+    ref_date = date.today()
+    if args.date:
+        try: ref_date = datetime.strptime(args.date, "%Y-%m-%d").date()
+        except: pass
+
+    excel_path = Path(args.excel)
+    if not excel_path.exists():
+        print(f"파일 없음: {excel_path}"); sys.exit(1)
+
+    print(f"데이터 로딩: {excel_path}")
+    records = load_data(excel_path)
+    print(f"  → {len(records)}개 SKU 로드")
+    if not records:
+        print("유효한 데이터 없음"); sys.exit(1)
+
+    out_dir  = Path(args.out)
+    out_file = out_dir / f"board_inbound_{ref_date.strftime('%Y-%m-%d')}.html"
+    generate_html(records, ref_date, out_file)
+
+if __name__ == "__main__":
+    main()

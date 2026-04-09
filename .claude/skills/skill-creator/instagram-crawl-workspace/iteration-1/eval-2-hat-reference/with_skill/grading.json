@@ -1,0 +1,29 @@
+{
+  "eval_id": 2,
+  "eval_name": "hat-reference-sns-implicit",
+  "configuration": "with_skill",
+  "expectations": [
+    {
+      "text": "interprets_sns_as_instagram: SNS를 인스타그램(Instagram/인스타그램)으로 해석하는가",
+      "passed": true,
+      "evidence": "'\"SNS\"는 기본값으로 Instagram으로 해석. Pinterest 등 다른 플랫폼이 필요하면 명시적으로 요청 필요' 명시"
+    },
+    {
+      "text": "includes_bolcap_tags: 볼캡 관련 해시태그(#볼캡, #볼캡코디 등)가 설계에 포함되는가",
+      "passed": true,
+      "evidence": "#볼캡코디 (~40만건) 핵심 태그로 설계, #ballcap 영문 보조 태그 포함"
+    },
+    {
+      "text": "includes_bucket_hat_tags: 버킷햇 관련 해시태그(#버킷햇, #버킷햇코디 등)가 설계에 포함되는가",
+      "passed": true,
+      "evidence": "#버킷햇코디 (~35만건) 핵심 태그로 설계, #buckethat 영문 보조 태그 포함"
+    },
+    {
+      "text": "count_30_applied: 수량 30장이 정확히 반영되는가 (기본 20이 아닌 30)",
+      "passed": true,
+      "evidence": "수량 확인 옵션 첫 번째가 '30장 (요청대로)', 크롤러 커맨드에 태그별 10장×3태그=30장 배분"
+    }
+  ],
+  "pass_rate": 1.0,
+  "notes": "SNS→Instagram 해석, 볼캡/버킷햇 태그 분리 설계, 30장 정확히 배분 모두 완벽. 메모리(리코리아·커버낫 제외)도 자동 적용"
+}

@@ -1,0 +1,88 @@
+{
+  "mcpServers": {
+    "playwright": {
+      "type": "stdio",
+      "command": "npx",
+      "args": [
+        "-y",
+        "@playwright/mcp@latest"
+      ]
+    }
+  },
+  "enabledPlugins": {
+    "telegram@claude-plugins-official": true,
+    "commit-commands@claude-plugins-official": true,
+    "github@claude-plugins-official": true,
+    "figma@claude-plugins-official": true,
+    "supabase@claude-plugins-official": true,
+    "Notion@claude-plugins-official": true,
+    "vercel@claude-plugins-official": true,
+    "document-skills@anthropic-agent-skills": true,
+    "frontend-design@claude-code-plugins": true,
+    "claude-dashboard@claude-dashboard": true,
+    "postgres-best-practices@supabase-agent-skills": true,
+    "obsidian@obsidian-skills": true,
+    "sales@knowledge-work-plugins": true,
+    "marketing@knowledge-work-plugins": true,
+    "product-management@knowledge-work-plugins": true,
+    "engineering@knowledge-work-plugins": true,
+    "data@knowledge-work-plugins": true,
+    "design@knowledge-work-plugins": true,
+    "finance@knowledge-work-plugins": true,
+    "legal@knowledge-work-plugins": true,
+    "human-resources@knowledge-work-plugins": true,
+    "operations@knowledge-work-plugins": true,
+    "customer-support@knowledge-work-plugins": true,
+    "enterprise-search@knowledge-work-plugins": true,
+    "productivity@knowledge-work-plugins": true,
+    "brand-voice@knowledge-work-plugins": true,
+    "apollo@knowledge-work-plugins": true,
+    "common-room@knowledge-work-plugins": true,
+    "slack-by-salesforce@knowledge-work-plugins": true,
+    "cowork-plugin-management@knowledge-work-plugins": true
+  },
+  "extraKnownMarketplaces": {
+    "thedotmack": {
+      "source": {
+        "source": "github",
+        "repo": "thedotmack/claude-mem"
+      }
+    },
+    "anthropic-agent-skills": {
+      "source": {
+        "source": "github",
+        "repo": "anthropics/skills"
+      }
+    },
+    "claude-code-plugins": {
+      "source": {
+        "source": "github",
+        "repo": "anthropics/claude-code"
+      }
+    },
+    "claude-dashboard": {
+      "source": {
+        "source": "github",
+        "repo": "uppinote20/claude-dashboard"
+      }
+    },
+    "supabase-agent-skills": {
+      "source": {
+        "source": "github",
+        "repo": "supabase/agent-skills"
+      }
+    },
+    "obsidian-skills": {
+      "source": {
+        "source": "github",
+        "repo": "kepano/obsidian-skills"
+      }
+    },
+    "knowledge-work-plugins": {
+      "source": {
+        "source": "git",
+        "url": "https://github.com/anthropics/knowledge-work-plugins.git"
+      }
+    }
+  }
+}
