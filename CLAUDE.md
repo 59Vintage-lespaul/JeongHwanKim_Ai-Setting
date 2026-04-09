@@ -73,10 +73,10 @@
 | 에이전시 | 팀원 (역할 → 스킬) |
 |----------|-------------------|
 | **전략기획실** | 시장 리서처→`trend-research` · 브랜드 전략가→`brand-strategy` · 수석 MD→`md-planning` · 컬렉션 플래너→`line-sheet` · 전략 컨설턴트→`pestle-analysis`·`porters-five-forces`·`ansoff-matrix`·`business-model-canvas`·`lean-canvas`·`value-proposition`·`product-strategy-canvas`·`product-vision` · 경쟁 분석가→`competitive-battlecard` · GTM 전략가→`beachhead-segment` · 디스커버리 리드→`opportunity-solution-tree`·`brainstorm-ideas-*`·`brainstorm-experiments-*`·`identify-assumptions-*`·`prioritize-*`·`analyze-feature-requests` · PM→`create-prd`·`user-stories` · OKR 코치→`brainstorm-okrs` · 이해관계자 매니저→`stakeholder-map` · 로드맵 설계자→`outcome-roadmap` |
-| **크리에이티브 스튜디오** | 크리에이티브 디렉터→`moodboard`·`pinterest-crawl` · 패션 디자이너→`design-spec` · 아트 디렉터→`visual-generation` |
-| **프로덕트 랩** | 프로덕션 매니저→`techpack`·`costing-ve`·`qr-process` |
-| **마케팅 쇼룸** | 마케팅 디렉터→`imc-strategy` · 콘텐츠 디렉터→`visual-content` · 패션 에디터→`copywriting` · 소셜 전략 디렉터→`social-viral` · CX 디자이너→`customer-journey-map` · 브랜드 네이밍 전문가→`product-name` · 릴리즈 매니저→`release-notes` |
-| **데이터 인텔리전스** | 트렌드 애널리스트→`sales-analysis` · 인사이트 아키텍트→`insight-archiving` · 데이터 애널리스트→`ab-test-analysis`·`cohort-analysis`·`sql-queries` · 리서치 애널리스트→`user-personas`·`user-segmentation`·`market-segments` · 고객 분석가→`ideal-customer-profile` · 데이터 엔지니어→`dummy-dataset` |
+| **크리에이티브 스튜디오** | 크리에이티브 디렉터→`moodboard`·`pinterest-crawl` · 패션 디자이너→`design-spec` · 아트 디렉터→`visual-generation` · 컬러 스트래티지스트→`color-intelligence` · 디자인 제너레이터→`design-generator` |
+| **프로덕트 랩** | 프로덕션 매니저→`techpack`·`costing-ve`·`qr-process` · 패턴 옵티마이저→`pattern-optimizer` |
+| **마케팅 쇼룸** | 마케팅 디렉터→`imc-strategy` · 콘텐츠 디렉터→`visual-content` · 패션 에디터→`copywriting` · 소셜 전략 디렉터→`social-viral` · CX 디자이너→`customer-journey-map` · 브랜드 네이밍 전문가→`product-name` · 릴리즈 매니저→`release-notes` · 비주얼 팩토리 매니저→`visual-factory` |
+| **데이터 인텔리전스** | 트렌드 애널리스트→`sales-analysis`·`trend-radar` · 인사이트 아키텍트→`insight-archiving` · 디맨드 옵티마이저→`demand-optimizer` · 데이터 애널리스트→`ab-test-analysis`·`cohort-analysis`·`sql-queries` · 리서치 애널리스트→`user-personas`·`user-segmentation`·`market-segments` · 고객 분석가→`ideal-customer-profile` · 데이터 엔지니어→`dummy-dataset` |
 | **QC 본부** | 품질 검증관→`quality-gate` · 갭 디텍터→`gap-analysis` · 리포트 제너레이터→`completion-report` · PDCA 이터레이터→`pdca-iteration` · 회고 퍼실리테이터→`retro` · 에디터→`grammar-check` |
 
 ## 자연어 → 스킬 라우팅
@@ -99,6 +99,8 @@
 | "핀터레스트에서 이미지 수집해줘" | `pinterest-crawl` |
 | "디자인 스펙 잡아줘" | `design-spec` |
 | "이미지 만들어줘" | `visual-generation` |
+| "시즌 컬러 팔레트 만들어줘", "씨빅 컬러 정해줘" | `color-intelligence` |
+| "디자인 시안 만들어줘", "배리에이션 뽑아줘" | `design-generator` |
 
 ### 생산 & 원가
 | 이렇게 말하면 | 스킬 |
@@ -106,6 +108,7 @@
 | "원가 맞아?", "마진 계산해줘", "VE 해줘" | `costing-ve` |
 | "테크팩 만들어줘" | `techpack` |
 | "리오더 진행해줘" | `qr-process` |
+| "원단 사용량 최적화해줘", "마카 효율 올려줘", "소재 대안 찾아줘" | `pattern-optimizer` |
 
 ### 마케팅 & 콘텐츠
 | 이렇게 말하면 | 스킬 |
@@ -115,6 +118,7 @@
 | "상품 설명 써줘", "인스타 캡션 써줘" | `copywriting` |
 | "인플루언서 찾아줘", "런칭 시퀀스" | `social-viral` |
 | "이름 뭐로 하지?", "상품명 후보 뽑아줘" | `product-name` |
+| "채널별 비주얼 에셋 만들어줘", "무신사 상품 컷 기획해줘" | `visual-factory` |
 
 ### 데이터 & 분석
 | 이렇게 말하면 | 스킬 |
@@ -124,6 +128,8 @@
 | "무신사 랭킹 가져와" | `musinsa-ranking` |
 | "무신사 발매 뭐 있어?" | `musinsa-release` |
 | "주간 대시보드 만들어줘" | `weekly-sales-dashboard` |
+| "트렌드 레이더 돌려줘", "트렌드 스코어링해줘" | `trend-radar` |
+| "리오더 타이밍 알려줘", "수요 예측해줘", "SPOT 후보 뽑아줘" | `demand-optimizer` |
 
 ### 품질 & 검수
 | 이렇게 말하면 | 스킬 |
@@ -139,9 +145,9 @@
 | 단계 | 에이전시 | 스킬 |
 |------|---------|------|
 | **Plan** | 전략기획실 | `trend-research` → `brand-strategy` → `md-planning` → `line-sheet` |
-| **Design** | 크리에이티브 스튜디오 + 프로덕트 랩 | `moodboard` → `design-spec` → `visual-generation` + `costing-ve` |
-| **Do** | 프로덕트 랩 + 마케팅 쇼룸 | `techpack` · `qr-process` + `imc-strategy` → `visual-content` → `copywriting` → `social-viral` |
-| **Check** | 데이터 인텔리전스 + QC 본부 | `sales-analysis` → `insight-archiving` + `gap-analysis` → `completion-report` |
+| **Design** | 크리에이티브 스튜디오 + 프로덕트 랩 | `trend-radar` → `color-intelligence` → `moodboard` → `design-generator` → `design-spec` → `visual-generation` + `pattern-optimizer` → `costing-ve` |
+| **Do** | 프로덕트 랩 + 마케팅 쇼룸 | `techpack` · `qr-process` + `imc-strategy` → `visual-content` → `visual-factory` → `copywriting` → `social-viral` |
+| **Check** | 데이터 인텔리전스 + QC 본부 | `sales-analysis` → `demand-optimizer` → `insight-archiving` + `gap-analysis` → `completion-report` |
 | **Act** | QC 본부 | `pdca-iteration` |
 
 ## 산출물 저장 규칙
